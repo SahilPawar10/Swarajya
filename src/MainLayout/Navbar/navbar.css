@@ -9,8 +9,8 @@ nav {
   z-index: 1;
   transition: 0.6 ease-in-out;
   /* height: 80px; */
-  /* background: transparent !important; */
-  background-color: aqua;
+  background: transparent !important;
+  /* background-color: aqua; */
   position: fixed;
 }
 
