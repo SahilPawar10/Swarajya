@@ -1,0 +1,231 @@
+nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  align-items: center;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  transition: 0.6 ease-in-out;
+  /* height: 80px; */
+  background: transparent !important;
+  /* background-color: aqua; */
+  position: fixed;
+}
+
+.menu > li,
+.menu > a {
+  display: inline-block;
+}
+
+.menu li {
+  position: relative;
+}
+.menu a {
+  font-size: 15px;
+  display: block;
+  padding: 10px 2rem;
+  transition: background-color 0.22 ease, color 0.22 ease;
+  color: #fff;
+}
+
+.active {
+  background-color: #f4b124;
+  /* font-size: 20px; */
+  margin: 34px;
+}
+.menu a:hover {
+  background-color: #f4b124;
+  color: #fff;
+}
+.submenu {
+  margin-top: 30px;
+  position: absolute;
+  background-color: #fff;
+  width: 200px;
+  left: 0;
+  z-index: 100;
+  top: 16rem;
+  opacity: 0;
+  display: none;
+  line-height: 15px;
+}
+
+.submenu::before {
+  content: "";
+  position: absolute;
+  top: -2.5rem;
+  left: 3rem;
+  border: 1.2rem solid transparent;
+}
+.menu li:hover > .submenu {
+  top: 1.5rem;
+  opacity: 1;
+  display: block;
+}
+.menu li:hover > .submenu a {
+  color: black;
+  border-bottom: 0.001rem solid rgb(183, 181, 181);
+  padding: 10px 10px 10px 10px;
+}
+.menu-icon {
+  border: 1px solid red;
+}
+
+.menu-icon {
+  display: none;
+}
+.menu-icon i {
+  color: white;
+  font-size: 25px;
+  padding: 10px;
+  /* display: none; */
+}
+.logoOnClose,
+.menuClose {
+  display: none;
+  margin: 0;
+  padding: 0;
+}
+.logoOnClose h2 {
+  margin: 0 !important;
+}
+
+/*...................... mobile........................... */
+@media (min-width: 320px) and (max-width: 480px) {
+  .logoOnClose,
+  .menuClose {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+    position: relative;
+  }
+  .menuClose i {
+    margin-top: -18px;
+    font-size: 39px;
+    color: #fff;
+  }
+  .menu-icon {
+    display: block;
+    cursor: pointer;
+  }
+  .nav-elements {
+    position: absolute;
+    width: 0px;
+    height: 100vh;
+    overflow: hidden;
+    right: 0%;
+
+    transition: all 0.3s ease-in;
+    background-color: #004e7e;
+  }
+  .nav-elements.active {
+    width: 100%;
+    transition: 0.8s;
+    height: 100vh;
+    top: 0;
+    align-items: center;
+  }
+  .nav-elements ul {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1vh;
+    padding-left: 20px;
+    align-items: center;
+    text-align: center;
+  }
+  .nav-elements ul li {
+    margin-right: auto;
+    margin-top: 22px;
+  }
+  nav ul li a {
+    font-weight: 700;
+    color: rgb(6, 6, 6);
+  }
+  .active {
+    margin: 0;
+  }
+  .submenu {
+    width: 193px;
+    left: 140px;
+    top: 0;
+    color: #fff;
+  }
+  .menu li:hover > .submenu {
+    top: -4px;
+    opacity: 1;
+    display: block;
+    /* background-color: #004e7e; */
+  }
+}
+
+/*...................... Tavlets........................... */
+
+@media (min-width: 481px) and (max-width: 790px) {
+  .logoOnClose,
+  .menuClose {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+    position: relative;
+  }
+  .menuClose i {
+    margin-top: -18px;
+    font-size: 39px;
+    color: #fff;
+  }
+  .menu-icon {
+    display: block;
+    cursor: pointer;
+  }
+  .nav-elements {
+    position: absolute;
+    width: 0px;
+    height: 100vh;
+    overflow: hidden;
+    right: 0%;
+
+    transition: all 0.3s ease-in;
+    /* background-color: rgb(235, 227, 217); */
+    background-color: #004e7e;
+  }
+  .nav-elements.active {
+    width: 100%;
+    transition: 0.8s;
+    height: 100vh;
+    /* margin-top: 876px; */
+    top: 0px;
+    align-items: center;
+  }
+  .nav-elements ul {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1vh;
+    padding-left: 20px;
+    align-items: center;
+    text-align: center;
+  }
+  .nav-elements ul li {
+    margin-right: auto;
+    margin-top: 22px;
+  }
+  nav ul li a {
+    font-weight: 700;
+    color: rgb(6, 6, 6);
+  }
+  .active {
+    margin: 0;
+  }
+  .submenu {
+    width: 193px;
+    left: 140px;
+    top: 0;
+    /* bottom: 20px; */
+  }
+  .menu li:hover > .submenu {
+    top: -4px;
+    opacity: 1;
+    display: block;
+  }
+}

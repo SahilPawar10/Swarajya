@@ -68,3 +68,101 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+
+
+@media (max-width: 412px) {
+  nav {
+    /* display: block; */
+    /* justify-content: center; */
+  }
+  .menu-icon {
+    display: block;
+    cursor: pointer;
+  }
+  .nav-elements {
+    position: absolute;
+    width: 0px;
+    height: 100vh;
+    overflow: hidden;
+    right: 0%;
+    /* margin-top: 472px; */
+    transition: all 0.3s ease-in;
+    background-color: rgb(235, 227, 217);
+  }
+  .nav-elements.active {
+    width: 100%;
+    transition: 0.8s;
+    height: 100vh;
+    margin-top: 750px;
+    align-items: center;
+  }
+  .nav-elements ul {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1vh;
+    padding-left: 20px;
+    align-items: center;
+    text-align: center;
+  }
+  .nav-elements ul li {
+    margin-right: auto;
+    margin-top: 22px;
+  }
+  nav ul li a {
+    font-weight: 700;
+    color: rgb(6, 6, 6);
+  }
+  .active {
+    margin: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  nav {
+    /* display: block; */
+    /* justify-content: center; */
+  }
+  .menu-icon {
+    display: block;
+    cursor: pointer;
+  }
+  .nav-elements {
+    position: absolute;
+    width: 0px;
+    height: 100vh;
+    overflow: hidden;
+    right: 0%;
+    /* margin-top: 472px; */
+    transition: all 0.3s ease-in;
+    background-color: rgb(235, 227, 217);
+  }
+  .nav-elements.active {
+    width: 100%;
+    transition: 0.8s;
+    height: 100vh;
+    margin-top: 760px;
+    align-items: center;
+  }
+  .nav-elements ul {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1vh;
+    padding-left: 20px;
+    align-items: center;
+    text-align: center;
+  }
+  .nav-elements ul li {
+    margin-right: auto;
+    margin-top: 22px;
+  }
+  nav ul li a {
+    font-weight: 700;
+    color: rgb(6, 6, 6);
+  }
+  .active {
+    margin: 0;
+  }
+}
