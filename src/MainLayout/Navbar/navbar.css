@@ -9,8 +9,8 @@ nav {
   z-index: 1;
   transition: 0.6 ease-in-out;
   /* height: 80px; */
-  background: transparent !important;
-  /* background-color: aqua; */
+  /* background: transparent !important; */
+  background-color: aqua;
   position: fixed;
 }
 
@@ -221,7 +221,6 @@ nav {
     width: 193px;
     left: 140px;
     top: 0;
-    /* bottom: 20px; */
   }
   .menu li:hover > .submenu {
     top: -4px;
