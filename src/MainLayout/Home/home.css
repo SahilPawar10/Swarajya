@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  height: 100vh;
 }
 
 .container {
@@ -44,6 +45,51 @@
   margin-bottom: 10px;
 }
 
+.banner-btn {
+  position: absolute;
+  background-color: #f4b124;
+  top: 500px;
+  left: 100px;
+  transition: 0.2s ease-in-out;
+  /* border: 2px solid #f4b124; */
+  border-radius: 17px;
+  cursor: pointer;
+}
+.banner-btn .btn-donateUs {
+  display: block;
+  font-size: 20px;
+  padding: 11px 42px 13px 13px;
+  position: relative;
+}
+
+.banner-btn .btn-donateUs .text {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+.icon {
+  margin: 9px 0px 0 0px;
+  position: absolute;
+  top: 3px;
+}
+.banner-btn .btn-donateUs p {
+  color: #fff;
+}
+.icon-heart {
+  color: #fff;
+  margin-left: 6px;
+  font-size: 25px;
+}
+
+.banner-btn :hover > .icon-heart {
+  color: rgba(8, 194, 8, 0.83);
+}
+
+.banner-btn :hover {
+  /* color: rgb(255, 0, 200); */
+  background-color: crimson;
+  border-radius: 17px;
+}
 .banner1 {
   animation: slide1 12s linear infinite;
 }

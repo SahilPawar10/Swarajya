@@ -5,13 +5,24 @@ import logo from "../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
 
 function Navbar() {
   const [shownav, setShownav] = useState(false);
+  const [nav, setnav] = useState(false);
 
   const handleNav = () => {
     setShownav(!shownav);
   };
+  const changebackground = () => {
+    if (window.scrollY >= 50) {
+      setnav(true);
+    } else {
+      setnav(false);
+    }
+  };
+
+  window.addEventListener("scroll", changebackground);
+
   return (
     <div>
-      <nav>
+      <nav className={nav ? "nav-active" : "nav"}>
         <div className="logo-heading">
           <img src={logo} alt="" />
           {/* <h2>स्वराज्य</h2> */}
@@ -30,7 +41,7 @@ function Navbar() {
               <i class="fa fa-window-close" aria-hidden="true"></i>
             </div>
           </div>
-          <ul className="menu">
+          <ul className={nav ? "scroll-menu" : "menu"}>
             <li>
               <a href="#" className="active">
                 Donate
