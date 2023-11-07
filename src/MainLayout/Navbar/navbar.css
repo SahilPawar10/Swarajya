@@ -40,6 +40,7 @@ nav {
 .menu a,
 .scroll-menu a {
   font-size: 15px;
+  font-weight: 700;
   display: block;
   padding: 10px 2rem;
   transition: background-color 0.22 ease, color 0.22 ease;

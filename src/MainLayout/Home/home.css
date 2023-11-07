@@ -31,6 +31,13 @@
   /* left: 50%;
   top: 50%;
   transform: translate(-50%, -50%); */
+  animation: zoom-out 3s linear infinite;
+}
+
+@keyframes zoom-out {
+  100% {
+    width: 100%;
+  }
 }
 
 .banner-text {
@@ -39,6 +46,16 @@
   top: 350px;
   left: 100px;
   color: #fff;
+  animation: text-up 12s linear infinite;
+  transform: translateY(100px);
+}
+@keyframes text-up {
+  10% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .banner-text h1 {
@@ -54,6 +71,8 @@
   /* border: 2px solid #f4b124; */
   border-radius: 17px;
   cursor: pointer;
+  animation: text-up 12s linear infinite;
+  transform: translateY(100px);
 }
 .banner-btn .btn-donateUs {
   display: block;
@@ -155,13 +174,24 @@
   }
 }
 
+.text1 {
+  animation-delay: 0s;
+}
+
+.text2 {
+  animation-delay: 3s;
+}
+.text3 {
+  animation-delay: 9s;
+}
 @media (min-width: 320px) and (max-width: 480px) {
   .banner-text {
     width: auto;
     position: absolute;
-    top: 254px;
+    top: 389px;
     left: 16px;
-    color: #0e0d0d;
+    color: #fff;
+    font-size: 10px;
   }
   .banner1,
   .banner2,
@@ -172,15 +202,15 @@
     top: 0;
     left: 0;
   }
-  .banner1 .banner2,
-  .banner3 img {
-    /* width: 100%;
-    background-size: cover;
-    object-fit: cover;
+  .banner-btn {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%); */
+    background-color: #f4b124;
+    top: 484px;
+    left: 19px;
+    transition: 0.2s ease-in-out;
+    /* border: 2px solid #f4b124; */
+    border-radius: 17px;
+    cursor: pointer;
   }
 }
 
@@ -188,9 +218,10 @@
   .banner-text {
     width: auto;
     position: absolute;
-    top: 254px;
-    left: 51px;
-    color: #0e0d0d;
+    top: 389px;
+    left: 16px;
+    color: #fff;
+    font-size: 10px;
   }
   .banner1,
   .banner2,
@@ -201,14 +232,14 @@
     top: 0;
     left: 0;
   }
-  .banner1 .banner2,
-  .banner3 img {
-    /* width: 100%;
-    background-size: cover;
-    object-fit: cover;
-    position: absolute; */
-    /* left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%); */
+  .banner-btn {
+    position: absolute;
+    background-color: #f4b124;
+    top: 484px;
+    left: 19px;
+    transition: 0.2s ease-in-out;
+    /* border: 2px solid #f4b124; */
+    border-radius: 17px;
+    cursor: pointer;
   }
 }
