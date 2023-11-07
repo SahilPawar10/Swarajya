@@ -14,6 +14,11 @@ nav {
   position: fixed;
 }
 
+.logo-heading img {
+  width: 150px;
+  margin-top: 20px;
+}
+
 .menu > li,
 .menu > a {
   display: inline-block;
@@ -69,15 +74,12 @@ nav {
   border-bottom: 0.001rem solid rgb(183, 181, 181);
   padding: 10px 10px 10px 10px;
 }
-.menu-icon {
-  border: 1px solid red;
-}
 
 .menu-icon {
   display: none;
 }
 .menu-icon i {
-  color: white;
+  color: rgb(22, 22, 22);
   font-size: 25px;
   padding: 10px;
   /* display: none; */
@@ -94,6 +96,10 @@ nav {
 
 /*...................... mobile........................... */
 @media (min-width: 320px) and (max-width: 480px) {
+  .logo-heading img {
+    width: 100px;
+    margin-top: 20px;
+  }
   .logoOnClose,
   .menuClose {
     display: flex;
@@ -101,6 +107,7 @@ nav {
     margin: 20px;
     position: relative;
   }
+
   .menuClose i {
     margin-top: -18px;
     font-size: 39px;
@@ -109,6 +116,8 @@ nav {
   .menu-icon {
     display: block;
     cursor: pointer;
+    background-color: white;
+    border-radius: 15px;
   }
   .nav-elements {
     position: absolute;
@@ -163,6 +172,10 @@ nav {
 /*...................... Tavlets........................... */
 
 @media (min-width: 481px) and (max-width: 790px) {
+  .logo-heading img {
+    width: 120px;
+    margin-top: 20px;
+  }
   .logoOnClose,
   .menuClose {
     display: flex;
@@ -178,6 +191,8 @@ nav {
   .menu-icon {
     display: block;
     cursor: pointer;
+    background-color: white;
+    border-radius: 15px;
   }
   .nav-elements {
     position: absolute;

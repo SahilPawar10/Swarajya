@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
+import logo from "../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
 
 function Navbar() {
   const [shownav, setShownav] = useState(false);
@@ -12,10 +13,10 @@ function Navbar() {
     <div>
       <nav>
         <div className="logo-heading">
-          {/* <img src="" alt="" /> */}
-          <h2>स्वराज्य</h2>
+          <img src={logo} alt="" />
+          {/* <h2>स्वराज्य</h2> */}
         </div>
-        <div className="menu-icon" onClick={handleNav}>
+        <div className="menu-icon box-shadow" onClick={handleNav}>
           {shownav ? (
             <i class="fa fa-window-close" aria-hidden="true"></i>
           ) : (
