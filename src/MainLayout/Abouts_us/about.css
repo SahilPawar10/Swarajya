@@ -1,0 +1,12 @@
+/* #aboutus {
+  margin-top: 50px;
+} */
+
+/* .row {
+  display: flex !important;
+  justify-content: space-around;
+} */
+.image-section img {
+  width: 200px;
+  border-radius: 100%;
+}

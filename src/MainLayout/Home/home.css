@@ -9,15 +9,18 @@
   width: 100%;
 }
 
-.banner1 .banner2,
+.banner1,
+.banner2,
 .banner3 {
   height: 100vh;
-  /* height: 100%; */
+
   width: 100%;
   position: absolute;
   /* top: 80px; */
   top: 0;
   left: 0;
+  background-size: cover;
+  object-fit: cover;
 }
 
 .banner1,
@@ -46,16 +49,6 @@
   top: 350px;
   left: 100px;
   color: #fff;
-  animation: text-up 12s linear infinite;
-  transform: translateY(100px);
-}
-@keyframes text-up {
-  10% {
-    transform: translateY(0px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
 }
 
 .banner-text h1 {
@@ -65,7 +58,7 @@
 .banner-btn {
   position: absolute;
   background-color: #f4b124;
-  top: 500px;
+  top: 405px;
   left: 100px;
   transition: 0.2s ease-in-out;
   /* border: 2px solid #f4b124; */
@@ -205,7 +198,7 @@
   .banner-btn {
     position: absolute;
     background-color: #f4b124;
-    top: 484px;
+    top: 407px;
     left: 19px;
     transition: 0.2s ease-in-out;
     /* border: 2px solid #f4b124; */
@@ -235,7 +228,7 @@
   .banner-btn {
     position: absolute;
     background-color: #f4b124;
-    top: 484px;
+    top: 407px;
     left: 19px;
     transition: 0.2s ease-in-out;
     /* border: 2px solid #f4b124; */

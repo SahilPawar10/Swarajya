@@ -1,0 +1,82 @@
+#programs {
+  margin: 30px 0 0 0;
+  flex: 0 0 100%;
+}
+.carosoul {
+  margin: 0%;
+}
+
+.carosoul-section {
+  margin: 20px 120px;
+}
+.carousel-inner {
+  height: 500px;
+}
+
+.image-section img {
+  border-radius: 50%;
+  width: 350px;
+  height: 350px;
+  border: 2px solid #007bff;
+  /* margin: 10px; */
+}
+.image-section {
+}
+
+.img-desc {
+  margin-left: -90px;
+  margin-top: 64px;
+  text-align: start;
+}
+
+.slide-title h2 {
+  color: #333 !important;
+  text-align: left;
+  font-weight: 800 !important;
+  font-family: ui-monospace;
+
+  /* fo */
+}
+.slide-desc {
+  font-weight: 200;
+  font-size: larger;
+  font-size: 25px;
+  font-family: "math";
+}
+
+@media (min-width: 791px) and (max-width: 1245px) {
+  .img-desc {
+    margin-left: 11px;
+    /* margin-top: 28px;
+    text-align: start; */
+  }
+}
+@media (min-width: 320px) and (max-width: 480px) {
+  .carosoul-section {
+    margin: 10px 0px;
+  }
+  .image-section img {
+    border-radius: 50%;
+    width: 280px;
+    height: 280px;
+  }
+  .img-desc {
+    margin-left: 20px;
+    margin-top: 28px;
+    text-align: start;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 790px) {
+  .carosoul-section {
+    margin: 20px 30px;
+  }
+  .image-section img {
+    border-radius: 50%;
+  }
+  .img-desc {
+    margin-left: 20px;
+    margin-top: 28px;
+    text-align: start;
+  }
+}

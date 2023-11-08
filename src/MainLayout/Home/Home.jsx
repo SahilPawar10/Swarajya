@@ -6,6 +6,7 @@ import slider1 from "../../assets/WhatsApp Image 2023-11-07 at 9.16.39 PM.jpeg";
 import slider2 from "../../assets/kirtan.jpeg";
 import slider3 from "../../assets/haldiKunku.jpeg";
 import About from "../Abouts_us/About";
+import Program from "../Programs/Program";
 
 function Home() {
   return (
@@ -75,7 +76,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <About />
+      <Program />
     </div>
   );
 }

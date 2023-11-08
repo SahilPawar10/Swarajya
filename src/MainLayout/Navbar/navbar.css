@@ -126,6 +126,7 @@ nav {
   .logo-heading img {
     width: 100px;
     margin-top: 20px;
+    margin-right: 146px;
   }
   .logoOnClose,
   .menuClose {
@@ -196,12 +197,13 @@ nav {
   }
 }
 
-/*...................... Tavlets........................... */
+/*...................... Tablets........................... */
 
 @media (min-width: 481px) and (max-width: 790px) {
   .logo-heading img {
-    width: 120px;
+    width: 100px;
     margin-top: 20px;
+    margin-right: 146px;
   }
   .logoOnClose,
   .menuClose {
