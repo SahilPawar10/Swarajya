@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./program.css";
 import slider1 from "../../assets/WhatsApp Image 2023-11-07 at 9.16.39 PM.jpeg";
 import slider2 from "../../assets/kirtan.jpeg";
 import slider3 from "../../assets/haldiKunku.jpeg";
 import About from "../Abouts_us/About";
+
 function Program() {
   return (
     <div id="programs">
@@ -14,10 +17,13 @@ function Program() {
             class="carousel slide"
             data-bs-ride="carousel"
           >
-            <div class="carousel-inner">
-              <div class="carousel-item active" data-bs-interval="3000">
+            <div class="carousel-inner  ">
+              <div
+                class="carousel-item active box-shadow"
+                data-bs-interval="3000"
+              >
                 <div class="container text-center">
-                  <div class="row align-items-start">
+                  <div class="row align-items-start ">
                     <div class="col">
                       <div className="image-section">
                         <img src={slider1} alt="carosou1" />
@@ -33,12 +39,16 @@ function Program() {
                         (40.6 million). India is home to one-third of the global
                         total of stunted children under the age of five.
                       </p>
-                      <div className="button">Donate</div>
+                      {/* <div className="button">Donate</div> */}
+
+                      <Link to="/donate" className="program-button">
+                        <span className="text">Know More</span>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="carousel-item" data-bs-interval="6000">
+              <div class="carousel-item  box-shadow" data-bs-interval="6000">
                 <div class="container text-center">
                   <div class="row align-items-start">
                     <div class="col">
@@ -56,12 +66,15 @@ function Program() {
                         got impacted and most affected have been girls from
                         marginalized communities
                       </p>
-                      <div className="button">Donate</div>
+
+                      <Link to="/donate" className="program-button">
+                        <span className="text">Know More</span>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="carousel-item" data-bs-interval="9000">
+              <div class="carousel-item box-shadow" data-bs-interval="9000">
                 <div class="container text-center">
                   <div class="row align-items-start">
                     <div class="col">
@@ -77,7 +90,10 @@ function Program() {
                         Lend a helping hand in the last-mile delivery of
                         adequate nutrition to pregnant and lactating mothers.
                       </p>
-                      <div className="button">Donate</div>
+
+                      <Link to="/donate" className="program-button">
+                        <span className="text">Know More</span>
+                      </Link>
                     </div>
                   </div>
                 </div>

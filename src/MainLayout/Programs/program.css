@@ -17,10 +17,18 @@
   border-radius: 50%;
   width: 350px;
   height: 350px;
-  border: 2px solid #007bff;
+  border: 13px solid #e2860d;
+  box-shadow: #333;
   /* margin: 10px; */
 }
-.image-section {
+.program-button {
+  background-color: #f4b124;
+  transition: 0.2s ease-in-out;
+  /* border: 2px solid #f4b124; */
+  border-radius: 17px;
+  cursor: pointer;
+  padding: 10px 15px;
+  width: 250px;
 }
 
 .img-desc {

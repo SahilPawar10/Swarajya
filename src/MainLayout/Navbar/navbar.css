@@ -91,12 +91,24 @@ nav {
   left: 3rem;
   border: 1.2rem solid transparent;
 }
+
+.scroll-menu li:hover > .submenu {
+  top: 1.5rem;
+  opacity: 1;
+  display: block;
+}
 .menu li:hover > .submenu {
   top: 1.5rem;
   opacity: 1;
   display: block;
 }
 .menu li:hover > .submenu a {
+  color: black;
+  border-bottom: 0.001rem solid rgb(183, 181, 181);
+  padding: 10px 10px 10px 10px;
+}
+
+.scroll-menu li:hover > .submenu a {
   color: black;
   border-bottom: 0.001rem solid rgb(183, 181, 181);
   padding: 10px 10px 10px 10px;

@@ -21,11 +21,6 @@ function Home() {
                 Harmony for Humanity: Nurturing Well-being through Social
                 Engagement
               </h1>
-              {/* <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptates aspernatur dolore quaerat et, necessitatibus
-                sapiente!
-              </p> */}
             </div>
             <div className="banner-btn text1">
               <Link to="/donate" className="btn-donateUs">
@@ -40,11 +35,6 @@ function Home() {
             <img src={slider2} alt="shiv" />
             <div className="banner-text text2 ">
               <h1> स्वराज्य - Empowering Through Self-Governance</h1>
-              {/* <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptates aspernatur dolore quaerat et, necessitatibus
-                sapiente!
-              </p> */}
             </div>
             <div className="banner-btn text2">
               <Link to="/donate" className="btn-donateUs">
@@ -59,11 +49,6 @@ function Home() {
             <img src={slider3} alt="hands" />
             <div className="banner-text text3 ">
               <h1>Empowering Communities Through Joy and Social Initiatives</h1>
-              {/* <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptates aspernatur dolore quaerat et, necessitatibus
-                sapiente!
-              </p> */}
             </div>
             <div className="banner-btn text3 ">
               <Link to="/donate" className="btn-donateUs">
@@ -76,7 +61,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <Program />
+      <About />
     </div>
   );
 }
