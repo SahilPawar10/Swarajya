@@ -22,8 +22,8 @@ function Program() {
                 class="carousel-item active box-shadow"
                 data-bs-interval="3000"
               >
-                <div class="container text-center">
-                  <div class="row align-items-start ">
+                <div class="container ">
+                  <div class="row  ">
                     <div class="col">
                       <div className="image-section">
                         <img src={slider1} alt="carosou1" />
