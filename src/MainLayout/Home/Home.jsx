@@ -62,6 +62,7 @@ function Home() {
         </div>
       </div>
       <About />
+      <Program />
     </div>
   );
 }

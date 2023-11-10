@@ -27,7 +27,17 @@ function About() {
               <div class="program-slide ">
                 <div class="col">
                   <div className="image-section">
-                    <img src={slider1} alt="carosou1" />
+                    <div class="circle_box">
+                      <div>
+                        <svg>
+                          <circle cx="150" cy="150" r="140" />
+                          <circle cx="150" cy="150" r="140" />
+                        </svg>
+                        <span>
+                          <img src={slider1} alt="" />
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="col img-desc ">
@@ -52,7 +62,18 @@ function About() {
               <div class="program-slide ">
                 <div class="col">
                   <div className="image-section">
-                    <img src={slider3} alt="carosou1" />
+                    {/* <img src={slider3} alt="carosou1" /> */}
+                    <div class="circle_box">
+                      <div>
+                        <svg>
+                          <circle cx="150" cy="150" r="140" />
+                          <circle cx="150" cy="150" r="140" />
+                        </svg>
+                        <span>
+                          <img src={slider1} alt="" />
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="col img-desc ">
@@ -77,7 +98,18 @@ function About() {
               <div class="program-slide ">
                 <div class="col">
                   <div className="image-section">
-                    <img src={slider2} alt="carosou1" />
+                    {/* <img src={slider2} alt="carosou1" /> */}
+                    <div class="circle_box">
+                      <div>
+                        <svg>
+                          <circle cx="150" cy="150" r="140" />
+                          <circle cx="150" cy="150" r="140" />
+                        </svg>
+                        <span>
+                          <img src={slider1} alt="" />
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="col img-desc ">
@@ -102,7 +134,18 @@ function About() {
               <div class="program-slide ">
                 <div class="col">
                   <div className="image-section">
-                    <img src={slider1} alt="carosou1" />
+                    {/* <img src={slider1} alt="carosou1" /> */}
+                    <div class="circle_box">
+                      <div>
+                        <svg>
+                          <circle cx="150" cy="150" r="140" />
+                          <circle cx="150" cy="150" r="140" />
+                        </svg>
+                        <span>
+                          <img src={slider1} alt="" />
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="col img-desc ">
