@@ -1,4 +1,4 @@
-svg {
+/* svg {
   width: 300px;
   height: 300px;
 
@@ -22,8 +22,8 @@ circle:nth-child(2) {
 .circle_box:nth-child(1) circle:nth-child(2) {
   stroke-dashoffset: calc(100 * 6);
   stroke-dasharray: calc(100 * 5);
-  stroke-dashoffset: calc((100 * 8) - ((100 * 4) * 50) / 100);
-  stroke: #00f;
+  stroke-dashoffset: calc((100 * -8) - ((100 * -8) * 50) / 100);
+  stroke: orange;
 }
 .circle_box {
   font-size: 36px;
@@ -45,10 +45,10 @@ circle:nth-child(2) {
 .circle_box span img {
   width: 262px;
   height: 262px;
-  border: 2px solid white;
+  border: 8px solid rgb(208, 208, 208);
   border-radius: 50%;
 }
 
 .circle_box:hover circle {
-  stroke: #00f;
-}
+  stroke: orange;
+} */

@@ -30,8 +30,8 @@ function About() {
                     <div class="circle_box">
                       <div>
                         <svg>
-                          <circle cx="150" cy="150" r="140" />
-                          <circle cx="150" cy="150" r="140" />
+                          <circle cx="170" cy="170" r="160" />
+                          <circle cx="170" cy="170" r="160" />
                         </svg>
                         <span>
                           <img src={slider1} alt="" />
@@ -66,8 +66,8 @@ function About() {
                     <div class="circle_box">
                       <div>
                         <svg>
-                          <circle cx="150" cy="150" r="140" />
-                          <circle cx="150" cy="150" r="140" />
+                          <circle cx="170" cy="170" r="160" />
+                          <circle cx="170" cy="170" r="160" />
                         </svg>
                         <span>
                           <img src={slider1} alt="" />
@@ -102,8 +102,8 @@ function About() {
                     <div class="circle_box">
                       <div>
                         <svg>
-                          <circle cx="150" cy="150" r="140" />
-                          <circle cx="150" cy="150" r="140" />
+                          <circle cx="170" cy="170" r="160" />
+                          <circle cx="170" cy="170" r="160" />
                         </svg>
                         <span>
                           <img src={slider1} alt="" />
@@ -138,8 +138,8 @@ function About() {
                     <div class="circle_box">
                       <div>
                         <svg>
-                          <circle cx="150" cy="150" r="140" />
-                          <circle cx="150" cy="150" r="140" />
+                          <circle cx="170" cy="170" r="160" />
+                          <circle cx="170" cy="170" r="160" />
                         </svg>
                         <span>
                           <img src={slider1} alt="" />
@@ -166,19 +166,7 @@ function About() {
                 </div>
               </div>
             </div>
-            {/* <div className="nav-auto">
-              <div className="a-b1"></div>
-              <div className="a-b2"></div>
-              <div className="a-b3"></div>
-              <div className="a-b4"></div>
-            </div> */}
           </div>
-          {/* <div className="nav-m">
-            <label htmlFor="radio1" className="m-btn"></label>
-            <label htmlFor="radio2" className="m-btn"></label>
-            <label htmlFor="radio3" className="m-btn"></label>
-            <label htmlFor="radio4" className="m-btn"></label>
-          </div> */}
         </div>
       </section>
     </div>

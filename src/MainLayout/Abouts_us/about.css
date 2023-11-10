@@ -13,7 +13,7 @@
 
 .slider {
   margin: 10px 190px;
-  height: 320px;
+  height: 350px;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -115,14 +115,13 @@
   justify-content: space-around;
 }
 
-.image-section img {
+/* .image-section img {
   border-radius: 50%;
   width: 320px;
   height: 320px;
   border: 13px solid rgb(219, 131, 8);
   box-shadow: #333;
-  /* margin: 10px; */
-}
+} */
 
 .program-button {
   background-color: #f4b124;
@@ -171,6 +170,65 @@
   color: #504e70;
 }
 
+svg {
+  /* width: 300px;
+  height: 300px; */
+  width: 343px;
+  height: 343px;
+
+  transform: rotate(-90deg);
+  overflow: initial;
+}
+
+circle {
+  stroke-width: 20px;
+  fill: none;
+}
+circle:nth-child(1) {
+  stroke: #fff;
+}
+circle:nth-child(2) {
+  stroke: #f00;
+  position: relative;
+  z-index: 1;
+}
+
+.circle_box:nth-child(1) circle:nth-child(2) {
+  stroke-dashoffset: calc(100 * 6);
+  stroke-dasharray: calc(100 * 6);
+  stroke-dashoffset: calc((100 * -9) - ((100 * -8) * 50) / 100);
+  stroke: orange;
+}
+.circle_box {
+  font-size: 36px;
+  color: #fff;
+  text-align: center;
+}
+.circle_box div {
+  position: relative;
+}
+.circle_box span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 40px;
+}
+
+.circle_box span img {
+  /* width: 262px;
+  height: 262px; */
+  width: 308px;
+  height: 308px;
+  border: 8px solid rgb(208, 208, 208);
+  border-radius: 50%;
+}
+
+.circle_box:hover circle {
+  stroke: orange;
+}
+
 @media (min-width: 791px) and (max-width: 1245px) {
   #aboutus {
     margin-top: 50px;
@@ -189,15 +247,15 @@
   .slider {
     margin: 10px 10px;
 
-    height: 633px;
+    height: 778px;
   }
 
   .program-slide {
     display: block;
   }
-  .image-section img {
+  /* .image-section img {
     margin-left: 28px;
-  }
+  } */
   .img-desc {
     margin-left: 18px;
     margin-top: 60px;
@@ -224,13 +282,13 @@
   .slider {
     margin: 10px 10px;
 
-    height: 985px;
+    height: 737px;
   }
 
   .program-slide {
     display: block;
   }
-  .image-section img {
+  /* .image-section img {
     margin-left: 46px;
-  }
+  } */
 }
