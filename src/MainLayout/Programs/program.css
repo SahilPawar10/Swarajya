@@ -1,6 +1,172 @@
-/* svg {
-  width: 300px;
-  height: 300px;
+#programs {
+  margin-top: 50px;
+  /* height: 100vh; */
+}
+
+.section {
+  margin: 0%;
+  padding: 0%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slider {
+  margin: 10px 190px;
+  height: 350px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.slide {
+  width: 500%;
+  /* height: 500%; */
+  display: flex;
+}
+
+.slide input {
+  display: none;
+}
+
+.st {
+  width: 20%;
+  transition: 2s;
+}
+
+/* .st img {
+  width: 950px;
+  height: 500px;
+} */
+
+.nav-m {
+  position: absolute;
+  width: 800px;
+  margin-top: -95px;
+  justify-content: center;
+  display: flex;
+}
+
+.m-btn {
+  border: 2px solid orange;
+  padding: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 1s;
+}
+
+.m-btn:not(:last-child) {
+  margin-right: 30px;
+}
+
+.m-btn:hover {
+  background-color: orange;
+}
+
+#radio1:checked ~ .first {
+  margin-left: 0%;
+}
+#radio2:checked ~ .first {
+  margin-left: -20%;
+}
+#radio3:checked ~ .first {
+  margin-left: -40%;
+}
+#radio4:checked ~ .first {
+  margin-left: -60%;
+}
+
+.nav-auto {
+  position: absolute;
+  width: 800px;
+  margin-top: 400px;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-auto div {
+  border: 2px solid orange;
+  padding: 5px;
+  border-radius: 10px;
+  transition: 1s;
+}
+
+.nav-auto div:not(:last-child) {
+  margin-right: 30px;
+  justify-content: center;
+}
+
+#radio1:checked ~ .nav-auto .a-b1 {
+  background-color: orange;
+}
+#radio2:checked ~ .nav-auto .a-b2 {
+  background-color: orange;
+}
+
+#radio3:checked ~ .nav-auto .a-b3 {
+  background-color: orange;
+}
+
+#radio4:checked ~ .nav-auto .a-b4 {
+  background-color: orange;
+}
+
+.program-slide {
+  display: flex;
+  justify-content: space-around;
+}
+
+.program-button {
+  background-color: #f4b124;
+  transition: 0.2s ease-in-out;
+  /* border: 2px solid #f4b124; */
+  /* border-radius: 17px; */
+  cursor: pointer;
+  padding: 10px 15px;
+  width: 250px;
+  margin-top: 20px;
+  color: black;
+  font-size: 20px;
+}
+
+.program-button span {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.program-button:hover {
+  color: white;
+  background-color: rgb(255, 94, 0);
+}
+.img-desc {
+  margin-left: 40px;
+  margin-top: 94px;
+  text-align: start;
+}
+
+.slide-title h2 {
+  color: #504e70;
+  text-align: left;
+  font-weight: 800 !important;
+  /* font-family: ui-monospace; */
+  font-size: 35px;
+  margin-top: -50px;
+}
+.slide-desc {
+  font-weight: 500;
+  font-size: larger;
+  font-size: 20px;
+  font-family: Poppins, sans-serif;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  text-align: left;
+  color: #504e70;
+}
+
+svg {
+  /* width: 300px;
+  height: 300px; */
+  width: 343px;
+  height: 343px;
 
   transform: rotate(-90deg);
   overflow: initial;
@@ -21,10 +187,12 @@ circle:nth-child(2) {
 
 .circle_box:nth-child(1) circle:nth-child(2) {
   stroke-dashoffset: calc(100 * 6);
-  stroke-dasharray: calc(100 * 5);
-  stroke-dashoffset: calc((100 * -8) - ((100 * -8) * 50) / 100);
+  stroke-dasharray: calc(100 * 6);
+  stroke-dashoffset: calc((100 * -9) - ((100 * -8) * 50) / 100);
   stroke: orange;
+  /* animation: show-border 2s linear forwards; */
 }
+
 .circle_box {
   font-size: 36px;
   color: #fff;
@@ -43,12 +211,78 @@ circle:nth-child(2) {
 }
 
 .circle_box span img {
-  width: 262px;
-  height: 262px;
+  /* width: 262px;
+  height: 262px; */
+  width: 308px;
+  height: 308px;
   border: 8px solid rgb(208, 208, 208);
   border-radius: 50%;
 }
 
 .circle_box:hover circle {
   stroke: orange;
-} */
+}
+
+@media (min-width: 791px) and (max-width: 1245px) {
+  #aboutus {
+    margin-top: 50px;
+    height: 65vh;
+  }
+  .slider {
+    margin: 10px 0px;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  #aboutus {
+    margin-top: 50px;
+    /* height: 60vh; */
+  }
+  .slider {
+    margin: 10px 10px;
+
+    height: 778px;
+  }
+
+  .program-slide {
+    display: block;
+  }
+  /* .image-section img {
+    margin-left: 28px;
+  } */
+  .img-desc {
+    margin-left: 3px;
+    margin-top: 60px;
+    text-align: start;
+  }
+  .slide-title h2 {
+    font-size: 22px;
+    text-align: center;
+  }
+  .slide-desc {
+    font-size: 16px;
+    text-align: center;
+  }
+  .program-button {
+    margin-left: 120px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 790px) {
+  #aboutus {
+    margin-top: 50px;
+    /* height: 60vh; */
+  }
+  .slider {
+    margin: 10px 10px;
+
+    height: 737px;
+  }
+
+  .program-slide {
+    display: block;
+  }
+  /* .image-section img {
+    margin-left: 46px;
+  } */
+}

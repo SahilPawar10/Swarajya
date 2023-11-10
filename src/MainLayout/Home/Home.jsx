@@ -7,6 +7,7 @@ import slider2 from "../../assets/kirtan.jpeg";
 import slider3 from "../../assets/haldiKunku.jpeg";
 import About from "../Abouts_us/About";
 import Program from "../Programs/Program";
+import Vision from "../Visions/Vision";
 
 function Home() {
   return (
@@ -61,8 +62,9 @@ function Home() {
           </div>
         </div>
       </div>
-      <About />
-      {/* <Program /> */}
+
+      <Program />
+      <Vision />
     </div>
   );
 }

@@ -48,6 +48,9 @@ li {
 a {
   text-decoration: none;
 }
+body {
+  overflow-x: hidden; /* Hides the horizontal scrollbar */
+}
 /* .....................Main.............................. */
 img {
   width: 100%;
@@ -56,4 +59,25 @@ img {
 }
 .box-shadow {
   box-shadow: 0 0 20px rgba(48, 46, 77, 0.15);
+}
+
+/* For Webkit-based browsers like Chrome, Safari */
+::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1eded;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #f4b124;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #f4b124;
 }
