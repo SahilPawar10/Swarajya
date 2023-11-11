@@ -1,3 +1,86 @@
 #vision {
-  margin-top: 50px;
+  margin-top: 80px;
+
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.vision-text {
+  margin: 10px 10px 20px 10px;
+}
+
+.vision-text .heading {
+  color: #004e7e;
+  /* text-align: left; */
+  font-weight: 800 !important;
+
+  font-size: 25px;
+}
+
+.vision-text .heading2 {
+  margin-top: 20px;
+  /* width: 600px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 20px;
+}
+
+.vision-text .heading2 h2 {
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: rgb(247, 170, 28);
+  padding: 2px 20px;
+  box-shadow: 5px 10px 30px rgba(2, 238, 255, 0.336);
+}
+
+.vision-images {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 100px 100px;
+  gap: 20px;
+}
+
+.vision-type {
+  position: relative;
+}
+.vision-images img {
+  width: 250px;
+  height: 300px;
+  border: 6px solid grey;
+}
+
+.vision-type h3 {
+  top: 14px;
+  position: absolute;
+  width: 239px;
+  left: 27px;
+  color: #fff;
+  font-weight: 800 !important;
+  font-size: 25px;
+}
+
+.type-header {
+  /* position: "absolute";
+  top: 0; */
+  position: absolute;
+  background: transparent;
+  top: 246px;
+  /* display: none; */
+  width: 239px;
+  left: 5px;
+}
+.type-text p {
+  /* background-color: orange; */
+  text-align: center;
+  /* width: 239px; */
+  display: none;
+}
+
+.vision-images img:hover ~ .vision-type .type-header {
+  display: block;
 }

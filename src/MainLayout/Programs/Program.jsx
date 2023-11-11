@@ -5,7 +5,7 @@ import "./program.css";
 import slider1 from "../../assets/WhatsApp Image 2023-11-07 at 9.16.39 PM.jpeg";
 import slider2 from "../../assets/kirtan.jpeg";
 import slider3 from "../../assets/haldiKunku.jpeg";
-import About from "../Abouts_us/About";
+import slider4 from "../../assets/Screenshot 2023-11-04 084415.png";
 
 function Program() {
   let counter = 1;
@@ -16,6 +16,7 @@ function Program() {
       counter = 1;
     }
   }, 5000);
+
   return (
     <div id="programs">
       <section className="section">
@@ -70,7 +71,7 @@ function Program() {
                           <circle cx="170" cy="170" r="160" />
                         </svg>
                         <span>
-                          <img src={slider1} alt="" />
+                          <img src={slider2} alt="" />
                         </span>
                       </div>
                     </div>
@@ -104,7 +105,7 @@ function Program() {
                           <circle cx="170" cy="170" r="160" />
                         </svg>
                         <span>
-                          <img src={slider1} alt="" />
+                          <img src={slider3} alt="" />
                         </span>
                       </div>
                     </div>
@@ -139,7 +140,7 @@ function Program() {
                           <circle cx="170" cy="170" r="160" />
                         </svg>
                         <span>
-                          <img src={slider1} alt="" />
+                          <img src={slider4} alt="" />
                         </span>
                       </div>
                     </div>

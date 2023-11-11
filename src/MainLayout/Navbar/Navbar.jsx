@@ -20,6 +20,16 @@ function Navbar() {
 
   window.addEventListener("scroll", changebackground);
 
+  // const pageHeight = Math.max(
+  //   document.body.scrollHeight,
+  //   document.body.offsetHeight,
+  //   document.documentElement.clientHeight,
+  //   document.documentElement.scrollHeight,
+  //   document.documentElement.offsetHeight
+  // );
+
+  // console.log("Page Height: ", pageHeight);
+
   return (
     <div>
       <nav className={nav ? "nav-active" : "nav"}>
