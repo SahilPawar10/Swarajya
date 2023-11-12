@@ -84,3 +84,20 @@
 .vision-images img:hover ~ .vision-type .type-header {
   display: block;
 }
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .vision-images {
+    display: grid;
+    /* justify-content: space-evenly; */
+    margin: 10px 10px;
+    /* gap: 20px; */
+  }
+}
+@media (min-width: 481px) and (max-width: 790px) {
+  .vision-images {
+    display: grid;
+    /* justify-content: space-evenly; */
+    margin: 10px 10px;
+    gap: 20px;
+  }
+}
