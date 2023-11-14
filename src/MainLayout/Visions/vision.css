@@ -43,6 +43,13 @@
   justify-content: space-evenly;
   margin: 100px 100px;
   gap: 20px;
+  position: relative;
+}
+
+.type2,
+.type3 {
+  position: absolute;
+  top: 50px;
 }
 
 .vision-type {
@@ -52,38 +59,55 @@
   width: 250px;
   height: 300px;
   border: 6px solid grey;
+  cursor: pointer;
+}
+
+.vision-images img:hover {
+  border: 6px solid orange;
 }
 
 .vision-type h3 {
   top: 14px;
   position: absolute;
-  width: 239px;
-  left: 27px;
+  width: 240px;
+  left: 6px;
   color: #fff;
   font-weight: 800 !important;
   font-size: 25px;
 }
 
 .type-header {
-  /* position: "absolute";
-  top: 0; */
   position: absolute;
   background: transparent;
-  top: 246px;
-  /* display: none; */
-  width: 239px;
+  top: 220px;
+  display: none;
+  width: 240px;
   left: 5px;
+  transition: all 0.6s ease;
 }
 .type-text p {
-  /* background-color: orange; */
   text-align: center;
-  /* width: 239px; */
+}
+.type-text {
+  width: 240px;
+  margin-top: 10px;
   display: none;
 }
-
-.vision-images img:hover ~ .vision-type .type-header {
+.vision-type :hover ~ .type-header {
   display: block;
+  color: #fff;
+  background: rgb(228 112 29 / 81%);
+
+  height: 21%;
 }
+.vision-type :hover ~ .type-text {
+  display: block;
+
+  /* display: contents; */
+}
+/* .vision-images img:hover ~ .vision-type .type-header {
+  display: block;
+} */
 
 @media (min-width: 320px) and (max-width: 480px) {
   .vision-images {
@@ -91,6 +115,10 @@
     /* justify-content: space-evenly; */
     margin: 10px 10px;
     /* gap: 20px; */
+    gap: 20px;
+  }
+  .type-text {
+    width: 240px;
   }
 }
 @media (min-width: 481px) and (max-width: 790px) {
@@ -99,5 +127,8 @@
     /* justify-content: space-evenly; */
     margin: 10px 10px;
     gap: 20px;
+  }
+  .type-text {
+    width: 240px;
   }
 }

@@ -16,7 +16,7 @@ function Vision() {
         </div>
       </div>
       <div className="vision-images">
-        <div className="vision-type">
+        <div className="vision-type type1">
           <h3>Health</h3>
           <img src={slider1} alt="" />
           <div className="type-header">
@@ -27,7 +27,7 @@ function Vision() {
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
           </div>
         </div>
-        <div className="vision-type">
+        <div className="vision-type type2">
           <h3>Education</h3>
           <img src={slider2} alt="" />
           <div className="type-header">
@@ -47,7 +47,7 @@ function Vision() {
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
           </div>
         </div>
-        <div className="vision-type">
+        <div className="vision-type type3">
           <h3>Activities</h3>
           <img src={slider1} alt="" />
           <div className="type-header">
