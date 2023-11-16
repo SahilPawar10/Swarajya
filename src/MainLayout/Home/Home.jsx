@@ -8,6 +8,7 @@ import slider3 from "../../assets/haldiKunku.jpeg";
 import About from "../Abouts_us/About";
 import Program from "../Programs/Program";
 import Vision from "../Visions/Vision";
+import Donate from "../DonateUS/Donate";
 
 function Home() {
   const revealDiv = () => {
@@ -43,7 +44,13 @@ function Home() {
                 </h1>
               </div>
               <div className="banner-btn text1">
-                <Link to="/donate" className="btn-donateUs">
+                <Link
+                  to="donateUs"
+                  smooth={true}
+                  duration={500}
+                  offset={-80}
+                  className="btn-donateUs"
+                >
                   <span className="text">DonateUs</span>
                   <span className="icon">
                     <i class="fa fa-heart icon-heart" aria-hidden="true"></i>
@@ -57,7 +64,13 @@ function Home() {
                 <h1> स्वराज्य - Empowering Through Self-Governance</h1>
               </div>
               <div className="banner-btn text2">
-                <Link to="/donate" className="btn-donateUs">
+                <Link
+                  to="donateUs"
+                  smooth={true}
+                  duration={500}
+                  offset={-80}
+                  className="btn-donateUs"
+                >
                   <span className="text">DonateUs</span>
                   <span className="icon">
                     <i class="fa fa-heart icon-heart" aria-hidden="true"></i>
@@ -73,7 +86,13 @@ function Home() {
                 </h1>
               </div>
               <div className="banner-btn text3 ">
-                <Link to="/donate" className="btn-donateUs">
+                <Link
+                  to="donateUs"
+                  smooth={true}
+                  duration={800}
+                  offset={-80}
+                  className="btn-donateUs"
+                >
                   <span className="text">DonateUs</span>
                   <span className="icon">
                     <i class="fa fa-heart icon-heart" aria-hidden="true"></i>
@@ -89,6 +108,9 @@ function Home() {
       </div>
       <div className="section4 reveal">
         <Vision />
+      </div>
+      <div className="section5 reveal">
+        <Donate />
       </div>
     </div>
   );

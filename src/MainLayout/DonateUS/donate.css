@@ -1,0 +1,128 @@
+#donateUs {
+  padding: 0;
+  box-sizing: border-box;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  background: url("../../assets/Banner-7.jpg");
+}
+
+.donate {
+  display: flex;
+  justify-content: space-around;
+  height: 95%;
+  margin-top: 30px;
+  gap: 0px;
+  width: 70%;
+  /* background-color: antiquewhite; */
+  /* background: url("../../assets/donateUS.jpg"); */
+  box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+  -webkit-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+  -moz-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+}
+
+.donate-card {
+  display: block;
+  margin: 50px 5px;
+  width: 38%;
+  background: #fdfcfc;
+}
+
+.donate-card .card-desc {
+  margin: 20px 20px 5px 20px;
+}
+
+.card-inner-text {
+  text-align: start;
+}
+.donate-form {
+  display: grid;
+  margin: 50px 5px;
+  width: 35%;
+  background: #fdfcfc;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* margin-left: -400px; */
+  margin-left: -250px;
+}
+
+.payment-form {
+  margin-top: 0px;
+  padding: 20px;
+  /* width: 350px; */
+  display: block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* background-color: aqua; */
+}
+.payment-form h2 {
+  color: #004e7e;
+  font-weight: 800 !important;
+  font-size: 50px;
+}
+.donate-card .card-image {
+  height: 47%;
+}
+.donate-card .card-image img {
+  box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+  -webkit-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+  -moz-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+}
+.donate-form-btn {
+  /* margin-top: 10px; */
+}
+
+@media (min-width: 791px) and (max-width: 1245px) {
+  .donate-card {
+    display: none;
+  }
+  .donate {
+    width: 100%;
+  }
+  .donate-form {
+    width: 70%;
+    margin-left: 0;
+    margin: 30px 5px;
+  }
+  .payment-form h2 {
+    font-size: 40px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 790px) {
+  .donate-card {
+    display: none;
+  }
+  .donate-form {
+    width: 70%;
+    margin-left: 0;
+    margin: 30px 5px;
+  }
+  .payment-form h2 {
+    font-size: 40px;
+  }
+  .donate {
+    width: 100%;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .donate {
+    width: 100%;
+  }
+  .donate-card {
+    display: none;
+  }
+
+  .donate-form {
+    width: 90%;
+    margin-left: 0;
+    margin: 30px 5px;
+  }
+  .payment-form h2 {
+    font-size: 40px;
+  }
+}
