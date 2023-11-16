@@ -1,8 +1,9 @@
 import React from "react";
 import "./vision.css";
-import slider1 from "../../assets/WhatsApp Image 2023-11-07 at 9.16.39 PM.jpeg";
-import slider2 from "../../assets/kirtan.jpeg";
-import slider3 from "../../assets/haldiKunku.jpeg";
+import slider1 from "../../assets/child-yputh.jpg";
+import slider2 from "../../assets/education.jpg";
+import slider3 from "../../assets/about-header.jpg";
+import vision4 from "../../assets/cleanlines.jpg";
 
 function Vision() {
   return (
@@ -14,6 +15,9 @@ function Vision() {
         <div className="heading2">
           <h2>Enriching Lives Since Day One</h2>
         </div>
+        <h2 style={{ margin: "50px 10px", fontSize: "50px", color: "#004e7e" }}>
+          Our Focus
+        </h2>
       </div>
       <div className="vision-images">
         <div className="vision-type type1">
@@ -49,7 +53,7 @@ function Vision() {
         </div>
         <div className="vision-type type3">
           <h3>Activities</h3>
-          <img src={slider1} alt="" />
+          <img src={vision4} alt="" />
           <div className="type-header">
             <h4> Disaster Relief 13 million people reached</h4>
           </div>

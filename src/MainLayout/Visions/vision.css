@@ -106,20 +106,22 @@
 
   /* display: contents; */
 }
-/* .vision-images img:hover ~ .vision-type .type-header {
-  display: block;
-} */
 
 @media (min-width: 320px) and (max-width: 480px) {
   .vision-images {
     display: grid;
-    /* justify-content: space-evenly; */
     margin: 10px 10px;
-    /* gap: 20px; */
     gap: 20px;
   }
   .type-text {
-    width: 240px;
+    display: none;
+  }
+  .type2,
+  .type3 {
+    top: 0;
+  }
+  .vision-images :hover ~ .type-header {
+    height: 25%;
   }
 }
 @media (min-width: 481px) and (max-width: 790px) {
@@ -130,6 +132,13 @@
     gap: 20px;
   }
   .type-text {
-    width: 240px;
+    display: none;
+  }
+  .type2,
+  .type3 {
+    top: 0;
+  }
+  .vision-images :hover ~ .type-header {
+    height: 25%;
   }
 }

@@ -178,16 +178,6 @@
   }
 }
 
-.text1 {
-  animation-delay: 0s;
-}
-
-.text2 {
-  animation-delay: 3s;
-}
-.text3 {
-  animation-delay: 9s;
-}
 @media (min-width: 320px) and (max-width: 480px) {
   .banner-text {
     width: auto;
