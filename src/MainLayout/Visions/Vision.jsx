@@ -24,7 +24,6 @@ function Vision() {
           <h3>Health</h3>
           <img src={slider1} alt="" />
           <div className="type-header">
-            {/* Education 0.32 million people reached */}
             <h4>Health 103.7 million people reached</h4>
           </div>
           <div className="type-text">

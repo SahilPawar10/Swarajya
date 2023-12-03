@@ -9,6 +9,8 @@ import About from "../Abouts_us/About";
 import Program from "../Programs/Program";
 import Vision from "../Visions/Vision";
 import Donate from "../DonateUS/Donate";
+import RecentWork from "../RecentWorks/RecentWork";
+import Footer from "../footer/Footer";
 
 function Home() {
   const revealDiv = () => {
@@ -111,6 +113,12 @@ function Home() {
       </div>
       <div className="section5 reveal">
         <Donate />
+      </div>
+      <div className="section6 reveal">
+        <RecentWork />
+      </div>
+      <div className="section7">
+        <Footer />
       </div>
     </div>
   );

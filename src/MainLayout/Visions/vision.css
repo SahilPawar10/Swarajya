@@ -127,6 +127,7 @@
 @media (min-width: 481px) and (max-width: 790px) {
   .vision-images {
     display: grid;
+
     /* justify-content: space-evenly; */
     margin: 10px 10px;
     gap: 20px;
@@ -140,5 +141,27 @@
   }
   .vision-images :hover ~ .type-header {
     height: 25%;
+  }
+}
+
+@media (min-width: 791px) and (max-width: 1152px) {
+  .vision-images {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .vision-type h3 {
+    left: 106px;
+  }
+  .type2,
+  .type3 {
+    top: 0;
+  }
+  .type-header {
+    display: none;
+  }
+  .type-text {
+    display: none;
   }
 }
