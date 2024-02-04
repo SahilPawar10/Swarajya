@@ -7,7 +7,8 @@ import slider3 from "../../assets/haldiKunku.jpeg";
 function About() {
   return (
     <div id="aboutus">
-      <h1>About Us</h1>
+      {/* <h1>About Us</h1> */}
+      <img src={slider2} alt="shiv" />
     </div>
   );
 }

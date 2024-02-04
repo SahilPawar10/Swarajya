@@ -20,21 +20,14 @@ function Navbar() {
 
   window.addEventListener("scroll", changebackground);
 
-  // const pageHeight = Math.max(
-  //   document.body.scrollHeight,
-  //   document.body.offsetHeight,
-  //   document.documentElement.clientHeight,
-  //   document.documentElement.scrollHeight,
-  //   document.documentElement.offsetHeight
-  // );
-
-  // console.log("Page Height: ", pageHeight);
-
   return (
     <div>
       <nav className={nav ? "nav-active" : "nav"}>
         <div className="logo-heading">
-          <img src={logo} alt="" />
+          <Link to="/">
+            <img src={logo} alt="" />
+          </Link>
+
           {/* <h2>स्वराज्य</h2> */}
         </div>
         <div className="menu-icon box-shadow" onClick={handleNav}>
@@ -61,7 +54,8 @@ function Navbar() {
               <a href="#"> About Us</a>
               <ul className="submenu ">
                 <li>
-                  <a href="#"> Our Mission</a>
+                  {/* <a href="#"> Our Mission</a> */}
+                  <Link to="/mission">Our Mission</Link>
                 </li>
                 <li>
                   <a href="#">Where We Work</a>

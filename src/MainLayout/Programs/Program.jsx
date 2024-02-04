@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 // import { Link } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./program.css";
@@ -9,13 +9,19 @@ import slider4 from "../../assets/WhatsApp Image 2023-11-16 at 10.59.42 AM.jpeg"
 
 function Program() {
   let counter = 1;
-  setInterval(() => {
-    document.getElementById("radio" + counter).checked = true;
-    counter++;
-    if (counter > 4) {
-      counter = 1;
-    }
-  }, 5000);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      document.getElementById("radio" + counter).checked = true;
+      counter++;
+      if (counter > 4) {
+        counter = 1;
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <div id="programs">

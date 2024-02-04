@@ -1,11 +1,18 @@
+import { RoundaboutLeftSharp } from "@mui/icons-material";
 import Home from "./MainLayout/Home/Home";
+import Mission from "./MainLayout/Abouts_us/OurMission/Mission";
 import Program from "./MainLayout/Programs/Program";
+import { Router, Routes, Route } from "react-router-dom";
+import Navbar from "./MainLayout/Navbar/Navbar";
+import Footer from "./MainLayout/footer/Footer";
 
 function App() {
   return (
     <div className="App">
-      <Home />
-      {/* <Program /> */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/mission" element={<Mission />} />
+      </Routes>
     </div>
   );
 }

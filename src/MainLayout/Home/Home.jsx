@@ -10,9 +10,10 @@ import Program from "../Programs/Program";
 import Vision from "../Visions/Vision";
 import Donate from "../DonateUS/Donate";
 import RecentWork from "../RecentWorks/RecentWork";
-import Footer from "../footer/Footer";
+// import Footer from "../footer/Footer";
+import withLayout from "../index";
 
-function Home() {
+const Home = (props) => {
   const revealDiv = () => {
     const reveals = document.querySelectorAll(".reveal");
 
@@ -31,9 +32,6 @@ function Home() {
   window.addEventListener("scroll", revealDiv);
   return (
     <div>
-      <div className="section1 ">
-        <Navbar className="navbar" />
-      </div>
       <div className="section2 ">
         <div className="home">
           <div className="container">
@@ -117,11 +115,10 @@ function Home() {
       <div className="section6 reveal">
         <RecentWork />
       </div>
-      <div className="section7">
-        <Footer />
-      </div>
+      <div className="section7">{/* <Footer /> */}</div>
     </div>
   );
-}
+};
 
-export default Home;
+// export default Home;
+export default withLayout(Home);
