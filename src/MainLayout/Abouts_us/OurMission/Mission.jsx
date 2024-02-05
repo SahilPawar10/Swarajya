@@ -5,17 +5,37 @@ import missionBanner from "../../../assets/visionmission_banner.jpg";
 
 const Mission = () => {
   return (
-    <div style={{ backgroundColor: "orange" }}>
+    <div className="mission-section">
       <div className="mission-banner">
         <img src={missionBanner} alt="" />
+        <div className="front-view-container">
+          <div className="row">
+            <div className="insider-header">
+              <div className="front-view-inside">
+                <div className="small-nav">
+                  <p> Home > Who we are > Vision and Mission</p>
+                </div>
+                <div className="misson-header">
+                  <div className="mision-header-text">
+                    <h4>Vision and Mission</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="front-view">
-        <div className="small-nav">Home > Who we are > Vision and Mission</div>
-        <div className="misson-header-text">Vision and Mission</div>
+      <div className="mission-desc-container">
+        <div className="row">
+          <div className="insider">
+            <div className="mission-desc-text">
+              <div className="heading">dsjsb</div>
+              <div className="heading-text">abahbk</div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div className="desc-about-mission">small Description of mission</div>
       <div className="table-bg">background of table (image)</div>
       <div className="table">Table with information</div>
       <div className="swarajy-diff">Our Difference</div>

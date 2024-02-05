@@ -1,8 +1,73 @@
-.front-view {
-  /* width: 50%; */
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  justify-items: center;
+.mission-banner {
+  position: relative;
+}
+
+.front-view-container {
+  width: 100%;
+  position: absolute;
+  bottom: -25px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.front-view-container .row {
   display: flex;
+  flex-wrap: wrap;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.insider-header {
+  padding-left: 15px;
+  width: 100%;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+
+.misson-header {
+  background: url("../../../assets/texture-bg.jpg");
+  height: 100px;
+}
+
+.mision-header-text {
+  display: flex;
+  padding: 25px;
+}
+
+.small-nav p {
+  margin: 0px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: white;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  font-family: "Fira Sans Condensed", sans-serif;
+  background-color: rgb(22, 20, 20);
+}
+
+.mision-header-text h4 {
+  font-size: 40px;
+  font-weight: 900;
+  font-family: "Fira Sans Condensed", sans-serif;
+  color: #333;
+}
+
+.mission-desc-container {
+  margin-top: 80px;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+
+.mission-desc-container .row {
+  display: flex;
+  flex-wrap: wrap;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.insider {
+  padding-right: 25px;
+  padding-left: 25px;
 }
