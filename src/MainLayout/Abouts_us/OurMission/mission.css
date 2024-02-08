@@ -71,3 +71,46 @@
   padding-right: 25px;
   padding-left: 25px;
 }
+
+.mission-desc-text {
+  display: flex;
+  gap: 200px;
+  justify-content: center;
+  align-items: center;
+  margin-left: 60px;
+}
+
+.col-main {
+  width: 400px;
+}
+
+.heading {
+  font-size: 30px;
+  text-align: center;
+  font-family: "Fira Sans Condensed", sans-serif !important;
+  font-weight: 900 !important;
+  font-size: 2.3rem;
+  color: #004e7e;
+  line-height: 1.2;
+}
+
+.heading-text {
+  padding: 10px;
+}
+.heading-text p {
+  text-align: center;
+  font-family: "Merriweather", serif !important;
+  font-size: 18px;
+  font-weight: 600;
+  /* line-height: 1.8; */
+  color: #333;
+}
+
+.table-bg {
+  width: 20%;
+  transform: rotate(90deg);
+  margin: -130px auto -214px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

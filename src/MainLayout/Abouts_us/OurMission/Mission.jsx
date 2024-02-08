@@ -2,6 +2,7 @@ import React from "react";
 import withLayout from "../..";
 import "./mission.css";
 import missionBanner from "../../../assets/visionmission_banner.jpg";
+import tablebg from "../../../assets/cirle-motiff.svg";
 
 const Mission = () => {
   return (
@@ -30,13 +31,33 @@ const Mission = () => {
         <div className="row">
           <div className="insider">
             <div className="mission-desc-text">
-              <div className="heading">dsjsb</div>
-              <div className="heading-text">abahbk</div>
+              <div className="col-main">
+                <div className="heading">Our Vision</div>
+                <div className="heading-text">
+                  <p>
+                    We seek a world of hope that is inclusive and just, where
+                    all people live in dignity and security.
+                  </p>
+                </div>
+              </div>
+              <div className="col-main">
+                <div className="heading">Our Vision</div>
+                <div className="heading-text">
+                  <p>
+                    We seek a world of hope that is inclusive and just, where
+                    all people live in dignity and security.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="table-bg">background of table (image)</div>
+      <div className="table-bg">
+        <img src={tablebg} alt="" />
+
+        {/* <h1>Welcome</h1> */}
+      </div>
       <div className="table">Table with information</div>
       <div className="swarajy-diff">Our Difference</div>
       <div className="mission-programs">Mission Programs</div>
