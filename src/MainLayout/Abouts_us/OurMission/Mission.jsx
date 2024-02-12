@@ -58,7 +58,55 @@ const Mission = () => {
 
         {/* <h1>Welcome</h1> */}
       </div>
-      <div className="table">Table with information</div>
+      <div className="table-container">
+        <div className="table-inner">
+          <table></table>
+          <thead>
+            <tr>
+              <th>Thematic Goals</th>
+              <th>
+                <table>
+                  <tbody>
+                    <tr>Vertical Technical Focus</tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tbody>
+                </table>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <table>
+                  <tbody>
+                    <tr>1</tr>
+                    <tr>3</tr>
+                    <tr>5</tr>
+                    <tr>7</tr>
+                    <tr>9</tr>
+                    <tr>0</tr>
+                  </tbody>
+                </table>
+              </td>
+              <td>
+                <table>
+                  <tbody>
+                    <tr>1</tr>
+                    <tr>2</tr>
+                    <tr>4</tr>
+                    <tr>6</tr>
+                    <tr>8</tr>
+                    <tr>0</tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </div>
+      </div>
       <div className="swarajy-diff">Our Difference</div>
       <div className="mission-programs">Mission Programs</div>
       <div className="mission-image-with-text">Mission Image with text</div>
