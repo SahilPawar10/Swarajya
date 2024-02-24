@@ -109,8 +109,126 @@
 .table-bg {
   width: 20%;
   transform: rotate(90deg);
-  margin: -130px auto -214px auto;
+  margin: -130px auto -145px auto;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.table-container {
+  position: relative;
+  height: 600px;
+}
+
+.actual-table {
+  position: absolute;
+  top: -13.5px;
+  left: 15%;
+  padding: 5px;
+  width: 70%;
+}
+.table-inner {
+  width: 100%;
+  padding: 10px;
+}
+.t-head {
+  background-color: #004e7e;
+  height: 140px;
+  color: #fff;
+}
+
+.left-th {
+  width: 40%;
+  padding-left: 10px;
+  text-align: left;
+  border-right: 1px solid white;
+}
+
+.right-th {
+  text-align: center;
+}
+
+.right-th-table {
+  width: 100%;
+  margin-bottom: -32px;
+  margin-left: 0;
+  border-top: 1px solid white;
+}
+
+.right-th h6 {
+  font-size: 20px;
+}
+
+.right-th-tr :last-child {
+  border: none;
+}
+
+.right-th-tr-th {
+  /* width: 25%; */
+  padding: 30px 10px 20px 10px;
+  border-right: 1px solid white;
+  text-align: center;
+}
+
+.right-th table tbody {
+  margin: 0;
+}
+
+.table-rows {
+  width: 100%;
+}
+
+.table-rows-tr td {
+  padding: 10px;
+}
+
+.table-rows-1 {
+  background-color: #f0f0f0;
+  border: 1px solid gainsboro;
+  margin: 0%;
+}
+.table-rows-tr {
+  border: 1px solid gainsboro;
+  /* margin: 0; */
+  height: 50px;
+  padding-left: 10px !important;
+}
+
+.table-rows-right {
+  width: 100%;
+  margin: 0;
+}
+.table-rows-right-tr {
+  /* background-color: #004e7e; */
+  width: 100%;
+  height: 50px;
+}
+
+.table-rows-right-tr td {
+  border: 1px solid gainsboro;
+}
+
+.table-rows-right-tr .box1 {
+  /* background-color: #333; */
+  width: 7.4rem;
+  border-left: 0;
+}
+
+.table-rows-right-tr .box2,
+.box3 {
+  width: 10.4rem;
+}
+
+.check-icon {
+  text-align: center;
+  color: red;
+  background-color: #f0f0f0;
+}
+
+.border-0 {
+  border: 0 !important;
 }

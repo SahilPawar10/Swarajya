@@ -60,51 +60,160 @@ const Mission = () => {
       </div>
       <div className="table-container">
         <div className="table-inner">
-          <table></table>
-          <thead>
-            <tr>
-              <th>Thematic Goals</th>
-              <th>
-                <table>
-                  <tbody>
-                    <tr>Vertical Technical Focus</tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                  </tbody>
-                </table>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <table>
-                  <tbody>
-                    <tr>1</tr>
-                    <tr>3</tr>
-                    <tr>5</tr>
-                    <tr>7</tr>
-                    <tr>9</tr>
-                    <tr>0</tr>
-                  </tbody>
-                </table>
-              </td>
-              <td>
-                <table>
-                  <tbody>
-                    <tr>1</tr>
-                    <tr>2</tr>
-                    <tr>4</tr>
-                    <tr>6</tr>
-                    <tr>8</tr>
-                    <tr>0</tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
+          <table className="actual-table">
+            <thead className="t-head">
+              <tr>
+                <th className="left-th">Thematic Goals</th>
+                <th className="right-th">
+                  <h6> Vertical Technical Focus</h6>
+                  <table className="right-th-table">
+                    <tbody>
+                      <tr className="right-th-tr">
+                        <th className="right-th-tr-th">Health</th>
+                        <th className="right-th-tr-th">Livelihood</th>
+                        <th className="right-th-tr-th">Education</th>
+                        <th className="right-th-tr-th">Community</th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="table-rows-1">
+                  <table className="table-rows">
+                    <tbody>
+                      <tr className="table-rows-tr">
+                        <td className="border-0">
+                          {" "}
+                          Humanitarian action (SDG 11)
+                        </td>
+                      </tr>
+                      <tr className="table-rows-tr">
+                        <td className="border-0">
+                          {" "}
+                          Quality healthcare (SDG 3)
+                        </td>
+                      </tr>
+                      <tr className="table-rows-tr">
+                        <td className="border-0">
+                          Quality and inclusive education (SDG 4)
+                        </td>
+                      </tr>
+                      <tr className="table-rows-tr">
+                        <td className="border-0">
+                          Decent work and economic growth (SDG 8)
+                        </td>
+                      </tr>
+                      <tr className="table-rows-tr">
+                        <td className="border-0">
+                          Adequate food and nutrition (SDG 2)
+                        </td>
+                      </tr>
+                      <tr className="table-rows-tr">
+                        <td className="border-0">
+                          Clean water and sanitation (SDG 6)
+                        </td>
+                      </tr>
+                      <tr className="table-rows-tr">
+                        <td className="border-0">
+                          Clean energy, climate resilience (SDG 7, 13)
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td>
+                  <table className="table-rows-right">
+                    <tbody>
+                      <tr className="table-rows-right-tr">
+                        <td className="box1"></td>
+                        <td className="box"></td>
+                        <td className="box"></td>
+                        <td className="box check-icon">
+                          <i class="fa fa-check" aria-hidden="true"></i>{" "}
+                        </td>
+                      </tr>
+                      <tr className="table-rows-right-tr">
+                        <td className="box1 check-icon">
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                        <td className="box"></td>
+                        <td className="box"></td>
+                        <td className="box"> </td>
+                      </tr>
+                      <tr className="table-rows-right-tr">
+                        <td className="box1"></td>
+                        <td className="box"></td>
+                        <td className="box check-icon">
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                        <td className="box"> </td>
+                      </tr>
+                      <tr className="table-rows-right-tr">
+                        <td className="box1"></td>
+                        <td className="box2 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                        <td className="box3"></td>
+                        <td className="box4"> </td>
+                      </tr>
+                      <tr className="table-rows-right-tr">
+                        <td className="box1 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                        <td className="box2 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                        <td className="box3 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                        <td className="box4 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>{" "}
+                        </td>
+                      </tr>
+                      <tr className="table-rows-right-tr">
+                        <td className="box1 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                        <td className="box2 check-icon">
+                          {" "}
+                          <i
+                            class="fa fa-check check-icon"
+                            aria-hidden="true"
+                          ></i>
+                        </td>
+                        <td className="box3"></td>
+                        <td className="box4 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>{" "}
+                        </td>
+                      </tr>
+                      <tr className="table-rows-right-tr">
+                        <td className="box1"></td>
+                        <td className="box2 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                        <td className="box3"></td>
+                        <td className="box4 check-icon">
+                          {" "}
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div className="swarajy-diff">Our Difference</div>
