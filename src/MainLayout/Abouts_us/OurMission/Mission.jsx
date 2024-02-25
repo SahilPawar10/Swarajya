@@ -3,6 +3,9 @@ import withLayout from "../..";
 import "./mission.css";
 import missionBanner from "../../../assets/visionmission_banner.jpg";
 import tablebg from "../../../assets/cirle-motiff.svg";
+import indivisual from "../../../assets/Individuals-01.svg";
+import relationship from "../../../assets/Relationships-01.svg";
+import system from "../../../assets/Systems-01.svg";
 
 const Mission = () => {
   return (
@@ -244,8 +247,100 @@ const Mission = () => {
         </div>
       </div>
       {/* ....................................Mission Programms ............................ */}
-      <div className="mission-programs-container">Mission Programs</div>
-      <div className="mission-image-with-text">Mission Image with text</div>
+      <div className="mission-programs-container">
+        <div className="miss-progr-inner">
+          <div className="miss-progr-heading">
+            <h2>
+              Our programmes aim to amplify and channel the dialogue on <br />
+              marginalised women and girls in India.
+            </h2>
+          </div>
+          <div className="miss-progr-level-heading">
+            <p>
+              CARE believes that lasting impact at scale can be achieved at
+              three important levels –
+            </p>
+          </div>
+          <div className="miss-progr-levels">
+            <div className="program-levels">
+              <div className="program-icon">
+                <img src={indivisual} alt="" />
+              </div>
+              <div className="program-content">
+                <h2>Individuals</h2>
+                <p>
+                  Elevating their confidence, self-esteem, aspirations, and
+                  overall consciousness to change their circumstances, by
+                  imparting them the right knowledge, skills, and resources.
+                </p>
+              </div>
+            </div>
+
+            <div className="program-levels">
+              <div className="program-icon">
+                <img src={relationship} alt="" />
+              </div>
+              <div className="program-content">
+                <h2>Systems</h2>
+                <p>
+                  Securing social investments by the government and corporate
+                  bodies, which enables us to multiply impact at scale and
+                  realise our goals at a faster pace.
+                </p>
+              </div>
+            </div>
+
+            <div className="program-levels">
+              <div className="program-icon">
+                <img src={system} alt="" />
+              </div>
+              <div className="program-content">
+                <h2>Relationships</h2>
+                <p>
+                  Address and alleviate the inequality that persists within
+                  intimate relationships, family and social networks, community,
+                  and economic spaces.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ....................................Mission Image Last Image  ............................ */}
+      <div className="mission-image-last">
+        <div className="mission-image-last-background section-background-block"></div>
+        <div className="mission-image-last-content">
+          <div className="row-last-img">
+            <div className="col-last-img">
+              <div className="content-last-img">
+                <p>
+                  We plan to achieve our goals by leveraging the following
+                  strategies -
+                </p>
+                <ul>
+                  <li>
+                    Leveraging information, communication and technology (ICT)
+                    to improve our programme depth and diversity
+                  </li>
+                  <li>Bringing gender transformative change</li>
+                  <li>
+                    Partnering with Government and Corporate Systems to bring
+                    change at scale
+                  </li>
+                  <li>
+                    Innovative and evidence-based campaigns to eliminate the
+                    root causes of poverty
+                  </li>
+                  <li>
+                    Impact driven approach to reach the maximum number of people
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
