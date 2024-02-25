@@ -57,6 +57,8 @@ const Mission = () => {
         <img src={tablebg} alt="" />
 
         {/* <h1>Welcome</h1> */}
+
+        {/* ....................................Table ............................ */}
       </div>
       <div className="table-container">
         <div className="table-inner">
@@ -93,7 +95,7 @@ const Mission = () => {
                       <tr className="table-rows-tr">
                         <td className="border-0">
                           {" "}
-                          Quality healthcare (SDG 3)
+                          Quality healthSWARAJYA (SDG 3)
                         </td>
                       </tr>
                       <tr className="table-rows-tr">
@@ -216,8 +218,33 @@ const Mission = () => {
           </table>
         </div>
       </div>
-      <div className="swarajy-diff">Our Difference</div>
-      <div className="mission-programs">Mission Programs</div>
+
+      {/* ....................................Our Difference ............................ */}
+      <div className="swarajy-diff-container">
+        <div className="diff-background-img section-background-block"></div>
+        <div className="diff-text-box">
+          <div className="diff-text-row">
+            <h2 className="padding-20"> The SWARAJYA Difference</h2>
+            <p className="padding-20">
+              SWARAJYA focuses on large scale interventions that build
+              communities that are capable of empowering women and girls.
+            </p>
+            <p className="padding-20">
+              Women have long-endured familial, communal, societal, and economic
+              discrimination. We put women and girls at the heart of all our
+              work because we know that we cannot overcome poverty without
+              fighting inequality. In a just and inclusive world, each
+              individual must have equal rights and opportunities.
+            </p>
+            <p className="last-text-diff padding-20">
+              When we invest in women and girls, we invest in strengthening
+              their families and communities.
+            </p>
+          </div>
+        </div>
+      </div>
+      {/* ....................................Mission Programms ............................ */}
+      <div className="mission-programs-container">Mission Programs</div>
       <div className="mission-image-with-text">Mission Image with text</div>
     </div>
   );
