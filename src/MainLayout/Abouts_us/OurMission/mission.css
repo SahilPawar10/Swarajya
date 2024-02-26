@@ -2,9 +2,14 @@
   position: relative;
 }
 
+.mob-img {
+  display: none;
+}
+
 .front-view-container {
   width: 100%;
   position: absolute;
+  top: 80%;
   bottom: -25px;
   padding-right: 15px;
   padding-left: 15px;
@@ -455,4 +460,87 @@ table {
   font-size: 1.3rem;
   font-family: "Merriweather", serif !important;
   padding-bottom: 5px;
+  list-style: disc !important;
+}
+
+/*..................................... mobile view........................................... */
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .mission-banner-img {
+    display: none;
+  }
+  .mob-img {
+    display: inline;
+    /* width: 140%; */
+  }
+
+  .front-view-container .row {
+    display: inline-block;
+  }
+  .insider-header {
+    margin-left: 0px;
+    padding-left: 0;
+  }
+  .small-nav {
+    display: none;
+  }
+  .mision-header-text h4 {
+    font-size: 27px;
+  }
+
+  .table-bg {
+    display: none;
+  }
+
+  .table-container {
+    display: none;
+  }
+
+  .mission-desc-text {
+    display: block;
+    margin-left: 0;
+  }
+
+  .mission-desc-container {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 45px;
+  }
+
+  .insider {
+    padding: 0;
+  }
+  .col-main {
+    width: 100%;
+  }
+  .mission-programs-container {
+    height: 100%;
+  }
+  .miss-progr-levels {
+    display: inline-block;
+  }
+
+  .mission-image-last:before {
+    width: 100%;
+  }
+  .col-last-img {
+    max-width: 100%;
+  }
+}
+
+/* ------------------------------------------tab-view---------------------------------- */
+@media (min-width: 481px) and (max-width: 790px) {
+  .mission-banner-img {
+    display: none;
+  }
+  .mob-img {
+    display: inline;
+    /* width: 140%; */
+  }
+  .front-view-container {
+    top: 78%;
+  }
+  .front-view-container .row {
+    display: contents;
+  }
 }

@@ -2,6 +2,7 @@ import React from "react";
 import withLayout from "../..";
 import "./mission.css";
 import missionBanner from "../../../assets/visionmission_banner.jpg";
+import missionBanner_mob from "../../../assets/visionmission_banner-mob.jpg";
 import tablebg from "../../../assets/cirle-motiff.svg";
 import indivisual from "../../../assets/Individuals-01.svg";
 import relationship from "../../../assets/Relationships-01.svg";
@@ -11,7 +12,10 @@ const Mission = () => {
   return (
     <div className="mission-section">
       <div className="mission-banner">
-        <img src={missionBanner} alt="" />
+        <div className="mission-banner-img">
+          <img src={missionBanner} alt="" />
+        </div>
+        <img src={missionBanner_mob} alt="" className="mob-img" />
         <div className="front-view-container">
           <div className="row">
             <div className="insider-header">
