@@ -55,7 +55,7 @@
 .mision-header-text h4 {
   font-size: 40px;
   font-weight: 900;
-  font-family: "Fira Sans Condensed", sans-serif;
+  /* font-family: "Fira Sans Condensed", sans-serif; */
   color: #333;
 }
 
@@ -92,7 +92,7 @@
 .heading {
   font-size: 30px;
   text-align: center;
-  font-family: "Fira Sans Condensed", sans-serif !important;
+  /* font-family: "Fira Sans Condensed", sans-serif !important; */
   font-weight: 900 !important;
   font-size: 2.3rem;
   color: #004e7e;
@@ -104,9 +104,9 @@
 }
 .heading-text p {
   text-align: center;
-  font-family: "Merriweather", serif !important;
+  /* font-family: "Merriweather", serif !important; */
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
   /* line-height: 1.8; */
   color: #333;
 }
@@ -303,7 +303,7 @@ table {
 .diff-text-row h2 {
   font-weight: 700;
   font-size: 2.3rem;
-  font-family: "Merriweather", serif !important;
+  /* font-family: "Merriweather", serif !important; */
 }
 
 .diff-text-row p {
@@ -385,7 +385,7 @@ table {
 
 .program-content h2 {
   font-weight: 800;
-  font-family: "Fira Sans Condensed", sans-serif !important;
+  /* font-family: "Fira Sans Condensed", sans-serif !important; */
   font-size: 1.7rem;
   color: #333;
 }
@@ -485,7 +485,9 @@ table {
     display: none;
   }
   .mision-header-text h4 {
-    font-size: 27px;
+    font-size: 37px;
+    font-family: serif;
+    font-weight: bold;
   }
 
   .table-bg {
