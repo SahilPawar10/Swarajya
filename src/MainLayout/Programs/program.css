@@ -234,10 +234,6 @@ circle:nth-child(2) {
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
-  #aboutus {
-    margin-top: 50px;
-    /* height: 60vh; */
-  }
   .slider {
     margin: 10px 10px;
 
@@ -269,10 +265,6 @@ circle:nth-child(2) {
 }
 
 @media (min-width: 481px) and (max-width: 790px) {
-  #aboutus {
-    margin-top: 50px;
-    /* height: 60vh; */
-  }
   .slider {
     margin: 10px 10px;
 

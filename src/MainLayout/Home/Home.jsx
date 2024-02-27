@@ -5,7 +5,7 @@ import Navbar from "../Navbar/Navbar";
 import slider1 from "../../assets/Banner-7.jpg";
 import slider2 from "../../assets/Banner-6.jpg";
 import slider3 from "../../assets/haldiKunku.jpeg";
-import About from "../Abouts_us/About";
+
 import Program from "../Programs/Program";
 import Vision from "../Visions/Vision";
 import Donate from "../DonateUS/Donate";

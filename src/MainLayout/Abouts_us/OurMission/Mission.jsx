@@ -7,11 +7,12 @@ import tablebg from "../../../assets/cirle-motiff.svg";
 import indivisual from "../../../assets/Individuals-01.svg";
 import relationship from "../../../assets/Relationships-01.svg";
 import system from "../../../assets/Systems-01.svg";
+import Banner from "../../Components/Banner";
 
 const Mission = () => {
   return (
     <div className="mission-section">
-      <div className="mission-banner">
+      {/* <div className="mission-banner">
         <div className="mission-banner-img">
           <img src={missionBanner} alt="" />
         </div>
@@ -32,8 +33,13 @@ const Mission = () => {
             </div>
           </div>
         </div>
-      </div>
-
+      </div> */}
+      <Banner
+        image={missionBanner}
+        mob_image={missionBanner_mob}
+        submenu1={"About Us"}
+        submenu2={"Vision & Mission "}
+      />
       <div className="mission-desc-container">
         <div className="row">
           <div className="insider">

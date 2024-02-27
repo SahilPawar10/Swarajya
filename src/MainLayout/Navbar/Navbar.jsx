@@ -57,8 +57,9 @@ function Navbar() {
                   {/* <a href="#"> Our Mission</a> */}
                   <Link to="/mission">Our Mission</Link>
                 </li>
+                {/* /about */}
                 <li>
-                  <a href="#">Where We Work</a>
+                  <Link to="/about">About Us</Link>
                 </li>
                 <li>
                   <a href="#">Our Team</a>

@@ -1,0 +1,98 @@
+.mob-img {
+  display: none;
+}
+
+.front-view-container {
+  width: 100%;
+  position: absolute;
+  top: 80%;
+  bottom: -25px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.front-view-container .row {
+  display: flex;
+  flex-wrap: wrap;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.insider-header {
+  padding-left: 15px;
+  width: 100%;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+
+.misson-header {
+  background: url("../../assets/texture-bg.jpg");
+  height: 100px;
+}
+
+.mision-header-text {
+  display: flex;
+  padding: 25px;
+}
+
+.small-nav p {
+  margin: 0px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: white;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  font-family: "Fira Sans Condensed", sans-serif;
+  background-color: rgb(22, 20, 20);
+}
+
+.mision-header-text h4 {
+  font-size: 40px;
+  font-weight: 900;
+  /* font-family: "Fira Sans Condensed", sans-serif; */
+  color: #333;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .mission-banner-img {
+    display: none;
+  }
+  .mob-img {
+    display: inline;
+    /* width: 140%; */
+  }
+
+  .front-view-container .row {
+    display: inline-block;
+  }
+  .insider-header {
+    margin-left: 0px;
+    padding-left: 0;
+  }
+  .small-nav {
+    display: none;
+  }
+  .mision-header-text h4 {
+    font-size: 37px;
+    font-family: serif;
+    font-weight: bold;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 790px) {
+  .mission-banner-img {
+    display: none;
+  }
+  .mob-img {
+    display: inline;
+    /* width: 140%; */
+  }
+  .front-view-container {
+    top: 78%;
+  }
+  .front-view-container .row {
+    display: contents;
+  }
+}
