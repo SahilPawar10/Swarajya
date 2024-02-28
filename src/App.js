@@ -6,6 +6,12 @@ import { Router, Routes, Route } from "react-router-dom";
 import Navbar from "./MainLayout/Navbar/Navbar";
 import Footer from "./MainLayout/footer/Footer";
 import About from "./MainLayout/Abouts_us/About_Us/About";
+import Team from "./MainLayout/Abouts_us/Our_Team/Team";
+import Belief from "./MainLayout/Abouts_us/Our_Belief/Belief";
+import Jayanti from "./MainLayout/Our_Work/ShivJayanti/Jayanti";
+import Health from "./MainLayout/Our_Work/Health/Health";
+import Work from "./MainLayout/Our_Work/Work/Work";
+import Get_Involved from "./MainLayout/Get_Involved/Get_Involved";
 
 function App() {
   return (
@@ -14,6 +20,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/mission" element={<Mission />} />
         <Route path="/about" element={<About />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/belief" element={<Belief />} />
+        <Route path="/jayanti" element={<Jayanti />} />
+        <Route path="/health" element={<Health />} />
+        <Route path="/work" element={<Work />} />
+        <Route path="/involve" element={<Get_Involved />} />
       </Routes>
     </div>
   );

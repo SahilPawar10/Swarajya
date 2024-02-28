@@ -62,10 +62,10 @@ function Navbar() {
                   <Link to="/about">About Us</Link>
                 </li>
                 <li>
-                  <a href="#">Our Team</a>
+                  <Link to="/team">Our Team</Link>
                 </li>
                 <li>
-                  <a href="#">Our Beliefs</a>
+                  <Link to="/belief">Our Belief</Link>
                 </li>
               </ul>
             </li>
@@ -73,18 +73,18 @@ function Navbar() {
               <a href="#">Our Work</a>
               <ul className="submenu">
                 <li>
-                  <a href="#">ShivJayanti</a>
+                  <Link to="/jayanti">ShivJayanti</Link>
                 </li>
                 <li>
-                  <a href="#">Health</a>
+                  <Link to="/health">Health</Link>
                 </li>
                 <li>
-                  <a href="#">Our Work</a>
+                  <Link to="/work">Our Work</Link>
                 </li>
               </ul>
             </li>
             <li>
-              <a href="#">Get Involved</a>
+              <Link to="/involve">Get Involved</Link>
             </li>
             <li>
               <a href="#">Login</a>

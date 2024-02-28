@@ -64,6 +64,10 @@
     /* width: 140%; */
   }
 
+  .front-view-container {
+    top: 75%;
+  }
+
   .front-view-container .row {
     display: inline-block;
   }
