@@ -68,11 +68,10 @@ const Mission = () => {
       </div>
       <div className="table-bg">
         <img src={tablebg} alt="" />
-
-        {/* <h1>Welcome</h1> */}
-
-        {/* ....................................Table ............................ */}
       </div>
+
+      {/* ....................................Table ............................ */}
+
       <div className="table-container">
         <div className="table-inner">
           <table className="actual-table">

@@ -224,7 +224,7 @@ table {
 }
 
 .diff-text-box {
-  display: flex;
+  /* display: flex; */
 
   max-width: 1240px;
   padding-right: 15px;
