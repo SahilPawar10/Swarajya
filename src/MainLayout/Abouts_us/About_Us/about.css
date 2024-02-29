@@ -77,6 +77,7 @@
 
 .about-us-values {
   position: relative;
+  height: 100vh;
 }
 .div-mid-header {
   text-align: center;
@@ -95,6 +96,7 @@
 }
 .width25 {
   width: 30% !important;
+  z-index: 1;
 }
 .div-mid-header-mob {
   display: none;
@@ -102,21 +104,40 @@
 
 .values-row {
   display: flex;
+  gap: 10px;
+  margin: 0 50px 0 50px;
 }
 
 .values-row .values {
   text-align: center;
+  flex: 1;
 }
 
 .values img {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
+  background-color: aliceblue;
+  padding: 15px;
 }
 
+.values h2 {
+  margin: 15px auto 15px auto;
+}
+.values p {
+  margin: 15px auto 15px auto;
+}
 .core-val-about {
-  /* position: absolute; */
-  /* top: 67%; */
+  position: absolute;
+  top: 67%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.core-val-about .row {
+  margin-right: 60px;
+  margin-left: 60px;
+  z-index: 1;
 }
 @media (min-width: 320px) and (max-width: 480px) {
   .about-us-container {

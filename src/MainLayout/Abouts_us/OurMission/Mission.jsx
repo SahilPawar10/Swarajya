@@ -38,7 +38,7 @@ const Mission = () => {
         image={missionBanner}
         mob_image={missionBanner_mob}
         submenu1={"About Us"}
-        submenu2={"Vision & Mission "}
+        submenu2={"Our Mission"}
       />
       <div className="mission-desc-container">
         <div className="row">
