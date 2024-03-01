@@ -7,6 +7,9 @@ import aboutBanner from "../../../assets/about-banner.jpg";
 import aboutBanne_Mob from "../../../assets/about-banner_mob.jpg";
 import tablebg from "../../../assets/cirle-motiff.svg";
 import respectIcon from "../../../assets/respect-icon.svg";
+import intigrityIcon from "../../../assets/integrity-icon.svg";
+import commitmentIcon from "../../../assets/commitment-icon.svg";
+import excellenceIcon from "../../../assets/excellence-icon.svg";
 
 function About() {
   return (
@@ -89,22 +92,34 @@ function About() {
           <div className="row">
             <div className="values-row">
               <div className="values">
-                <img src={respectIcon} alt="" />
+                <div className="image">
+                  <img className="vals-img" src={respectIcon} alt="" />
+                </div>
+
                 <h2>Respect</h2>
                 <p>Upholding the dignity of each individual</p>
               </div>
               <div className="values">
-                <img src={respectIcon} alt="" />
+                <div className="image">
+                  <img className="vals-img" src={intigrityIcon} alt="" />
+                </div>
+
                 <h2>Integrity</h2>
                 <p>Adhering to an ethical code of conduct in all actions</p>
               </div>
               <div className="values">
-                <img src={respectIcon} alt="" />
+                <div className="image">
+                  <img className="vals-img" src={commitmentIcon} alt="" />
+                </div>
+
                 <h2>Commitment</h2>
                 <p>Fulfilling our duties and social responsibilities</p>
               </div>
               <div className="values">
-                <img src={respectIcon} alt="" />
+                <div className="image">
+                  <img className="vals-img" src={excellenceIcon} alt="" />
+                </div>
+
                 <h2>Excellence</h2>
                 <p>
                   Setting high performance standards and being accountable to

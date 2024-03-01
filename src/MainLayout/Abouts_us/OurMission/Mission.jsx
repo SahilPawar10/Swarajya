@@ -12,28 +12,6 @@ import Banner from "../../Components/Banner";
 const Mission = () => {
   return (
     <div className="mission-section">
-      {/* <div className="mission-banner">
-        <div className="mission-banner-img">
-          <img src={missionBanner} alt="" />
-        </div>
-        <img src={missionBanner_mob} alt="" className="mob-img" />
-        <div className="front-view-container">
-          <div className="row">
-            <div className="insider-header">
-              <div className="front-view-inside">
-                <div className="small-nav">
-                  <p> Home > Who we are > Vision and Mission</p>
-                </div>
-                <div className="misson-header">
-                  <div className="mision-header-text">
-                    <h4>Vision and Mission</h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <Banner
         image={missionBanner}
         mob_image={missionBanner_mob}
@@ -45,7 +23,7 @@ const Mission = () => {
           <div className="insider">
             <div className="mission-desc-text">
               <div className="col-main">
-                <div className="heading">Our Vision</div>
+                <div className="heading">Our Mission</div>
                 <div className="heading-text">
                   <p>
                     We seek a world of hope that is inclusive and just, where
@@ -57,8 +35,7 @@ const Mission = () => {
                 <div className="heading">Our Vision</div>
                 <div className="heading-text">
                   <p>
-                    We seek a world of hope that is inclusive and just, where
-                    all people live in dignity and security.
+                    To save lives, enable social protection and defeat poverty.
                   </p>
                 </div>
               </div>
