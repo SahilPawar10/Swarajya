@@ -34,7 +34,7 @@ const teamData = [
   {
     id: "4",
     image: member6,
-    name: "Ajit Kadamr",
+    name: "Ajit Kadam",
     role: "Director",
   },
   {
@@ -73,13 +73,13 @@ function Team() {
               className={!Active ? "active-team" : "notActive"}
               onClick={handleTeam}
             >
-              Board Members
+              <span>Board Members</span>
             </li>
             <li
               className={Active ? "active-team" : "notActive"}
               onClick={handleTeam}
             >
-              Management Members
+              <span>Management Team</span>
             </li>
           </ul>
         </div>
