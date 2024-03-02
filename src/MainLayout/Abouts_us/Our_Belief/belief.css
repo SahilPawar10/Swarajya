@@ -1,0 +1,46 @@
+.belief-heading h2 {
+  text-align: center;
+  font-weight: 800;
+  font-size: 40px;
+  margin: 15px auto 15px auto;
+  font-family: "Quicksand", sans-serif !important;
+  line-height: 50px;
+  margin-bottom: 30px;
+  color: rgb(0, 78, 126);
+}
+
+.belief-content h2 {
+  text-align: center;
+  font-weight: 800;
+
+  font-family: "Quicksand", sans-serif !important;
+  line-height: 50px;
+  margin-bottom: 30px;
+  color: rgb(0, 78, 126);
+}
+
+.beliefs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
+}
+
+.beliefs-img {
+  text-align: center;
+}
+.beliefs-img img {
+  width: 150px;
+  height: 150px;
+  padding: 30px;
+}
+
+.beliefs-desc {
+  padding: 5px;
+}
+.beliefs-desc p {
+  text-align: center;
+  font-size: larger;
+  font-family: Poppins, sans-serif;
+  color: #504e70;
+  font-weight: 500;
+}
