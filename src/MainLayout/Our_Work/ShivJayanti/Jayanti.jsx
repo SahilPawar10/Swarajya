@@ -29,12 +29,12 @@ function Jayanti() {
 
     nextButton.addEventListener("click", () => {
       console.log("nextClicked");
-      scrollContainer.scrollLeft += 350;
+      scrollContainer.scrollLeft += 370;
     });
 
     backButton.addEventListener("click", () => {
       console.log("backClicked");
-      scrollContainer.scrollLeft -= 350;
+      scrollContainer.scrollLeft -= 370;
     });
   }, []);
 
