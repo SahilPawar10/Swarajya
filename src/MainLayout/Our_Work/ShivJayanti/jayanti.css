@@ -155,7 +155,67 @@
   padding: 5px 15px;
   font-family: "Fira Sans Condensed", sans-serif;
   font-weight: 700;
+  padding: 10px;
 }
+/* ----------------------------------------------------------Gallery----------------------------------------------- */
+
+.jayanti-Gallery {
+  background: url("../../../assets/grey-bg-pattern.png");
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.gallery-slider .images {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 20px;
+  padding: 20px;
+  overflow: scroll;
+}
+
+.gallery-slider .images::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-slider .images img {
+  width: 350px;
+  height: 400px;
+  transition: transform 0.5s;
+}
+
+.gallery-slider .images img:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.gallery-slider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* cursor: grab; */
+}
+
+.gallery-slider span {
+  /* margin: 0 10px 0 10px; */
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  outline: 0;
+  transition: 0.3s all ease-out;
+  background-color: #fff;
+  margin: 0 10px 0 10px;
+  cursor: pointer;
+}
+
+.gallery-slider span:hover {
+  background-color: #fba704;
+}
+.gallery-slider span:hover i {
+  color: #fff;
+  -webkit-transition: 0.3s all ease-out;
+  transition: 0.3s all ease-out;
+}
+
 @media (min-width: 320px) and (max-width: 480px) {
   .jayanti-info h2 {
     margin-top: 100px;
