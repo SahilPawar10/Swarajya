@@ -29,27 +29,14 @@ function Jayanti() {
 
     nextButton.addEventListener("click", () => {
       console.log("nextClicked");
-      scrollContainer.scrollLeft += 190;
+      scrollContainer.scrollLeft += 350;
     });
 
     backButton.addEventListener("click", () => {
       console.log("backClicked");
-      scrollContainer.scrollLeft -= 190;
+      scrollContainer.scrollLeft -= 350;
     });
   }, []);
-
-  // let scrollContainer = document.getElementById("jayantiGallery");
-  // let backButton = document.getElementById("backBtn");
-  // let nextButton = document.getElementById("nextBtn");
-
-  // scrollContainer.addEventListener("wheel", (evt) => {
-  //   evt.preventDefault();
-  //   scrollContainer.scrollLeft += evt.deltaY;
-  // });
-
-  // nextButton.addEventListener("click", () => {
-  //   scrollContainer.scrollLeft += 900;
-  // });
 
   return (
     <div>
@@ -192,8 +179,8 @@ function Jayanti() {
           <h2>Gallery</h2>
         </div>
         <div className="gallery-slider">
-          <span>
-            <i class="fa fa-arrow-left" aria-hidden="true" id="backBtn"></i>
+          <span id="backBtn">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
           </span>
           <div className="images" id="jayantiGallery" ref={scrollContainerRef}>
             <img src={bhashan} alt="" />
@@ -206,8 +193,8 @@ function Jayanti() {
             <img src={JayantiGal4} alt="" />
             <img src={JayantiGal5} alt="" />
           </div>
-          <span>
-            <i class="fa fa-arrow-right" aria-hidden="true" id="nextBtn"></i>
+          <span id="nextBtn">
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
           </span>
         </div>
       </div>
