@@ -129,10 +129,27 @@
   .team-desc {
     width: auto;
   }
+
+  .teamtype-container h2 {
+    text-align: center;
+  }
+  .team-member {
+    display: block;
+    justify-content: center;
+    align-items: center;
+  }
   .team-grid {
-    display: inline-table;
+    display: block;
   }
   .memberName {
-    margin-top: 40px;
+    margin-top: 8px;
+    text-align: center;
+  }
+  .memberRole {
+    text-align: center;
+  }
+  .member-photo {
+    padding: 0;
+    text-align: center;
   }
 }

@@ -24,11 +24,150 @@
   font-size: 20px;
 }
 
+/* -------------------------------Jayanti Programs--------------------------- */
+
+.jaya-progr-heading {
+  margin-bottom: 50px;
+}
+.jaya-progr-heading h2 {
+  margin: 15px auto 15px auto;
+  font-weight: 700;
+
+  line-height: 50px;
+  margin-top: 30px;
+  font-size: 50px;
+  transition: filter 0.3s ease;
+  color: rgb(0, 78, 126);
+  text-align: center;
+}
+.jayanti-progr-types {
+  display: flex;
+  gap: 10px;
+}
+
+.jay-pro-img {
+  width: auto;
+  height: auto;
+  position: relative;
+}
+.jay-pro {
+  cursor: pointer;
+  margin-bottom: -6px;
+}
+
+.jay-pro-img::before {
+  position: absolute;
+  top: 82%;
+
+  width: 100%;
+  content: "";
+  height: 18%;
+  background-color: rgba(23, 33, 39, 0.5);
+}
+
+.jay-pro-img h4 {
+  position: absolute;
+  top: 82%;
+  left: 10%;
+  color: #fff;
+  font-size: 20px;
+  font-family: Poppins, sans-serif;
+  font-weight: 500;
+  margin: 0;
+  display: block;
+  cursor: pointer;
+  /* z-index: 2; */
+  text-align: center;
+}
+
+.jay-pro-type-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.jay-pro-type-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+.jay-pro-content {
+  color: #fff;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  z-index: 1;
+  padding: 50px;
+  opacity: 0;
+  -webkit-transition: 0.3s all ease-out;
+  transition: 0.3s all ease-out;
+  visibility: hidden;
+}
+
+.jay-pro-content::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(228, 112, 29, 0.8);
+  z-index: -1;
+}
+
+.jay-pro-content-details {
+  position: absolute;
+  left: 12px;
+  top: 17px;
+  text-align: left;
+}
+
+.jay-pro-type-item:hover .jay-pro-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+.jay-pro-content-details .type-name h4 {
+  font-weight: 600;
+  font-size: 20px;
+  font-family: "Quicksand", sans-serif !important;
+
+  padding: 10px;
+}
+
+.jay-pro-content-details .type-name p {
+  font-family: Poppins, sans-serif;
+
+  font-size: 15px;
+  padding: 10px;
+}
+
+.read-more {
+  background: #fba704;
+  color: #333 !important;
+  padding: 5px 15px;
+  font-family: "Fira Sans Condensed", sans-serif;
+  font-weight: 700;
+}
 @media (min-width: 320px) and (max-width: 480px) {
   .jayanti-info h2 {
     margin-top: 100px;
   }
   .jayanti-info h2 {
     font-size: 40px;
+  }
+  .jayanti-progr-types {
+    display: block;
+    padding: 30px;
+  }
+  .jay-pro-type-item {
+    margin-bottom: 50px;
   }
 }
