@@ -75,9 +75,9 @@ function Navbar() {
                 <li>
                   <Link to="/jayanti">ShivJayanti</Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/health">Health</Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/work">Our Work</Link>
                 </li>
@@ -87,7 +87,7 @@ function Navbar() {
               <Link to="/involve">Get Involved</Link>
             </li>
             <li>
-              <a href="#">Login</a>
+              <Link href="#">Login</Link>
             </li>
           </ul>
         </div>
