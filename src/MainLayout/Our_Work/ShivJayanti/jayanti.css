@@ -151,11 +151,21 @@
 
 .read-more {
   background: #fba704;
-  color: #333 !important;
+  color: #333;
   padding: 5px 15px;
   font-family: "Fira Sans Condensed", sans-serif;
   font-weight: 700;
   padding: 10px;
+  transition: 0.3s all ease-out;
+  cursor: pointer;
+}
+
+.read-more:hover {
+  -webkit-box-shadow: 7px 14px 37px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 7px 14px 37px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 7px 14px 37px -1px rgba(0, 0, 0, 0.75);
+  background-color: orangered;
+  color: #fff;
 }
 /* ----------------------------------------------------------Gallery----------------------------------------------- */
 

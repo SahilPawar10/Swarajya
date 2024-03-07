@@ -4,6 +4,12 @@ import Banner from "../../Components/Banner";
 import withLayout from "../..";
 import workBanner from "../../../assets/work_Banner.jpg";
 import workBanner_mob from "../../../assets/work_Bannermob.jpg";
+import workPoster from "../../../assets/infographic.png";
+import workBlog1 from "../../../assets/workblog1.jpg";
+import workBlog2 from "../../../assets/workblog2.jpg";
+import workBlog3 from "../../../assets/workblog3.jpg";
+import workBlog4 from "../../../assets/workblog4.png";
+import { Link } from "react-router-dom";
 
 function Work() {
   return (
@@ -74,7 +80,115 @@ function Work() {
         </div>
         {/* --------------------------------------section 3------------------------------ */}
         <div className="work-poster">
-          <img src="" alt="" />
+          <img src={workPoster} alt="" />
+        </div>
+        {/*----------------------------------- Touching Lives---------------------------------------- */}
+        <div className="touching-lives contenr-1200">
+          <h2>Touching Lives</h2>
+          <div className="blogs">
+            <div className="blog">
+              <div className="blog-image">
+                <img src={workBlog1} alt="" />
+              </div>
+              <div className="blog-desc">
+                <div className="blog-type">EDUCATION</div>
+                <div className="blog-header">
+                  <h4>
+                    Giving Girls a Newfound Confidence to Realise their Dreams
+                    with Ballika Manch
+                  </h4>
+                </div>
+                <div className="blog-story">
+                  <p>
+                    Fifteen-year-old Sabrina is a class VIII student in the
+                    government middle school at Bawla, Haryana. She studies all
+                    subjects diligently, with her favourite being Hindi. During
+                    the COVID pandemic, she missed school for two years due to
+                    the lockdown restrictions, a time...
+                  </p>
+                </div>
+                <div>
+                  <Link className="read-more">Read More</Link>
+                </div>
+              </div>
+            </div>
+            <div className="blog">
+              <div className="blog-image">
+                <img src={workBlog2} alt="" />
+              </div>
+              <div className="blog-desc">
+                <div className="blog-type">HEALTH</div>
+                <div className="blog-header">
+                  <h4>
+                    Powering Up For Better Irrigation: The Green Revolution in
+                    Pinjrat Village
+                  </h4>
+                </div>
+                <div className="blog-story">
+                  <p>
+                    In the heart of Surat district, nestled amidst the verdant
+                    landscapes, lies the village of Pinjrat. Home to 86
+                    families, this village is located next to a water stream,
+                    with its inhabitants primarily depending on agriculture for
+                    their livelihood. For years, they relied on a diesel-powered
+                    irrigation...
+                  </p>
+                </div>
+                <div className="blog-read-more">
+                  <Link className="read-more">Read More</Link>
+                </div>
+              </div>
+            </div>
+            <div className="blog">
+              <div className="blog-image">
+                <img src={workBlog3} alt="" />
+              </div>
+              <div className="blog-desc">
+                <div className="blog-type">WOMEN EMPOWERMENT</div>
+                <div className="blog-header">
+                  <h4>Building businesses, Empowering women</h4>
+                </div>
+                <div className="blog-story">
+                  <p>
+                    Healthy living along with sustainable livelihoods is key to
+                    changing the destiny of many poor and marginalised women in
+                    the remotest parts of our country. This builds their
+                    resilience to meet life’s challenges head on and provides a
+                    strong foundation to take care of themselves, according to
+                    'The State of Food Security and Nutrition in the World,their
+                    family and th...
+                  </p>
+                </div>
+                <div className="blog-read-more">
+                  <Link className="read-more">Read More</Link>
+                </div>
+              </div>
+            </div>
+            <div className="blog">
+              <div className="blog-image">
+                <img src={workBlog4} alt="" />
+              </div>
+              <div className="blog-desc">
+                <div className="blog-type">LIVELIHOOD</div>
+                <div className="blog-header">
+                  <h4>Healthy communities start right nutrition</h4>
+                </div>
+                <div className="blog-story">
+                  <p>
+                    14 percent of India’s population is undernourished,
+                    according to 'The State of Food Security and Nutrition in
+                    the World, 2020’ report. CARE India’s Kanya Sampurna Project
+                    is makithe World, 2020’ report. CARE India’s Kanya Sampurna
+                    Project is maki according to 'The State of Food Security and
+                    Nutrition in the World...
+                  </p>
+                </div>
+                <div className="blog-read-more">
+                  <Link className="read-more">Read More</Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
