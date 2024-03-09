@@ -1,0 +1,149 @@
+.involved_Text {
+  margin: 0 15px 0 15px;
+  display: flex;
+  flex-wrap: wrap;
+  /* gap: 20px; */
+}
+
+.involved_Text .header {
+  justify-content: center;
+  align-items: center;
+  margin: 50px 0;
+  flex: 40%;
+}
+
+.involved_Text .header h4 {
+  font-size: 30px;
+  color: rgb(0, 78, 126);
+}
+
+.involved_Text .header span {
+  font-weight: 700;
+  color: #504e70;
+}
+
+.involved_Text .desc {
+  flex: 40%;
+}
+
+.involved_Text .desc p {
+  font-size: 18px;
+}
+/* ------------------------------Section 2------------------------------ */
+.attributes-grid {
+  margin: 0 40px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+.attribute {
+  position: relative;
+}
+
+/* .attribute */
+
+.attribute-img {
+  position: relative;
+  z-index: -1;
+  /* text-align: center; */
+}
+
+.attribute-img .img-desc {
+  position: absolute;
+  width: 100%;
+  top: 60%;
+  left: -8%;
+  text-align: center;
+  color: #fff;
+  z-index: 1;
+}
+.attribute-img .img-desc h4 {
+  font-size: 30px;
+}
+
+.attribute-content {
+  text-align: center;
+  padding: 10px;
+  position: absolute;
+  top: 0%;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s all ease-in-out;
+  -webkit-transition: 0.3s all ease-in-out;
+}
+.attribute-content::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 98.5%;
+  background-color: rgba(228, 112, 29, 0.8);
+  z-index: -1;
+}
+
+.attribute-content h4 {
+  font-size: 30px;
+  /* margin-bottom: 5px; */
+  margin-top: 70px;
+  text-align: center;
+}
+
+.attribute:hover .attribute-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+.attribute:hover .attribute-img .img-desc {
+  display: none;
+}
+
+/* ------------------------------Section4-------------------------------- */
+.join-team {
+  background: url("../../assets/blue-bg.jpg");
+  /* padding: 40px 0; */
+
+  margin-bottom: 50px;
+}
+
+.join-team-text {
+  padding: 40px;
+  text-align: center;
+}
+
+.join-team-text h4 {
+  color: #fba704;
+  font-size: 25px;
+}
+.join-team-text p {
+  color: #fff;
+  padding: 4px;
+  font-size: 16px;
+}
+@media (min-width: 320px) and (max-width: 480px) {
+  .involved_Text {
+    display: block;
+    /* margin-left: 30px; */
+  }
+
+  .involved_Text .header h4 {
+    font-size: 20px;
+  }
+
+  .attributes-grid {
+    display: block;
+  }
+
+  .attribute-content {
+    padding: 10 0 50px 0;
+    line-height: 16px;
+  }
+  .attribute-content h4 {
+    margin-top: 0;
+    font-size: 20px;
+  }
+}

@@ -134,12 +134,15 @@ function Jayanti() {
               <div className="jay-pro-content-details">
                 <div className="type-name">
                   <h4>
-                    Kerala Flood <br />
-                    Response
+                    Community together <br />
                   </h4>
                   <p>
-                    Rapid aid to the destruction and loss caused by the flooding
-                    and landslides in Idukki and Wayanad.
+                    Shiv Jayanti brings our community together, especially
+                    through the tradition of Haldi Kunku for ladies. This event
+                    allows women to gather, celebrate, and strengthen bonds of
+                    unity.Through this cherished ritual, we honor the spirit of
+                    Shiv Jayanti and reinforce the importance of togetherness in
+                    our community.
                   </p>
                   <Link className="read-more">
                     <span>Read More</span>
@@ -157,12 +160,15 @@ function Jayanti() {
               <div className="jay-pro-content-details">
                 <div className="type-name">
                   <h4>
-                    Kerala Flood <br />
-                    Response
+                    Community together <br />
                   </h4>
                   <p>
-                    Rapid aid to the destruction and loss caused by the flooding
-                    and landslides in Idukki and Wayanad.
+                    Shiv Jayanti brings our community together, especially
+                    through the tradition of Haldi Kunku for ladies. This event
+                    allows women to gather, celebrate, and strengthen bonds of
+                    unity.Through this cherished ritual, we honor the spirit of
+                    Shiv Jayanti and reinforce the importance of togetherness in
+                    our community.
                   </p>
                   <Link className="read-more">
                     <span>Read More</span>

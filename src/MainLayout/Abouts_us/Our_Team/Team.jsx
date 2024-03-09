@@ -9,6 +9,12 @@ import member3 from "../../../assets/member4.jpeg";
 import member4 from "../../../assets/member5.jpeg";
 import member5 from "../../../assets/member6.jpeg";
 import member6 from "../../../assets/member7.jpeg";
+import Mgtmember1 from "../../../assets/dattta.jpeg";
+import Mgtmember2 from "../../../assets/mgtmember2.jpg";
+import Mgtmember3 from "../../../assets/mgtmember3.jpg.png";
+import Mgtmember4 from "../../../assets/mgtmember4.jpg.png";
+import Mgtmember5 from "../../../assets/mgtmember5.jpg.png";
+import Mgtmember6 from "../../../assets/mgtmember6.jpg.png";
 
 import withLayout from "../..";
 
@@ -48,6 +54,44 @@ const teamData = [
     image: member2,
     name: "Vishal Nikam",
     role: "Director",
+  },
+];
+const teamDataMgt = [
+  {
+    id: "1",
+    image: Mgtmember6,
+    name: "Tanaji Pawar",
+    role: "Management Member",
+  },
+  {
+    id: "2",
+    image: Mgtmember1,
+    name: "Datta Pawar",
+    role: "Management Member",
+  },
+  {
+    id: "3",
+    image: Mgtmember2,
+    name: "Swapnil Kadam",
+    role: "Management Member",
+  },
+  {
+    id: "4",
+    image: Mgtmember3,
+    name: "Narendra Kadam",
+    role: "Management Member",
+  },
+  {
+    id: "5",
+    image: Mgtmember4,
+    name: "Vishal PAwar ",
+    role: "Management Member",
+  },
+  {
+    id: "6",
+    image: Mgtmember5,
+    name: "Amar Pawar",
+    role: "Management Member",
   },
 ];
 
@@ -147,7 +191,7 @@ function Management() {
           <div className="teamtype-container contenr-1200 ">
             <h2>Management Team</h2>
             <div className="team-grid">
-              {teamData.map((item) => {
+              {teamDataMgt.map((item) => {
                 return (
                   <div className="team-member">
                     <div className="member-photo">

@@ -50,19 +50,20 @@ function About() {
         <div className="desc diff-text-box">
           <div className="diff-text-row">
             <p className="padding-20">
-              CARE India is a part of the CARE International Confederation,
-              which is helping millions of people in living a life of dignity.
-              We have a presence in over 100 countries.
+              Welcome to our <b> "SWARAJYA"</b> dedicated to making a difference
+              in the lives of people in need. At our core, we believe in
+              spreading happiness and providing assistance to those facing
+              challenges.
             </p>
             <p className="padding-20">
-              We have been contributing to India’s explosive growth for 75
-              years, starting from the time when it was a newly formed nation,
-              till today when it is among the world’s fastest developing
-              economies.
+              We began with a simple yet powerful vision: to create positive
+              change one step at a time. By focusing on small targets, we ensure
+              that every action we take has a meaningful impact.
             </p>
             <p className="padding-20">
-              In 2021-22, we impacted the lives of more than 84.2 million
-              people, through 90 projects, carried across 21 states.
+              Our journey is just beginning, but our commitment to helping
+              others remains unwavering. Join us as we work together to bring
+              hope and support to those who need it most.
             </p>
           </div>
         </div>
