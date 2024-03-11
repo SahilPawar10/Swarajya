@@ -3,7 +3,7 @@ import Banner from "../../Components/Banner";
 import "./team.css";
 import teamPhoto from "../../../assets/rsz_2bhajani_mandal1.jpg";
 import teamPhoto_mob from "../../../assets/bhajani_mandal1_mob.jpg";
-import member1 from "../../../assets/member2.jpeg";
+import member1 from "../../../assets/member2 (2).jpeg";
 import member2 from "../../../assets/member3.jpeg";
 import member3 from "../../../assets/member4.jpeg";
 import member4 from "../../../assets/member5.jpeg";
@@ -14,7 +14,7 @@ import Mgtmember2 from "../../../assets/mgtmember2.jpg";
 import Mgtmember3 from "../../../assets/mgtmember3.jpg.png";
 import Mgtmember4 from "../../../assets/mgtmember4.jpg.png";
 import Mgtmember5 from "../../../assets/mgtmember5.jpg.png";
-import Mgtmember6 from "../../../assets/mgtmember6.jpg.png";
+import Mgtmember6 from "../../../assets/mgtmember7.jpeg";
 
 import withLayout from "../..";
 
@@ -60,7 +60,7 @@ const teamDataMgt = [
   {
     id: "1",
     image: Mgtmember6,
-    name: "Tanaji Pawar",
+    name: "Rohan  Chavhan",
     role: "Management Member",
   },
   {

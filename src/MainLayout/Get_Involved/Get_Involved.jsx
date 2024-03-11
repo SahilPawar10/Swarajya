@@ -94,10 +94,8 @@ function Get_Involved() {
                 <h4>Donate</h4>
                 One of the easiest, fastest, and most effective ways you can
                 propel the progress of women and girls is through monetary
-                support. With your contribution, we can reach out to more and
-                more women and girls from the poorest and marginalised
-                communities with specific interventions. You can easily donate
-                online via net banking, credit card and debit card.
+                support. . You can easily donate online via net banking, credit
+                card and debit card.
               </p>
               <Link className="read-more">Read More</Link>
             </div>
@@ -113,13 +111,9 @@ function Get_Involved() {
             <div className="attribute-content">
               <p>
                 <h4>Campaigns</h4>
-                Over the years, CARE India has initiated, launched, and
-                organised several campaigns to raise the awareness about
-                specific issues around women and girl child empowerment. Some of
-                the recent campaigns have focused on generating awareness on
-                gender-based violence, outreach during International Women’s
-                Day, to rehabilitation efforts during disaster and natural
-                calamities.
+                Over the years, Swarajya has initiated, launched, and organised
+                several campaigns to raise the awareness about specific issues
+                around women and girl child empowerment.
               </p>
               <Link className="read-more">Read More</Link>
             </div>

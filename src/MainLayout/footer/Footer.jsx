@@ -3,8 +3,7 @@ import "./footer.css";
 import logo from "../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
 import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Link } from "react-scroll";
-
+import { Link } from "react-router-dom";
 const linkStyle = { display: "flex", textAlign: "center", gap: "0.01rem" };
 function Footer() {
   return (
@@ -30,14 +29,19 @@ function Footer() {
                 <KeyboardDoubleArrowDownIcon />
                 Our Founding Story
               </li>
-              <li style={linkStyle}>
-                <KeyboardDoubleArrowDownIcon />
-                The Problems
-              </li>
-              <li style={linkStyle}>
-                <KeyboardDoubleArrowDownIcon />
-                Our Team
-              </li>
+              <Link to="/about">
+                <li style={linkStyle}>
+                  <KeyboardDoubleArrowDownIcon />
+                  About Us
+                </li>
+              </Link>
+
+              <Link to="/team">
+                <li style={linkStyle}>
+                  <KeyboardDoubleArrowDownIcon />
+                  Our Team
+                </li>
+              </Link>
             </ul>
           </div>
           <div className="footer-nav">
@@ -53,10 +57,12 @@ function Footer() {
                 <KeyboardDoubleArrowDownIcon />
                 Vidio Gallery
               </li>
-              <li style={linkStyle}>
-                <KeyboardDoubleArrowDownIcon />
-                Swarajya in Events
-              </li>
+              <Link to="/work">
+                <li style={linkStyle}>
+                  <KeyboardDoubleArrowDownIcon />
+                  Our Work
+                </li>
+              </Link>
             </ul>
           </div>
           <div className="footer-nav">
@@ -64,18 +70,16 @@ function Footer() {
               <li className="footer-active">
                 <h4>Contact Us</h4>
               </li>
-              <li style={linkStyle}>
-                <KeyboardDoubleArrowDownIcon />
-                Number
-              </li>
-              <li style={linkStyle}>
-                <KeyboardDoubleArrowDownIcon />
-                Mobile
-              </li>
-              <li style={linkStyle}>
-                <KeyboardDoubleArrowDownIcon />
-                Email
-              </li>
+              <div className="social-icons">
+                <i class="fa-brands fa-whatsapp"></i>
+                <i class="fa-brands fa-linkedin-in"></i>
+                <i class="fa-brands fa-youtube"></i>
+                <i class="fa-brands fa-instagram"></i>
+              </div>
+              <h5>Operating Address</h5>
+              <div className="address">
+                At post Ambrag, Patan 415206, <br /> Satara ,Maharashtra (INDIA)
+              </div>
             </ul>
           </div>
         </div>

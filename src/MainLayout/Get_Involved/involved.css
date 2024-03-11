@@ -105,8 +105,6 @@
 /* ------------------------------Section4-------------------------------- */
 .join-team {
   background: url("../../assets/blue-bg.jpg");
-  /* padding: 40px 0; */
-
   margin-bottom: 50px;
 }
 
@@ -130,6 +128,11 @@
     /* margin-left: 30px; */
   }
 
+  .attribute-img .img-desc {
+    top: 39%;
+    left: -4%;
+  }
+
   .involved_Text .header h4 {
     font-size: 20px;
   }
@@ -140,7 +143,7 @@
 
   .attribute-content {
     padding: 10 0 50px 0;
-    line-height: 16px;
+    /* line-height: 16px; */
   }
   .attribute-content h4 {
     margin-top: 0;

@@ -61,7 +61,7 @@ function Program() {
                   </p>
 
                   <Link to="/donate" className="program-button">
-                    <span className="text">Know More</span>
+                    <span className="text">Donate Us</span>
                   </Link>
                 </div>
               </div>
@@ -95,7 +95,7 @@ function Program() {
                   </p>
 
                   <Link to="/donate" className="program-button">
-                    <span className="text">Know More</span>
+                    <span className="text">Donate Us</span>
                   </Link>
                 </div>
               </div>
@@ -126,14 +126,13 @@ function Program() {
                   </div>
                   <p className="slide-desc">
                     Step into the divine realm as we celebrate Shiv Jayanti,
-                    honoring the birth of Lord Shiva.s for an immersive
-                    experience featuring heartfelt prayers, captivating cultural
+                    honoring the birth of Lord Shiva. captivating cultural
                     performances, and insightful discussions on the profound
                     teachings of Shiva.
                   </p>
 
                   <Link to="/donate" className="program-button">
-                    <span className="text">Know More</span>
+                    <span className="text">Donate Us</span>
                   </Link>
                 </div>
               </div>
@@ -171,7 +170,7 @@ function Program() {
                   {/* <div className="button">Donate</div> */}
 
                   <Link to="/donate" className="program-button">
-                    <span className="text">Know More</span>
+                    <span className="text">Donate Us</span>
                   </Link>
                 </div>
               </div>

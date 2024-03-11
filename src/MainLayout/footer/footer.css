@@ -39,6 +39,10 @@
   font-size: 18px;
 }
 
+.footer-nav li link {
+  color: #fff;
+}
+
 .footer-nav li:hover {
   color: orange;
   transition: all ease 0.2s;
@@ -95,6 +99,36 @@
 
 .copyright:hover {
   color: orange;
+}
+
+.social-icons {
+  display: flex;
+  align-items: center;
+}
+.social-icons i {
+  padding: 10px;
+  margin: 0 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  font-size: 15px;
+  color: #fd7e14;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.social-icons i:hover {
+  color: blue;
+}
+
+.footer-nav h5 {
+  color: #fff;
+  margin: 15px 10px;
+  font-size: 20px;
+}
+
+.address {
+  color: #fff;
+  margin: 10px 10px;
 }
 
 @media (min-width: 320px) and (max-width: 680px) {

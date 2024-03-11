@@ -12,6 +12,7 @@ import Jayanti from "./MainLayout/Our_Work/ShivJayanti/Jayanti";
 import Health from "./MainLayout/Our_Work/Health/Health";
 import Work from "./MainLayout/Our_Work/Work/Work";
 import Get_Involved from "./MainLayout/Get_Involved/Get_Involved";
+import Contribution from "./MainLayout/Pages/Contribution";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/health" element={<Health />} />
         <Route path="/work" element={<Work />} />
         <Route path="/involve" element={<Get_Involved />} />
+        <Route path="/highvalue" element={<Contribution />} />
       </Routes>
     </div>
   );

@@ -221,6 +221,7 @@ circle:nth-child(2) {
 
 .circle_box:hover circle {
   stroke: orange;
+  transition: 1s all ease-in-out;
 }
 
 @media (min-width: 791px) and (max-width: 1245px) {
