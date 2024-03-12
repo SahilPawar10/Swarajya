@@ -51,6 +51,11 @@
   color: #504e70;
 }
 
+/* -------------------------------Pledge Your Support---------------------------- */
+.pledge-text {
+  margin: 80px 15px 50px 15px;
+}
+
 @media (min-width: 320px) and (max-width: 480px) {
   .highval-imges {
     margin: 5px 10px 5px 10px;

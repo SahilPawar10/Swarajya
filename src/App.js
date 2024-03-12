@@ -13,6 +13,7 @@ import Health from "./MainLayout/Our_Work/Health/Health";
 import Work from "./MainLayout/Our_Work/Work/Work";
 import Get_Involved from "./MainLayout/Get_Involved/Get_Involved";
 import Contribution from "./MainLayout/Pages/Contribution";
+import Support from "./MainLayout/Pages/Support";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/work" element={<Work />} />
         <Route path="/involve" element={<Get_Involved />} />
         <Route path="/highvalue" element={<Contribution />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
     </div>
   );

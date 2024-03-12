@@ -60,7 +60,9 @@ function Get_Involved() {
                 determined to give back to the society from your share of wealth
                 and fortunes.
               </p>
-              <Link className="read-more">Read More</Link>
+              <Link to="/highvalue" className="read-more">
+                Read More
+              </Link>
             </div>
           </div>
           {/* -------------------attribute2------------- */}
@@ -78,7 +80,9 @@ function Get_Involved() {
                 like to associate your voice with as an accountable and
                 compassionate protagonist.
               </p>
-              <Link className="read-more">Read More</Link>
+              <Link to="/support" className="read-more">
+                Read More
+              </Link>
             </div>
           </div>
           {/* -------------------attribute3------------- */}
