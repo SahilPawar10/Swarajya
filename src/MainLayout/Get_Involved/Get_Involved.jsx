@@ -101,7 +101,9 @@ function Get_Involved() {
                 support. . You can easily donate online via net banking, credit
                 card and debit card.
               </p>
-              <Link className="read-more">Read More</Link>
+              <Link to="/donation" className="read-more">
+                Read More
+              </Link>
             </div>
           </div>
           {/* -------------------attribute4------------- */}

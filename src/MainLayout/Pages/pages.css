@@ -53,7 +53,70 @@
 
 /* -------------------------------Pledge Your Support---------------------------- */
 .pledge-text {
-  margin: 80px 15px 50px 15px;
+  margin: 10px 25px 15px 25px;
+}
+.pledge-text p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #504e70;
+  text-align: center;
+}
+
+.support-btn {
+  text-align: center;
+}
+
+.support-btn Link {
+  padding: 20px;
+}
+
+.support-btn .btn {
+  padding: 10px;
+  background-color: #fba704;
+  font-weight: 700;
+  font-size: 25px;
+  padding: 10px;
+  color: #fff;
+  transition: 0.3s all ease-out;
+  cursor: pointer;
+}
+
+.support-btn .btn:hover {
+  -webkit-box-shadow: 7px 14px 37px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 7px 14px 37px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 7px 14px 37px -1px rgba(0, 0, 0, 0.75);
+  background-color: orangered;
+  color: #fff;
+}
+
+.support-btn .btn span {
+  margin-left: 10px;
+}
+
+/* --------------------Donation jsx......................... */
+
+.donation-text {
+  margin: 10px 25px 15px 25px;
+  text-align: center;
+}
+
+.donation-text h5 {
+  font-size: 35px;
+  color: #e4701d;
+  font-size: 800;
+}
+
+.deed-info {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.deed-info .info {
+  flex: 50%;
+}
+
+.pie-chart {
+  flex: 50%;
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
@@ -68,5 +131,10 @@
   }
   .highval-box .box-line {
     height: 130px;
+  }
+
+  /* Contrribution */
+  .pledge-text {
+    margin: 80px 25px 15px 25px;
   }
 }
