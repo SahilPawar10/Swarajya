@@ -20,9 +20,9 @@ function Donation() {
           <h5>Do a good Deed</h5>
           <div className="deed-info">
             <div className="info">
-              CARE has been working in India for over 70 years, for the
-              upliftment of marginalised women and girls through 53 programmes
-              in 18 states and 130+ districts.
+              <b> Swarajya</b> has been working in India for the past 2 years ,
+              for the upliftment of marginalised women and girls through various
+              social programs .
             </div>
             <div className="pie-chart">Pie Chart</div>
           </div>

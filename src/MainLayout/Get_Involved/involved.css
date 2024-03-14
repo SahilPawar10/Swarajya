@@ -129,7 +129,7 @@
   }
 
   .attribute-img .img-desc {
-    top: 39%;
+    top: 20%;
     left: -4%;
   }
 
@@ -144,6 +144,7 @@
   .attribute-content {
     padding: 10 0 50px 0;
     /* line-height: 16px; */
+    font-size: 0.8rem;
   }
   .attribute-content h4 {
     margin-top: 0;

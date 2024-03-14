@@ -78,6 +78,9 @@
   .small-nav {
     display: none;
   }
+  .mision-header-text {
+    padding: 1rem 0 0 2rem;
+  }
   .mision-header-text h4 {
     font-size: 37px;
     font-family: serif;

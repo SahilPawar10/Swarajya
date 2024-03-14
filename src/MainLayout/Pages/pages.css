@@ -109,10 +109,14 @@
 .deed-info {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 10px;
 }
 
 .deed-info .info {
   flex: 50%;
+  font-size: 18px;
+  font-weight: 600;
+  color: #504e70;
 }
 
 .pie-chart {
@@ -136,5 +140,9 @@
   /* Contrribution */
   .pledge-text {
     margin: 80px 25px 15px 25px;
+  }
+  /* ----------Donation.JSx----------- */
+  .deed-info {
+    display: block;
   }
 }

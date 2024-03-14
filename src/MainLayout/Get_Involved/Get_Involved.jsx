@@ -121,7 +121,9 @@ function Get_Involved() {
                 several campaigns to raise the awareness about specific issues
                 around women and girl child empowerment.
               </p>
-              <Link className="read-more">Read More</Link>
+              <Link to="/work" className="read-more">
+                Read More
+              </Link>
             </div>
           </div>
         </div>
