@@ -104,6 +104,7 @@
   font-size: 35px;
   color: #e4701d;
   font-size: 800;
+  margin-bottom: 3%;
 }
 
 .deed-info {
@@ -114,15 +115,78 @@
 
 .deed-info .info {
   flex: 50%;
-  font-size: 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 10%;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #504e70;
+  /* padding-top: 3%; */
 }
 
 .pie-chart {
-  flex: 50%;
+  flex: 40%;
 }
 
+.pie-image {
+  padding-left: 5%;
+  padding-top: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* z-index: -99; */
+}
+
+.pie-image h5 {
+  position: absolute;
+  top: 53%;
+  left: 14%;
+  /* z-index: 1; */
+  color: #fff;
+  font-size: 1.7rem;
+  font-weight: 500;
+}
+.pie-image img {
+  width: 9rem;
+  height: 9rem;
+  /* z-index: 1; */
+}
+.pie-desc span {
+  font-size: 1.3rem;
+  padding-left: 3%;
+}
+
+/* ----------------------------Fonding Story------------------------------ */
+.swarajya-moments {
+  display: flex;
+  gap: 5%;
+}
+
+.swarajya-moments img {
+  flex: 30%;
+}
+.swarajya-moments .moments-info {
+  flex: 60%;
+}
+
+.moments-info h5 {
+  font-size: 1.3rem;
+  padding: 5px;
+}
+.moments-info h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  /* color: ; */
+  margin-top: 4%;
+  padding: 5px;
+  color: rgb(0, 78, 126);
+}
+
+.moments-info p {
+  /* margin-top: 5%; */
+  padding: 5px;
+}
 @media (min-width: 320px) and (max-width: 480px) {
   .highval-imges {
     margin: 5px 10px 5px 10px;
@@ -143,6 +207,22 @@
   }
   /* ----------Donation.JSx----------- */
   .deed-info {
+    display: block;
+  }
+
+  .pie-image {
+    display: block;
+  }
+  .pie-image h5 {
+    position: absolute;
+    top: 33%;
+    left: 40%;
+    /* z-index: 1; */
+    color: #fff;
+  }
+
+  /* --------------------------Founding Story----------------------- */
+  .swarajya-moments {
     display: block;
   }
 }

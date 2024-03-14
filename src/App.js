@@ -15,6 +15,7 @@ import Get_Involved from "./MainLayout/Get_Involved/Get_Involved";
 import Contribution from "./MainLayout/Pages/Contribution";
 import Support from "./MainLayout/Pages/Support";
 import Donation from "./MainLayout/Pages/Donation";
+import FoundingStory from "./MainLayout/Pages/FoundingStory";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/highvalue" element={<Contribution />} />
         <Route path="/support" element={<Support />} />
         <Route path="/donation" element={<Donation />} />
+        <Route path="/founding" element={<FoundingStory />} />
       </Routes>
     </div>
   );

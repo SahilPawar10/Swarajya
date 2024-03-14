@@ -25,10 +25,13 @@ function Footer() {
               <li className="footer-active">
                 <h4>About Us</h4>
               </li>
-              <li style={linkStyle}>
-                <KeyboardDoubleArrowDownIcon />
-                Our Founding Story
-              </li>
+              {/* /founding */}
+              <Link to="/founding">
+                <li style={linkStyle}>
+                  <KeyboardDoubleArrowDownIcon />
+                  Our Founding Story
+                </li>
+              </Link>
               <Link to="/about">
                 <li style={linkStyle}>
                   <KeyboardDoubleArrowDownIcon />
