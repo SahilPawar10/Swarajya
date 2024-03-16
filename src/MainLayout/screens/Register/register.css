@@ -1,0 +1,73 @@
+.register-div {
+  padding: 0;
+  box-sizing: border-box;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  background: url("../../../assets/Banner-7.jpg");
+}
+
+.register-box-insider {
+  margin-top: 6%;
+  box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+  -webkit-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+
+  -moz-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+  padding: 5% 12% 5% 12%;
+}
+.volunteer-info {
+  display: flex;
+
+  /* margin: 15% 15% 15% 15%; */
+  gap: 2%;
+
+  /* padding: 5%; */
+}
+.volunteer-text {
+  flex: 50%;
+  padding: 5% 5% 0 5%;
+  background-color: #fff;
+}
+
+.volunteer-text h2 {
+  color: #004e7e;
+  font-weight: 800 !important;
+  /* font-size: 2rem; */
+  margin-bottom: 10%;
+}
+
+.volunteer-text p {
+  margin: 15px auto 15px auto;
+  font-family: Poppins, sans-serif;
+  color: #504e70;
+  font-weight: 500;
+  text-align: center;
+  line-height: 30px;
+  font-size: 20px;
+}
+
+.volunteer-text span {
+  text-align: center !important;
+  color: #004e7e;
+  font-weight: 600;
+  font-size: 0.8rem;
+  width: 100%;
+}
+.register-footer {
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.register-form {
+  flex: 50%;
+  padding: 5% 5% 0 5%;
+  background-color: #fff;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .volunteer-text {
+    display: none;
+  }
+}

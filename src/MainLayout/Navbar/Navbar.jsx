@@ -87,7 +87,7 @@ function Navbar() {
               <Link to="/involve">Get Involved</Link>
             </li>
             <li>
-              <Link href="#">Login</Link>
+              <Link href="#">SignIn</Link>
             </li>
           </ul>
         </div>
