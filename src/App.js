@@ -17,6 +17,7 @@ import Support from "./MainLayout/Pages/Support";
 import Donation from "./MainLayout/Pages/Donation";
 import FoundingStory from "./MainLayout/Pages/FoundingStory";
 import Register from "./MainLayout/screens/Register/Register";
+import Login from "./MainLayout/screens/Login/Login";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/donation" element={<Donation />} />
         <Route path="/founding" element={<FoundingStory />} />
         <Route path="/sign-in" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </div>
   );

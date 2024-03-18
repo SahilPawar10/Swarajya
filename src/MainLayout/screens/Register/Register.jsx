@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import smallLogo from "../../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
 import Contact from "../../Components/ContactUS/Contact";
+import { Link } from "react-router-dom";
 function Register() {
   return (
     <div>
@@ -35,7 +36,7 @@ function Register() {
               </div>
 
               <div className="register-form">
-                <h2>Join Swarajya</h2>
+                <h2>#Join Swarajya</h2>
                 <TextField
                   fullWidth
                   label="Name"
@@ -71,14 +72,14 @@ function Register() {
                     marginBottom: "8px",
                   }}
                 >
-                  Designated to the people who need
+                  <Link to="/login">Already a user ..?</Link>
                 </p>
                 <Button
                   variant="contained"
                   fullWidth
                   // sx={{ marginTop: "30px", fontSize: "20px" }}
                 >
-                  DONATE
+                  Submit
                 </Button>
               </div>
             </div>
