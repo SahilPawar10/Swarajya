@@ -12,6 +12,10 @@ function Register() {
     <div>
       <div className="register-div">
         <div className="register-box contenr-1200">
+          <div className="mobile-register">
+            <h2 className="">#Make a Lasting Impact</h2>
+          </div>
+
           <div className="register-box-insider">
             <div className="volunteer-info">
               <div className="volunteer-text">
@@ -36,7 +40,7 @@ function Register() {
               </div>
 
               <div className="register-form">
-                <h2>#Join Swarajya</h2>
+                <h2 style={{ textAlign: "center" }}>#Join Swarajya</h2>
                 <TextField
                   fullWidth
                   label="Name"
@@ -77,7 +81,7 @@ function Register() {
                 <Button
                   variant="contained"
                   fullWidth
-                  // sx={{ marginTop: "30px", fontSize: "20px" }}
+                  sx={{ marginBottom: "30px", fontSize: "20px" }}
                 >
                   Submit
                 </Button>

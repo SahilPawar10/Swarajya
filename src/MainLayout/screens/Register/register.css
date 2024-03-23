@@ -16,6 +16,15 @@
   -moz-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
   padding: 5% 12% 5% 12%;
 }
+
+.login-box-insider {
+  margin-top: 40%;
+  box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+  -webkit-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+
+  -moz-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
+  padding: 5% 12% 5% 12%;
+}
 .volunteer-info {
   display: flex;
 
@@ -48,7 +57,7 @@
 }
 
 .volunteer-text span {
-  text-align: center !important;
+  text-align: center;
   color: #004e7e;
   font-weight: 600;
   font-size: 0.8rem;
@@ -66,8 +75,46 @@
   background-color: #fff;
 }
 
+.register-form h2 {
+  text-align: center;
+  color: #033c5f;
+}
+
+.login-form {
+  flex: 50%;
+  padding: 5% 5% 0 5%;
+  background-color: #fff;
+}
+
+.login-form h2 {
+  text-align: center;
+  color: #033c5f;
+}
+.mobile-register {
+  display: none;
+}
+
 @media (min-width: 320px) and (max-width: 480px) {
   .volunteer-text {
     display: none;
+  }
+  .register-box-insider {
+    /* margin-top: 40%; */
+    padding: 5%;
+  }
+
+  .mobile-register {
+    display: contents;
+  }
+  .mobile-register h2 {
+    margin-top: 50px;
+    text-align: center;
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* background-color: rgb(247, 170, 28); */
+    padding: 2px 20px;
+    box-shadow: 5px 10px 30px rgba(2, 238, 255, 0.336);
   }
 }

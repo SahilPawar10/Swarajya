@@ -12,13 +12,13 @@ function Login() {
       {" "}
       <div className="register-div">
         <div className="register-box contenr-1200">
-          <div className="register-box-insider">
+          <div className="login-box-insider">
             <div className="volunteer-info">
               <div className="volunteer-text">
                 <img src={LoginCard} alt="" />
               </div>
 
-              <div className="register-form">
+              <div className="login-form">
                 <h2>Login Swarajya Portal</h2>
                 <TextField
                   fullWidth
@@ -50,12 +50,12 @@ function Login() {
                     marginBottom: "8px",
                   }}
                 >
-                  <Link to="/sign-in"> Registered User ..?</Link>
+                  <Link to="/sign-in"> </Link>
                 </p>
                 <Button
                   variant="contained"
                   fullWidth
-                  // sx={{ marginTop: "30px", fontSize: "20px" }}
+                  sx={{ marginBottom: "30px" }}
                 >
                   Login
                 </Button>
