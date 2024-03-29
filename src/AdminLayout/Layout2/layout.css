@@ -1,0 +1,13 @@
+.admin-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  flex: 20%;
+  /* background-color: blueviolet; */
+}
+
+.admin-page {
+  flex: 80%;
+}

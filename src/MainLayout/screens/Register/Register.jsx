@@ -55,8 +55,8 @@ function Register() {
                 />
                 <TextField
                   fullWidth
-                  label="Location"
-                  id="Location"
+                  label="Email"
+                  id="Email"
                   sx={{ marginTop: "10px", marginBottom: "20px" }}
                 />
                 {/* <TextField

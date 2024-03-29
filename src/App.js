@@ -18,6 +18,10 @@ import Donation from "./MainLayout/Pages/Donation";
 import FoundingStory from "./MainLayout/Pages/FoundingStory";
 import Register from "./MainLayout/screens/Register/Register";
 import Login from "./MainLayout/screens/Login/Login";
+import Layout2 from "./AdminLayout/Layout2/LayoutAdmin";
+import AdminHome from "./AdminLayout/adminHome/AdminHome";
+import Visitors from "./AdminLayout/Visitors/Visitors";
+import Accounts from "./AdminLayout/Accounts/Accounts";
 
 function App() {
   return (
@@ -38,6 +42,9 @@ function App() {
         <Route path="/founding" element={<FoundingStory />} />
         <Route path="/sign-in" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AdminHome />} />
+        <Route path="/visitors" element={<Visitors />} />
+        <Route path="/accounts" element={<Accounts />} />
       </Routes>
     </div>
   );

@@ -22,15 +22,15 @@ function Login() {
                 <h2>Login Swarajya Portal</h2>
                 <TextField
                   fullWidth
-                  label="Name"
-                  id="Name"
+                  label="email"
+                  id="email"
                   sx={{ marginTop: "30px" }}
                 />
 
                 <TextField
                   fullWidth
-                  label="Location"
-                  id="Location"
+                  label="Password"
+                  id="Password"
                   sx={{ marginTop: "10px", marginBottom: "20px" }}
                 />
                 {/* <TextField
@@ -50,7 +50,7 @@ function Login() {
                     marginBottom: "8px",
                   }}
                 >
-                  <Link to="/sign-in"> </Link>
+                  <Link to="/sign-in">Register here </Link>
                 </p>
                 <Button
                   variant="contained"
