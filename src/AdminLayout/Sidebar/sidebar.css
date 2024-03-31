@@ -1,15 +1,22 @@
 .sidebar-logo {
   display: flex;
-  padding-top: 3%;
-  padding-left: 8%;
-  border-bottom: 3px solid grey;
-  border-right: 3px solid grey;
+  padding-top: 0%;
+  padding-left: 7%;
+  /* border-bottom: 3px solid grey;
+  border-right: 3px solid grey; */
 }
 
 .sidebar-heading h2 {
-  font-size: 2.5rem;
+  font-size: 2.4rem;
   font-weight: 300;
   font-family: fantasy;
+  color: rgb(0, 78, 126);
+}
+
+.side-active {
+  background-color: #fba704;
+  box-shadow: 9px 21px 32px -18px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 .sidebar-menus {
   /* background-color: blue; */
@@ -21,9 +28,12 @@
 .sidebar-menus li {
   padding: 5% 0 5% 0;
   align-items: center;
+  display: flex;
 }
 
 .side-menu {
-  /* color: #fff; */
-  /* padding: 10px; */
+  font-size: 1.2rem;
+  color: rgb(0, 78, 126);
+  font-weight: 800;
+  margin-left: 4%;
 }

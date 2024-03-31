@@ -4,10 +4,24 @@
 }
 
 .sidebar {
-  flex: 20%;
+  flex: 12%;
+  box-shadow: 9px 21px 32px -18px rgba(0, 0, 0, 0.2);
   /* background-color: blueviolet; */
 }
 
+.sidebar-header {
+  box-shadow: 9px 21px 32px -18px rgba(0, 0, 0, 0.2);
+  height: 7%;
+}
 .admin-page {
   flex: 80%;
+}
+
+.user-profile {
+  display: flex;
+  /* align-items: flex-end; */
+  justify-content: flex-end;
+  width: 90%;
+  padding: 5px;
+  cursor: pointer;
 }

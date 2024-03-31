@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -7,36 +7,64 @@ import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import CollectionsIcon from "@mui/icons-material/Collections";
 
-function Sidebar() {
+function Sidebar({ menu }) {
+  useEffect(() => {
+    console.log("siderBar Rendered");
+    document.getElementById(menu).style.backgroundColor = "#fba704";
+    document.getElementById(menu).style.borderRadius = "8px";
+  }, [menu]);
+
   return (
     <div>
       <div className="sidebar-logo">
-        <DashboardIcon sx={{ fontSize: "3.5rem" }} />
+        <DashboardIcon sx={{ fontSize: "3.3rem", color: "#fd7e14" }} />
         <div className="sidebar-heading">
           <h2>Swarajya</h2>
         </div>
       </div>
 
       <ul className="sidebar-menus">
-        <li>
+        <li id="admin-home">
           <span>
-            {" "}
-            <Groups2Icon sx={{ transform: "rotate(0deg)" }} />
+            <Groups2Icon
+              sx={{
+                transform: "rotate(0deg)",
+                fontSize: "1.4rem",
+                color: "#fd7e14",
+                paddingTop: "0.3rem",
+              }}
+            />
           </span>
 
-          <Link className="side-menu">Team</Link>
+          <Link className="side-menu " to="/admin">
+            Home
+          </Link>
         </li>
-        <li>
+        <li id="visit">
           <span>
-            <SensorOccupiedIcon sx={{ transform: "rotate(0deg)" }} />
+            <SensorOccupiedIcon
+              sx={{
+                transform: "rotate(0deg)",
+                fontSize: "1.4rem",
+                color: "#fd7e14",
+                paddingTop: "0.3rem",
+              }}
+            />
           </span>
           <Link to="/visitors" className="side-menu">
             Visitors
           </Link>
         </li>
-        <li>
+        <li id="account">
           <span>
-            <AccountBalanceWalletIcon sx={{ transform: "rotate(0deg)" }} />
+            <AccountBalanceWalletIcon
+              sx={{
+                transform: "rotate(0deg)",
+                fontSize: "1.4rem",
+                color: "#fd7e14",
+                paddingTop: "0.3rem",
+              }}
+            />
           </span>
           <Link to="/accounts" className="side-menu">
             Accounts
@@ -44,7 +72,14 @@ function Sidebar() {
         </li>
         <li>
           <span>
-            <CollectionsIcon sx={{ transform: "rotate(0deg)" }} />
+            <CollectionsIcon
+              sx={{
+                transform: "rotate(0deg)",
+                fontSize: "1.4rem",
+                color: "#fd7e14",
+                paddingTop: "0.3rem",
+              }}
+            />
           </span>
           <Link className="side-menu">Gallery</Link>
         </li>

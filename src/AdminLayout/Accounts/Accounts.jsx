@@ -5,4 +5,4 @@ function Accounts() {
   return <div>Accounts</div>;
 }
 
-export default LayoutAdmin(Accounts);
+export default LayoutAdmin(Accounts, "account");

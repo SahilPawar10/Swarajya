@@ -5,4 +5,4 @@ function Visitors() {
   return <div>Visitors</div>;
 }
 
-export default LayoutAdmin(Visitors);
+export default LayoutAdmin(Visitors, "visit");

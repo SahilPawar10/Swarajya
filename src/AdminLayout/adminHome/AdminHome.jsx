@@ -5,4 +5,4 @@ function AdminHome() {
   return <div>AdminHome</div>;
 }
 
-export default LayoutAdmin(AdminHome);
+export default LayoutAdmin(AdminHome, "admin-home");
