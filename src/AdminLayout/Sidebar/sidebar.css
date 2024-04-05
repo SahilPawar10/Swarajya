@@ -37,3 +37,9 @@
   font-weight: 800;
   margin-left: 4%;
 }
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .sidebar-heading {
+    display: none;
+  }
+}

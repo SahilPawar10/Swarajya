@@ -6,6 +6,7 @@ import Groups2Icon from "@mui/icons-material/Groups2";
 import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import CollectionsIcon from "@mui/icons-material/Collections";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function Sidebar({ menu }) {
   useEffect(() => {
@@ -70,7 +71,7 @@ function Sidebar({ menu }) {
             Accounts
           </Link>
         </li>
-        <li>
+        <li id="gallery">
           <span>
             <CollectionsIcon
               sx={{
@@ -82,6 +83,19 @@ function Sidebar({ menu }) {
             />
           </span>
           <Link className="side-menu">Gallery</Link>
+        </li>
+        <li id="Profile">
+          <span>
+            <AccountCircleIcon
+              sx={{
+                transform: "rotate(0deg)",
+                fontSize: "1.4rem",
+                color: "#fd7e14",
+                paddingTop: "0.3rem",
+              }}
+            />
+          </span>
+          <Link className="side-menu">Profile</Link>
         </li>
       </ul>
     </div>

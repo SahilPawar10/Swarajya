@@ -27,12 +27,13 @@
 }
 
 /* -------------------------------------Team------------------------------ */
-
+#visitors {
+  position: relative;
+}
 .team-table {
-  /* display: flex;
-  justify-content: center; */
   width: 80vw;
   margin: 5% 5% 0 5%;
+  /* overflow: scroll; */
 }
 
 .team-table table {
@@ -63,6 +64,143 @@
 }
 
 .search-bar input {
-  font-size: 30px;
-  border-radius: 10px;
+  border: 2px solid grey;
+  /* font-size: 30px; */
+  /* border-radius: 10px;
+   */
+  border-radius: 0;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  height: 50px;
+  width: 25%;
+}
+
+.search-bar input::placeholder {
+  font-size: 1.3em;
+  padding-left: 10px;
+}
+.search-bar button {
+  /* font-size: 30px; */
+  height: 50px;
+  outline: none;
+  background-color: #fbda04;
+  border-radius: 0;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+
+  width: 10%;
+}
+
+.search-bar button span {
+  font-size: 1em;
+  font-weight: 700;
+}
+
+.team-table table tbody tr td button {
+  padding: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+  color: #fff;
+  height: 35px;
+  /* border: none; */
+}
+.team-table table tbody tr td button:first-child {
+  background-color: rgb(7, 187, 7);
+}
+.team-table table tbody tr td button:last-child {
+  background-color: rgb(217, 104, 12);
+}
+
+/* -----------------------------Accounts------------------------ */
+.about-container {
+  position: relative;
+  width: 80%;
+  margin: 10% 20px 0px 20px;
+  background-color: antiquewhite;
+}
+
+#accounts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.about-container p {
+  /* margin-top: 50px; */
+  padding: 20px;
+  font-size: 1.2em;
+  font-weight: 600;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.f-reports {
+  margin: 20px;
+  display: flex;
+  gap: 3%;
+}
+
+.monthly-reports {
+  flex: 30%;
+}
+
+.report-heading {
+  padding: 15px;
+  text-align: center;
+  background-color: #fba704;
+  font-size: 1.2em;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.shivjayanti-reports {
+  flex: 30%;
+}
+.annual-reports {
+  flex: 30%;
+}
+
+.reports {
+  text-align: center;
+
+  /* width: 100%; */
+  /* padding: 15px; */
+}
+.reports div {
+  margin-top: 20px;
+  font-size: 1.5em;
+  font-weight: 600;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  padding: 10px;
+  color: rgb(0, 78, 126);
+  cursor: pointer;
+}
+.reports div:hover {
+  background-color: #fba704;
+  color: #fff;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .sidebar {
+    display: none;
+  }
+  .search-bar input {
+    width: 60%;
+  }
+  .search-bar button {
+    width: 27%;
+  }
+  .team-table {
+    width: 80vw;
+    margin: 10% 5% 0 5%;
+    overflow: scroll;
+  }
+  .team-table table tbody tr td button:last-child {
+    margin-top: 10px;
+    width: 85%;
+  }
+  .f-reports {
+    display: contents;
+  }
 }

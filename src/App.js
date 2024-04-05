@@ -22,6 +22,7 @@ import Layout2 from "./AdminLayout/Layout2/LayoutAdmin";
 import AdminHome from "./AdminLayout/adminHome/AdminHome";
 import Visitors from "./AdminLayout/Visitors/Visitors";
 import Accounts from "./AdminLayout/Accounts/Accounts";
+import Profile from "./AdminLayout/Profile/Profile";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/admin" element={<AdminHome />} />
         <Route path="/visitors" element={<Visitors />} />
         <Route path="/accounts" element={<Accounts />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
   );

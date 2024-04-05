@@ -3,6 +3,7 @@ import "./layout.css";
 import Sidebar from "../Sidebar/Sidebar";
 import Avatar from "@mui/material/Avatar";
 import avtar from "../../assets/member3.jpeg";
+import { Link } from "react-router-dom";
 
 const LayoutAdmin = (Page, menu) => {
   return () => (
@@ -14,7 +15,9 @@ const LayoutAdmin = (Page, menu) => {
         <div className="admin-page">
           <div className="sidebar-header">
             <div className="user-profile">
-              <Avatar alt="Cindy Baker" src={avtar} />
+              <Link to="/profile">
+                <Avatar alt="Cindy Baker" src={avtar} />
+              </Link>
             </div>
           </div>
           <Page />

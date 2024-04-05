@@ -8,6 +8,9 @@ function AdminHome() {
       {/* search bar  */}
       <div className="search-bar">
         <input type="text" placeholder="Search Here" />
+        <button>
+          <span>Search</span>
+        </button>
       </div>
       {/* Table */}
       <div className="team-table">
