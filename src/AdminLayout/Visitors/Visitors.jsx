@@ -52,3 +52,30 @@ function Visitors() {
 }
 
 export default LayoutAdmin(Visitors, "visit");
+
+// align-items: flex-end;
+/* justify-content: space-between; */
+
+//   .user-profile {
+//   margin: 2% 2% 0 2%;
+//   display: flex;
+//   align-items: flex-end;
+
+//   width: 90%;
+//   padding: 5px;
+//   cursor: pointer;
+// }
+
+{
+  /* <div className="mobile-togle">
+              <MenuIcon
+                sx={{
+                  transform: "rotate(0deg)",
+                  fontSize: "2.5rem",
+                  color: "#fd7e14",
+
+                  marginTop: "0.2rem",
+                }}
+              />
+            </div> */
+}

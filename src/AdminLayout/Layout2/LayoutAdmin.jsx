@@ -4,6 +4,8 @@ import Sidebar from "../Sidebar/Sidebar";
 import Avatar from "@mui/material/Avatar";
 import avtar from "../../assets/member3.jpeg";
 import { Link } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
 
 const LayoutAdmin = (Page, menu) => {
   return () => (
@@ -28,9 +30,3 @@ const LayoutAdmin = (Page, menu) => {
 };
 
 export default LayoutAdmin;
-/*
-
-sidemenu  
-20 /80
-
-*/

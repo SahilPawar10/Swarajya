@@ -183,7 +183,9 @@
 
 @media (min-width: 320px) and (max-width: 480px) {
   .sidebar {
-    display: none;
+    position: absolute;
+    /* top: 7%; */
+    z-index: 1;
   }
   .search-bar input {
     width: 60%;
