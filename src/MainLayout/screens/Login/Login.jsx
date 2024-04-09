@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 function Login() {
   return (
     <div>
-      {" "}
       <div className="register-div">
         <div className="register-box contenr-1200">
           <div className="login-box-insider">

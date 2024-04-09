@@ -100,7 +100,6 @@ function Team() {
 
   const handleTeam = () => {
     setActive(!Active);
-    console.log(Active, "teamActive");
   };
   return (
     <div>

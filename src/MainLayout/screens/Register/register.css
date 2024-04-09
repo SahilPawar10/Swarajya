@@ -18,7 +18,7 @@
 }
 
 .login-box-insider {
-  margin-top: 6;
+  margin-top: 80px;
   box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
   -webkit-box-shadow: 10px 10px 143px 0px rgba(0, 0, 0, 0.75) inset;
 
@@ -27,11 +27,7 @@
 }
 .volunteer-info {
   display: flex;
-
-  /* margin: 15% 15% 15% 15%; */
   gap: 2%;
-
-  /* padding: 5%; */
 }
 .volunteer-text {
   flex: 50%;

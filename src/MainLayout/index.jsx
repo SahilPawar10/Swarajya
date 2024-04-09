@@ -12,5 +12,3 @@ const withLayout = (Page) => {
 };
 
 export default withLayout;
-
-// https://swarajyabackend-arwh.onrender.com/

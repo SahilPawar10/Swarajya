@@ -1,0 +1,134 @@
+#profile {
+  width: 60vw;
+  margin: 7% auto 0 auto;
+}
+
+.profile-tab {
+  display: flex;
+  gap: 3%;
+}
+
+.profile-left-tab {
+  flex: 35%;
+  background: #e9ecf3;
+}
+
+.profile-right-tab {
+  flex: 70%;
+  background: #e9ecf3;
+}
+
+.profile-left-tab-innner {
+  margin: 10px;
+}
+
+.profile-img {
+  text-align: center;
+}
+.profile-img img {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0;
+}
+.profile-left-tab-innner h4 {
+  text-align: center;
+  font-size: 1.2rem;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #004e7e;
+}
+
+.profile-left-tab-innner h6 {
+  text-align: center;
+  font-size: 1.2rem;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #004e7e;
+}
+
+.profile-btns {
+  text-align: center;
+  margin: 0;
+}
+
+.profile-btns div {
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px;
+  background-color: #5b9bd1;
+  margin-bottom: 10px;
+}
+
+.profile-right-tab h6 {
+  margin: 10px;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.form-group {
+  display: inline-block;
+  padding-right: 100px;
+  margin-bottom: 15px;
+}
+
+.form-group input {
+  height: 35px;
+  width: 150%;
+  border-radius: 5px;
+  padding-left: 10px;
+  border: 2px solid grey;
+}
+
+.form-group input::file-selector-button {
+  font-weight: bold;
+  color: #fff;
+  background-color: orange;
+  height: 100%;
+  width: 30%;
+  margin-left: -10px;
+  /* border: thin solid grey; */
+  border: none;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  margin: 0%;
+  font-weight: 700;
+}
+
+.profile-form {
+  margin: 10px;
+}
+
+.edit-profile-tab {
+  display: block;
+  margin-top: 10px;
+  padding: 10px;
+  width: 45%;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #5b9bd1;
+  border: none;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .profile-tab {
+    display: block;
+  }
+  .edit-profile-tab {
+    width: 100%;
+  }
+
+  .form-group input {
+    text-align: center;
+    width: 150%;
+  }
+
+  .profile-right-tab {
+    padding-bottom: 30px;
+  }
+}

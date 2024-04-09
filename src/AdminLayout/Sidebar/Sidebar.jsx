@@ -12,13 +12,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 function Sidebar({ menu = "menu" }) {
   const [sidebar, setsideBar] = useState(false);
   useEffect(() => {
-    console.log("siderBar Rendered");
+    // console.log("siderBar Rendered");
     document.getElementById(menu).style.backgroundColor = "#fba704";
     document.getElementById(menu).style.borderRadius = "8px";
   }, [menu]);
 
   const onToggleClick = () => {
-    console.log("toggle");
+    // console.log("toggle");
     setsideBar(!sidebar);
   };
 
@@ -198,7 +198,9 @@ function Sidebar({ menu = "menu" }) {
                 }}
               />
             </span>
-            <Link className="side-menu">Profile</Link>
+            <Link to="/profile" className="side-menu">
+              Profile
+            </Link>
           </li>
         </ul>
       </div>

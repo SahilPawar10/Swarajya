@@ -1,13 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import withLayout from "../..";
 import "./register.css";
 import donateus from "../../../assets/donateUS.jpg";
+import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import smallLogo from "../../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
 import Contact from "../../Components/ContactUS/Contact";
 import { Link } from "react-router-dom";
+import { registerApi } from "../../../api/apiService";
+
 function Register() {
+  const [register, setRegister] = useState();
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = () => {
+    setLoading(true);
+    registerApi(register)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+
+        setLoading(false);
+      });
+    console.log("Clicked", register);
+  };
+
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setRegister((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   return (
     <div>
       <div className="register-div">
@@ -45,30 +77,27 @@ function Register() {
                   fullWidth
                   label="Name"
                   id="Name"
+                  name="name"
                   sx={{ marginTop: "30px" }}
+                  onChange={onChange}
+                />
+
+                <TextField
+                  fullWidth
+                  label="Email"
+                  id="Email"
+                  name="email"
+                  sx={{ marginTop: "10px" }}
+                  onChange={onChange}
                 />
                 <TextField
                   fullWidth
                   label="Mobile"
                   id="Mobile"
+                  name="number"
                   sx={{ marginTop: "10px" }}
+                  onChange={onChange}
                 />
-                <TextField
-                  fullWidth
-                  label="Email"
-                  id="Email"
-                  sx={{ marginTop: "10px", marginBottom: "20px" }}
-                />
-                {/* <TextField
-                fullWidth
-                label="Amount"
-                id="Amount"
-                defaultValue="250"
-                sx={{
-                  marginTop: "30px",
-                  marginBottom: "10px",
-                }}
-              /> */}
                 <p
                   style={{
                     color: "#004e7e",
@@ -82,8 +111,9 @@ function Register() {
                   variant="contained"
                   fullWidth
                   sx={{ marginBottom: "30px", fontSize: "20px" }}
+                  onClick={handleSubmit}
                 >
-                  Submit
+                  {loading ? "Sending" : "Submit"}
                 </Button>
               </div>
             </div>
