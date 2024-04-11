@@ -5,29 +5,50 @@ import donateus from "../../../assets/donateUS.jpg";
 import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import smallLogo from "../../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+
 import Contact from "../../Components/ContactUS/Contact";
 import { Link } from "react-router-dom";
 import { registerApi } from "../../../api/apiService";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 function Register() {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [register, setRegister] = useState();
+
+  const [message, setMessage] = useState("");
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
-    registerApi(register)
+    await registerApi(register)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         setLoading(false);
+        handleOpen();
       })
       .catch((err) => {
-        console.log(err);
-
+        console.log(err.response);
+        setMessage(err.response.data.message);
         setLoading(false);
       });
-    console.log("Clicked", register);
+    console.log("Clicked", message);
   };
 
   const onChange = (e) => {
@@ -73,6 +94,14 @@ function Register() {
 
               <div className="register-form">
                 <h2 style={{ textAlign: "center" }}>#Join Swarajya</h2>
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "red",
+                  }}
+                >
+                  {message}
+                </div>
                 <TextField
                   fullWidth
                   label="Name"
@@ -121,6 +150,25 @@ function Register() {
         </div>
       </div>
       <Contact />
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Thank You for Registrationg ,
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            We have recieved your request for Joining Swarajya , The request is
+            sent to admin for approval and you will recve the status via mail.{" "}
+            <br /> Kindly check your mail for update <br />
+            Thank You
+          </Typography>
+        </Box>
+      </Modal>
     </div>
   );
 }

@@ -1,12 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import withLayout from "../..";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Contact from "../../Components/ContactUS/Contact";
 import LoginCard from "../../../assets/login-Image.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginApi } from "../../../api/apiService";
+import { Navigate } from "react-router-dom";
 
 function Login() {
+  const [credentials, setCredentials] = useState();
+
+  const navigate = useNavigate();
+
+  const [message, setMessage] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setCredentials((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    await loginApi(credentials)
+      .then((res) => {
+        console.log(res.data);
+        setLoading(false);
+        localStorage.setItem("access_token", res.data.tokens.access.token);
+        localStorage.setItem("refresh_token", res.data.tokens.refresh.token);
+        navigate("/admin");
+      })
+      .catch((err) => {
+        console.log(err.response);
+
+        setMessage(err.response.data.message);
+        setLoading(false);
+      });
+    console.log("Clicked", message);
+  };
+
   return (
     <div>
       <div className="register-div">
@@ -19,10 +58,20 @@ function Login() {
 
               <div className="login-form">
                 <h2>Login Swarajya Portal</h2>
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "red",
+                  }}
+                >
+                  {message}
+                </div>
                 <TextField
                   fullWidth
                   label="email"
                   id="email"
+                  name="email"
+                  onChange={onChange}
                   sx={{ marginTop: "30px" }}
                 />
 
@@ -30,18 +79,10 @@ function Login() {
                   fullWidth
                   label="Password"
                   id="Password"
+                  name="password"
+                  onChange={onChange}
                   sx={{ marginTop: "10px", marginBottom: "20px" }}
                 />
-                {/* <TextField
-                fullWidth
-                label="Amount"
-                id="Amount"
-                defaultValue="250"
-                sx={{
-                  marginTop: "30px",
-                  marginBottom: "10px",
-                }}
-              /> */}
                 <p
                   style={{
                     color: "#004e7e",
@@ -55,8 +96,9 @@ function Login() {
                   variant="contained"
                   fullWidth
                   sx={{ marginBottom: "30px" }}
+                  onClick={handleSubmit}
                 >
-                  Login
+                  {loading ? <i>Sending</i> : "Submit"}
                 </Button>
               </div>
             </div>

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./layout.css";
 import Sidebar from "../Sidebar/Sidebar";
 import Avatar from "@mui/material/Avatar";
 import avtar from "../../assets/member3.jpeg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 

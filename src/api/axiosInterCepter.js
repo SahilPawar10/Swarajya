@@ -2,7 +2,8 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 const axiosInstance = axios.create({
-  baseURL: "https://swarajyabackend-arwh.onrender.com/v1", // deploy server
+  baseURL: "https://swarajyabackend-arwh.onrender.com/v1", // deploy
+  // baseURL: "http://localhost:3000/v1", // deploy server
 });
 
 axiosInstance.interceptors.request.use(

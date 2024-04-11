@@ -11,9 +11,9 @@ export const registerApi = (data) => {
   });
 };
 
-export const Login = (data) => {
+export const loginApi = (data) => {
   return new Promise((resolve, reject) => {
-    const url = "/login";
+    const url = "/auth/login";
     Axios.post(url, data)
       .then((res) => resolve(res))
       .catch((err) => reject(err));

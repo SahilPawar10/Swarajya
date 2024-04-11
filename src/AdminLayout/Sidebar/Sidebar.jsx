@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./sidebar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import Groups2Icon from "@mui/icons-material/Groups2";
 import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
@@ -16,6 +16,14 @@ function Sidebar({ menu = "menu" }) {
     document.getElementById(menu).style.backgroundColor = "#fba704";
     document.getElementById(menu).style.borderRadius = "8px";
   }, [menu]);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
 
   const onToggleClick = () => {
     // console.log("toggle");
