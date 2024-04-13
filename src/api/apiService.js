@@ -28,3 +28,21 @@ export const approveReq = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const forgotPass = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = "/auth/forgot-password";
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const resetPass = (data, token) => {
+  return new Promise((resolve, reject) => {
+    const url = `/auth/reset-password?token=${token}`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

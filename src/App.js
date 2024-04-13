@@ -23,6 +23,8 @@ import AdminHome from "./AdminLayout/adminHome/AdminHome";
 import Visitors from "./AdminLayout/Visitors/Visitors";
 import Accounts from "./AdminLayout/Accounts/Accounts";
 import Profile from "./AdminLayout/Profile/Profile";
+import Forgot_Password from "./MainLayout/screens/Password_Reset/Forgot_Password";
+import Reset_Password from "./MainLayout/screens/Password_Reset/Reset_Password";
 
 function App() {
   return (
@@ -47,6 +49,8 @@ function App() {
         <Route path="/visitors" element={<Visitors />} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/forgot_password" element={<Forgot_Password />} />
+        <Route path="/reset_password/:token" element={<Reset_Password />} />
       </Routes>
     </div>
   );
