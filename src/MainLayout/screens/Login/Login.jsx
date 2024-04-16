@@ -81,6 +81,7 @@ function Login() {
                   id="Password"
                   name="password"
                   onChange={onChange}
+                  type="password"
                   sx={{ marginTop: "10px", marginBottom: "20px" }}
                 />
                 <p

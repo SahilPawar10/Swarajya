@@ -46,3 +46,21 @@ export const resetPass = (data, token) => {
       .catch((err) => reject(err));
   });
 };
+
+export const getVisitor = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/visitor`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getTeamData = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/users`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

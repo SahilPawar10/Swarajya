@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { getVisitor } from "../../api/apiService";
 
 function Visitors() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getVisitor()
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <div id="visitors">
       <div className="search-bar">
@@ -24,15 +39,23 @@ function Visitors() {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            {data.map((visitor, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{visitor.name}</td>
+                <td>{visitor.number}</td>
+                <td>{visitor.email}</td>
+                <td>
+                  <button>Approve</button>
+                  <button>Reject</button>
+                </td>
+              </tr>
+            ))}
+            {/* <tr>
               <td>1</td>
               <td>Sahil Pawar</td>
               <td>9764804327</td>
               <td>sahilpawar@gmail.com</td>
-              <td>
-                <button>Approve</button>
-                <button>Reject</button>
-              </td>
             </tr>
             <tr>
               <td>2</td>
@@ -43,7 +66,7 @@ function Visitors() {
                 <button>Approve</button>
                 <button>Reject</button>
               </td>
-            </tr>
+            </tr> */}
           </tbody>
         </table>
       </div>
@@ -52,30 +75,3 @@ function Visitors() {
 }
 
 export default LayoutAdmin(Visitors, "visit");
-
-// align-items: flex-end;
-/* justify-content: space-between; */
-
-//   .user-profile {
-//   margin: 2% 2% 0 2%;
-//   display: flex;
-//   align-items: flex-end;
-
-//   width: 90%;
-//   padding: 5px;
-//   cursor: pointer;
-// }
-
-{
-  /* <div className="mobile-togle">
-              <MenuIcon
-                sx={{
-                  transform: "rotate(0deg)",
-                  fontSize: "2.5rem",
-                  color: "#fd7e14",
-
-                  marginTop: "0.2rem",
-                }}
-              />
-            </div> */
-}

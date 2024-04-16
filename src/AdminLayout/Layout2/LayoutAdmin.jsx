@@ -6,6 +6,7 @@ import avtar from "../../assets/member3.jpeg";
 import { Link, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
+import { getVisitor } from "../../api/apiService";
 
 const LayoutAdmin = (Page, menu) => {
   return () => (

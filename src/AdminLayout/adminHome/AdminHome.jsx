@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { getTeamData } from "../../api/apiService";
 
 function AdminHome() {
+  const [team, setTeam] = useState([]);
+
+  useEffect(() => {
+    getTeamData()
+      .then((res) => {
+        setTeam(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    console.log(team);
+  }, [team]);
   return (
     <div>
       {/* search bar  */}
@@ -28,7 +42,21 @@ function AdminHome() {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            {team.map((team, index) => (
+              <tr id={index}>
+                <td>{index + 1}</td>
+                <td>{team.firstName + " " + team.lastName} </td>
+                <td>{team.number}</td>
+                <td>{team.email}</td>
+                <td>{team?.gender ? team.gender : "not updated"}</td>
+                <td>{team?.picturePath ? team.picturePath : "not updated"}</td>
+                <td>{team?.address ? team.address : "not updated"}</td>
+                <td>
+                  <MoreVertIcon sx={{ transform: "rotate(0deg)" }} />
+                </td>
+              </tr>
+            ))}
+            {/* <tr>
               <td>1</td>
               <td>Sahil Pawar</td>
               <td>9764804327</td>
@@ -48,10 +76,8 @@ function AdminHome() {
               <td>Male</td>
               <td>Picture</td>
               <td>At post Ambrag tal-patan</td>
-              <td>
-                <MoreVertIcon sx={{ transform: "rotate(0deg)" }} />
-              </td>
-            </tr>
+           
+            </tr> */}
           </tbody>
         </table>
       </div>
