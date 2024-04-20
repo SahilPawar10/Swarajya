@@ -60,7 +60,7 @@ function Program() {
                     stunted children under the age of five.
                   </p>
 
-                  <Link to="/donate" className="program-button">
+                  <Link to="/donation" className="program-button">
                     <span className="text">Donate Us</span>
                   </Link>
                 </div>
@@ -94,7 +94,7 @@ function Program() {
                     mind to shine brightly
                   </p>
 
-                  <Link to="/donate" className="program-button">
+                  <Link to="/donation" className="program-button">
                     <span className="text">Donate Us</span>
                   </Link>
                 </div>
@@ -131,7 +131,7 @@ function Program() {
                     teachings of Shiva.
                   </p>
 
-                  <Link to="/donate" className="program-button">
+                  <Link to="/donation" className="program-button">
                     <span className="text">Donate Us</span>
                   </Link>
                 </div>
@@ -169,7 +169,7 @@ function Program() {
                   </p>
                   {/* <div className="button">Donate</div> */}
 
-                  <Link to="/donate" className="program-button">
+                  <Link to="/donation" className="program-button">
                     <span className="text">Donate Us</span>
                   </Link>
                 </div>

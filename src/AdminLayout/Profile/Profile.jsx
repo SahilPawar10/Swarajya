@@ -17,7 +17,9 @@ function Profile() {
             <h6>Since 14,feb,2024</h6>
             <div className="profile-btns">
               <div>Change Profile</div>
-              <div>Reset Password</div>
+              <div>
+                <Link to="/forgot_password">Reset Password</Link>
+              </div>
             </div>
           </div>
         </div>
