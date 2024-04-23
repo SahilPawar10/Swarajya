@@ -64,3 +64,21 @@ export const getTeamData = () => {
       .catch((err) => reject(err));
   });
 };
+
+export const getOneUser = (id) => {
+  return new Promise((resolve, reject) => {
+    const url = `/users/${id}`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const updateUser = (id, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/users/${id}`;
+    Axios.put(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
