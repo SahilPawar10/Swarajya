@@ -36,7 +36,6 @@ function Register() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    handleOpen();
     setLoading(true);
     await registerApi(register)
       .then((res) => {
@@ -49,7 +48,6 @@ function Register() {
         setMessage(err.response.data.message);
         setLoading(false);
       });
-    console.log("Clicked", message);
   };
 
   const onChange = (e) => {
