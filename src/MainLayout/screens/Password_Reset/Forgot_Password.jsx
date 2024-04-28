@@ -22,6 +22,7 @@ function Forgot_Password() {
       .then((res) => {
         console.log(res);
         setLoading(false);
+        alert("Please Check your email");
       })
       .catch((err) => {
         console.error(err);
