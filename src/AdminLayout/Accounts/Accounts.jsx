@@ -7,8 +7,8 @@ function Accounts() {
       <div className="about-container">
         <p>
           We believe in being transparent about our financials. As a valuable
-          donor, you have the right to garner a fair understanding of our
-          incomes and investments through donations.
+          contributor, you have the right to garner a fair understanding of our
+          incomes and investments through monthly amount.
         </p>
         <p>Click to see the Financial Statements. </p>
 
@@ -17,12 +17,14 @@ function Accounts() {
             <div className="report-heading">Monthly</div>
             <div className="reports">
               <div>
-                <a href="https://docs.google.com/spreadsheets/d/1ZhpGUAUX9uTIA__dDHHdLQ9nOBabPDpPyaFdvTQY7mo/edit#gid=214531015">
+                <a href="https://docs.google.com/spreadsheets/d/1wNQJwdVCl8qCVO49Lb2DdiWRmFXUmH5c8BfKHASfM1s/edit#gid=0">
                   FY 2024-25
                 </a>
               </div>
               <div>
-                <a href="">FY 2024-25</a>
+                <a href="https://docs.google.com/spreadsheets/d/1YJS2AmaRTa0FQvlwST1tIjgT0Xm9JCFC72-26zLcbao/edit?usp=sharing">
+                  FY 2023-24
+                </a>
               </div>
             </div>
           </div>
@@ -30,7 +32,9 @@ function Accounts() {
             <div className="report-heading"> Shivjayanti</div>
             <div className="reports">
               <div>
-                <a href="">FY 2024-25</a>
+                <a href="https://docs.google.com/spreadsheets/d/1NLAfqo1T52y6fXhj2DJLmTXvjqspOA8HEE9qFDXfcqM/edit?usp=sharing">
+                  FY 2024-25
+                </a>
               </div>
               <div>
                 <a href="">FY 2024-25</a>
