@@ -83,7 +83,7 @@ function Reset_Password() {
             </div>
             <div>
               <button onClick={handleSubmit}>
-                <s>Submit</s>
+                {loading ? "Sending" : "Submit"}
               </button>
             </div>
           </div>
