@@ -6,6 +6,8 @@ import { resetPass } from "../../../api/apiService";
 function Reset_Password() {
   let { token } = useParams();
 
+  const [loading, setLoading] = useState(false);
+
   const [password, setPassword] = useState("");
 
   const [confirmPass, setConfirmPass] = useState(false);
@@ -30,6 +32,7 @@ function Reset_Password() {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     if (password.password !== confirmPass) {
       setCorrectPassword(false);
       return;
@@ -39,8 +42,13 @@ function Reset_Password() {
         .then((res) => {
           console.log(res);
           alert("Password Updated successfully ..!");
+          setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+          alert("Error While Updating..Please try again");
+        });
     }
   };
   return (
