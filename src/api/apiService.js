@@ -82,3 +82,12 @@ export const updateUser = (id, data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const getIpDetails = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/auth/getip`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

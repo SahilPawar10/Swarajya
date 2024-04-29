@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./home.css";
 import { Link } from "react-scroll";
 import Navbar from "../Navbar/Navbar";
@@ -12,6 +12,7 @@ import Donate from "../DonateUS/Donate";
 import RecentWork from "../RecentWorks/RecentWork";
 // import Footer from "../footer/Footer";
 import withLayout from "../index";
+import { getIpDetails } from "../../api/apiService";
 
 const Home = (props) => {
   const revealDiv = () => {
@@ -30,6 +31,54 @@ const Home = (props) => {
   };
 
   window.addEventListener("scroll", revealDiv);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+
+    async function showPosition(position) {
+      console.log("Latitude: " + position.coords.latitude);
+
+      console.log("Longitude: " + position.coords.longitude);
+
+      const data = {
+        lat: position.coords.latitude,
+        long: position.coords.longitude,
+      };
+      await getIpDetails(data)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {});
+    }
+
+    function showError(error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          console.log("User denied the request for Geolocation.");
+
+          break;
+
+        case error.POSITION_UNAVAILABLE:
+          console.log("Location information is unavailable.");
+
+          break;
+
+        case error.TIMEOUT:
+          console.log("The request to get user location timed out.");
+
+          break;
+
+        case error.UNKNOWN_ERROR:
+          console.log("An unknown error occurred.");
+
+          break;
+      }
+    }
+  }, []);
   return (
     <div>
       <div className="section2 ">

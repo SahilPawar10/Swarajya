@@ -32,7 +32,10 @@ function Profile() {
   const handleform = async () => {
     console.log(editData);
     updateUser(userData.id, editData)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        alert("Succesfuly Updated ..!");
+      })
       .catch((err) => console.log(err));
   };
   const onChange = (e) => {
