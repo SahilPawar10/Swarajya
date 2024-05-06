@@ -5,7 +5,7 @@ export default function Banner({ image, mob_image, submenu1, submenu2 }) {
     <div>
       <div className="mission-banner">
         <div className="mission-banner-img">
-          <img src={image} alt="" />
+          <img src={image} loading="lazy" alt="" />
         </div>
         <img src={mob_image} alt="" className="mob-img" />
         <div className="front-view-container">

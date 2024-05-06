@@ -34,8 +34,8 @@
 }
 
 /* .st img {
-  width: 950px;
-  height: 500px;
+  width: 100vw;
+  height: 100vh;
 } */
 
 .nav-m {
@@ -279,3 +279,5 @@ circle:nth-child(2) {
     margin-left: 46px;
   } */
 }
+
+/* -------------------------Home Page Slider ----------------------------- */

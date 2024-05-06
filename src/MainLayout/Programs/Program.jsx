@@ -43,7 +43,7 @@ function Program() {
                           <circle cx="170" cy="170" r="160" />
                         </svg>
                         <span>
-                          <img src={program1} alt="" />
+                          <img src={program1} loading="lazy" alt="" />
                         </span>
                       </div>
                     </div>

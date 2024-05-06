@@ -4,7 +4,7 @@ import { Link } from "react-scroll";
 import Navbar from "../Navbar/Navbar";
 import slider1 from "../../assets/Banner-7.jpg";
 import slider2 from "../../assets/Banner-6.jpg";
-import slider3 from "../../assets/haldiKunku.jpeg";
+import slider3 from "../../assets/banner-3.jpg";
 
 import Program from "../Programs/Program";
 import Vision from "../Visions/Vision";
@@ -29,6 +29,22 @@ const Home = (props) => {
       }
     }
   };
+
+  let counter = 1;
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      document.getElementById("radio" + counter).checked = true;
+      counter++;
+      if (counter > 3) {
+        counter = 1;
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   window.addEventListener("scroll", revealDiv);
 
@@ -84,7 +100,7 @@ const Home = (props) => {
       <div className="section2 ">
         <div className="home">
           <div className="container">
-            <div className="banner1">
+            {/* <div className="banner1">
               <img src={slider1} alt="hands" />
               <div className="banner-text text1 ">
                 <h1>
@@ -148,7 +164,98 @@ const Home = (props) => {
                   </span>
                 </Link>
               </div>
-            </div>
+            </div> */}
+
+            <section className="home-carosoul">
+              <div className="home-slider">
+                <div className="slide">
+                  <input type="radio" name="radio-btn" id="radio1" />
+                  <input type="radio" name="radio-btn" id="radio2" />
+                  <input type="radio" name="radio-btn" id="radio3" />
+                  {/* <input type="radio" name="radio-btn" id="radio4" /> */}
+                  <div className="homeSlide first">
+                    <div className="st-text ">
+                      <h1>
+                        <span style={{ color: "#cc6017" }}>
+                          Harmony for Humanity:
+                        </span>{" "}
+                        Nurturing Well-being through Social Engagement
+                      </h1>
+                    </div>
+                    <div className="st-btn">
+                      <Link
+                        to="donateUs"
+                        smooth={true}
+                        duration={500}
+                        offset={-80}
+                        className="btn-donateUs"
+                      >
+                        <span className="text">DonateUs</span>
+                        <span className="icon">
+                          <i
+                            class="fa fa-heart icon-heart"
+                            aria-hidden="true"
+                          ></i>
+                        </span>
+                      </Link>
+                    </div>
+                    <img src={slider1} alt="" />
+                  </div>
+                  <div className="homeSlide">
+                    <div className="st-text">
+                      <h1>
+                        Empowering Communities Through Joy and Social
+                        Initiatives .
+                      </h1>
+                    </div>
+                    <div className="st-btn">
+                      <Link
+                        to="donateUs"
+                        smooth={true}
+                        duration={500}
+                        offset={-80}
+                        className="btn-donateUs"
+                      >
+                        <span className="text">DonateUs</span>
+                        <span className="icon">
+                          <i
+                            class="fa fa-heart icon-heart"
+                            aria-hidden="true"
+                          ></i>
+                        </span>
+                      </Link>
+                    </div>
+                    <img src={slider2} alt="" />
+                  </div>
+                  <div className="homeSlide">
+                    <div className="st-text">
+                      <h1 className="banner-3-text">
+                        United for the Swarajya : From Our People , <br /> For
+                        Our People
+                      </h1>
+                    </div>
+                    <div className="st-btn">
+                      <Link
+                        to="donateUs"
+                        smooth={true}
+                        duration={500}
+                        offset={-80}
+                        className="btn-donateUs"
+                      >
+                        <span className="text">DonateUs</span>
+                        <span className="icon">
+                          <i
+                            class="fa fa-heart icon-heart"
+                            aria-hidden="true"
+                          ></i>
+                        </span>
+                      </Link>
+                    </div>
+                    <img src={slider3} alt="" />
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
