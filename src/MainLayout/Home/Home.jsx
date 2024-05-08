@@ -205,7 +205,7 @@ const Home = (props) => {
                     <div className="st-text">
                       <h1>
                         Empowering Communities Through Joy and Social
-                        Initiatives .
+                        Initiatives.
                       </h1>
                     </div>
                     <div className="st-btn">

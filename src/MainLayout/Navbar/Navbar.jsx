@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
 import logo from "../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
+import mobileLogo from "../../assets/logo1-removebg-preview.png";
 
 function Navbar() {
   const [shownav, setShownav] = useState(false);
@@ -39,7 +40,13 @@ function Navbar() {
         </div>
         <div className={`nav-elements ${shownav && "active"}`}>
           <div className="logoOnClose">
-            <h2 style={{ color: "white" }}>स्वराज्य</h2>
+            {/* <h2 style={{ color: "white" }}>स्वराज्य</h2> */}
+            <img
+              src={mobileLogo}
+              style={{ width: "90px", height: "90px" }}
+              className="mobile-logo"
+              alt=""
+            />
             <div className="menuClose" onClick={handleNav}>
               <i class="fa fa-window-close" aria-hidden="true"></i>
             </div>

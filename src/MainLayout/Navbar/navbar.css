@@ -133,6 +133,12 @@ nav {
   margin: 0 !important;
 }
 
+.mobile-logo {
+  width: 149px;
+  height: 101px;
+  padding-bottom: 53px;
+}
+
 /*...................... mobile........................... */
 @media (min-width: 320px) and (max-width: 480px) {
   .logo-heading img {
