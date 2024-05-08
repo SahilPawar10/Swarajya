@@ -253,6 +253,14 @@
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
+  .homeSlide {
+    position: relative;
+  }
+
+  .homeSlide {
+    width: 20%;
+    transition: 2s;
+  }
   .banner-text {
     width: auto;
     position: absolute;

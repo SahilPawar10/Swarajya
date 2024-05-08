@@ -141,6 +141,9 @@ nav {
 
 /*...................... mobile........................... */
 @media (min-width: 320px) and (max-width: 480px) {
+  nav {
+    position: absolute;
+  }
   .logo-heading img {
     width: 100px;
     margin-top: 20px;

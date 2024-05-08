@@ -172,7 +172,6 @@ const Home = (props) => {
                   <input type="radio" name="radio-btn" id="radio1" />
                   <input type="radio" name="radio-btn" id="radio2" />
                   <input type="radio" name="radio-btn" id="radio3" />
-                  {/* <input type="radio" name="radio-btn" id="radio4" /> */}
                   <div className="homeSlide first">
                     <div className="st-text ">
                       <h1>
@@ -199,7 +198,7 @@ const Home = (props) => {
                         </span>
                       </Link>
                     </div>
-                    <img src={slider1} alt="" />
+                    <img src={slider1} alt="" className="bannerImg" />
                   </div>
                   <div className="homeSlide">
                     <div className="st-text">
@@ -225,7 +224,7 @@ const Home = (props) => {
                         </span>
                       </Link>
                     </div>
-                    <img src={slider2} alt="" />
+                    <img src={slider2} alt="" className="bannerImg" />
                   </div>
                   <div className="homeSlide">
                     <div className="st-text">
@@ -251,7 +250,7 @@ const Home = (props) => {
                         </span>
                       </Link>
                     </div>
-                    <img src={slider3} alt="" />
+                    <img src={slider3} alt="" className="bannerImg" />
                   </div>
                 </div>
               </div>
