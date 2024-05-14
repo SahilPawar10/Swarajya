@@ -52,113 +52,33 @@ function Forgot_Password() {
   };
 
   return (
-    // <div id="Forgot">
-    //   <div className="password-outer">
-    //     {/* <h4 className="page-heading">Forgot Password</h4> */}
-    //     <div className="forgot-password-inner">
-    //       <div className="forgot-insider">
-    //         <h4>Reset Your Password</h4>
-    //         <p>
-    //           Please Enter the email address you'd like your password reset
-    //           information sent to
-    //         </p>
-    //         <div>
-    //           <span>Enter Your email</span>
-    //           <input
-    //             type="email"
-    //             placeholder="enter your email"
-    //             onChange={onChange}
-    //           />
-    //         </div>
-    //         <div>
-    //           <button onClick={handleSubmit}>
-    //             {loading ? <s>Sending</s> : <s>Request Reset Link</s>}
-    //           </button>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-    <>
-      <section className="home-carosoul">
-        <div className="home-slider">
-          <div className="slide">
-            <input type="radio" name="radio-btn" id="radio1" />
-            <input type="radio" name="radio-btn" id="radio2" />
-            <input type="radio" name="radio-btn" id="radio3" />
-
-            <div className="homeSlide first">
-              <div className="st-text ">
-                <h1>
-                  Harmony for Humanity: Nurturing Well-being through Social
-                  Engagement
-                </h1>
-              </div>
-              <div className="st-btn">
-                <Link
-                  to="donateUs"
-                  smooth={true}
-                  duration={500}
-                  offset={-80}
-                  className="btn-donateUs"
-                >
-                  <span className="text">DonateUs</span>
-                  <span className="icon">
-                    <i class="fa fa-heart icon-heart" aria-hidden="true"></i>
-                  </span>
-                </Link>
-              </div>
-              <img src={slider4} alt="" />
+    <div id="Forgot">
+      <div className="password-outer">
+        {/* <h4 className="page-heading">Forgot Password</h4> */}
+        <div className="forgot-password-inner">
+          <div className="forgot-insider">
+            <h4>Reset Your Password</h4>
+            <p>
+              Please Enter the email address you'd like your password reset
+              information sent to
+            </p>
+            <div>
+              <span>Enter Your email</span>
+              <input
+                type="email"
+                placeholder="enter your email"
+                onChange={onChange}
+              />
             </div>
-            <div className="homeSlide">
-              <div className="st-text">
-                <h1>
-                  Empowering Communities Through Joy and Social Initiatives .
-                </h1>
-              </div>
-              <div className="st-btn">
-                <Link
-                  to="donateUs"
-                  smooth={true}
-                  duration={500}
-                  offset={-80}
-                  className="btn-donateUs"
-                >
-                  <span className="text">DonateUs</span>
-                  <span className="icon">
-                    <i class="fa fa-heart icon-heart" aria-hidden="true"></i>
-                  </span>
-                </Link>
-              </div>
-              <img src={slider2} alt="" />
-            </div>
-            <div className="homeSlide">
-              <div className="st-text">
-                <h1>
-                  United for the Swarajya : From Our People , <br /> For Our
-                  People
-                </h1>
-              </div>
-              <div className="st-btn">
-                <Link
-                  to="donateUs"
-                  smooth={true}
-                  duration={500}
-                  offset={-80}
-                  className="btn-donateUs"
-                >
-                  <span className="text">DonateUs</span>
-                  <span className="icon">
-                    <i class="fa fa-heart icon-heart" aria-hidden="true"></i>
-                  </span>
-                </Link>
-              </div>
-              <img src={slider3} alt="" />
+            <div>
+              <button onClick={handleSubmit}>
+                {loading ? <s>Sending</s> : <s>Request Reset Link</s>}
+              </button>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }
 
