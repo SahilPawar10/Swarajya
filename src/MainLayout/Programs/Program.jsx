@@ -12,7 +12,7 @@ function Program() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       document.getElementById("redio" + counter).checked = true;
-      counter++;
+      ++counter;
       if (counter > 4) {
         counter = 1;
       }
