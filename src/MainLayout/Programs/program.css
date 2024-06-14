@@ -124,6 +124,21 @@
   background-color: orange;
 }
 
+#redio1:checked ~ .nav-auto .a-b1 {
+  background-color: orange;
+}
+#redio2:checked ~ .nav-auto .a-b2 {
+  background-color: orange;
+}
+
+#redio3:checked ~ .nav-auto .a-b3 {
+  background-color: orange;
+}
+
+#redio4:checked ~ .nav-auto .a-b4 {
+  background-color: orange;
+}
+
 .program-slide {
   display: flex;
   justify-content: space-around;
