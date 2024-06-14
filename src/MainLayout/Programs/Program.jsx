@@ -10,7 +10,7 @@ import slider4 from "../../assets/WhatsApp Image 2023-11-16 at 10.59.42 AM.jpeg"
 function Program() {
   let count = 1;
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    const intervalID = setInterval(() => {
       document.getElementById("redio" + count).checked = true;
       ++count;
       if (count > 4) {
@@ -19,7 +19,7 @@ function Program() {
     }, 4500);
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(intervalID);
     };
   }, []);
 
@@ -28,10 +28,10 @@ function Program() {
       <section className="section">
         <div className="slider">
           <div className="slide">
-            <input type="radio" name="radio-btn" id="redio1" />
-            <input type="radio" name="radio-btn" id="redio2" />
-            <input type="radio" name="radio-btn" id="redio3" />
-            <input type="radio" name="radio-btn" id="redio4" />
+            <input type="radio" name="redio-btn" id="redio1" />
+            <input type="radio" name="redio-btn" id="redio2" />
+            <input type="radio" name="redio-btn" id="redio3" />
+            <input type="radio" name="redio-btn" id="redio4" />
             <div className="st first">
               <div class="program-slide ">
                 <div class="col">
