@@ -11,12 +11,12 @@ function Program() {
   let counter = 1;
   useEffect(() => {
     const intervalId = setInterval(() => {
-      document.getElementById("radio" + counter).checked = true;
+      document.getElementById("redio" + counter).checked = true;
       counter++;
       if (counter > 4) {
         counter = 1;
       }
-    }, 5000);
+    }, 4000);
 
     return () => {
       clearInterval(intervalId);
@@ -28,10 +28,10 @@ function Program() {
       <section className="section">
         <div className="slider">
           <div className="slide">
-            <input type="radio" name="radio-btn" id="radio1" />
-            <input type="radio" name="radio-btn" id="radio2" />
-            <input type="radio" name="radio-btn" id="radio3" />
-            <input type="radio" name="radio-btn" id="radio4" />
+            <input type="radio" name="radio-btn" id="redio1" />
+            <input type="radio" name="radio-btn" id="redio2" />
+            <input type="radio" name="radio-btn" id="redio3" />
+            <input type="radio" name="radio-btn" id="redio4" />
             <div className="st first">
               <div class="program-slide ">
                 <div class="col">

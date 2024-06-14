@@ -75,6 +75,20 @@
   margin-left: -60%;
 }
 
+
+#redio1:checked ~ .first {
+  margin-left: 0%;
+}
+#redio2:checked ~ .first {
+  margin-left: -20%;
+}
+#redio3:checked ~ .first {
+  margin-left: -40%;
+}
+#redio4:checked ~ .first {
+  margin-left: -60%;
+}
+
 .nav-auto {
   position: absolute;
   width: 800px;
