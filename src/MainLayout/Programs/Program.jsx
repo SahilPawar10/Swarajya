@@ -13,10 +13,10 @@ function Program() {
     const intervalId = setInterval(() => {
       document.getElementById("redio" + counter).checked = true;
       counter++;
-      if (counter > 4) {
+      if (counter > 5) {
         counter = 1;
       }
-    }, 4000);
+    }, 5000);
 
     return () => {
       clearInterval(intervalId);
