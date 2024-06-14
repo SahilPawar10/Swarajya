@@ -8,13 +8,13 @@ import slider3 from "../../assets/WhatsApp Image 2023-11-11 at 11.12.22 PM.jpeg"
 import slider4 from "../../assets/WhatsApp Image 2023-11-16 at 10.59.42 AM.jpeg";
 
 function Program() {
-  let counter = 1;
+  let count = 1;
   useEffect(() => {
     const intervalId = setInterval(() => {
-      document.getElementById("redio" + counter).checked = true;
-      ++counter;
-      if (counter > 4) {
-        counter = 1;
+      document.getElementById("redio" + count).checked = true;
+      ++count;
+      if (count > 4) {
+        count = 1;
       }
     }, 4500);
 
