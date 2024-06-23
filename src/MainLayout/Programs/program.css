@@ -75,6 +75,20 @@
   margin-left: -60%;
 }
 
+
+#redio1:checked ~ .first {
+  margin-left: 0%;
+}
+#redio2:checked ~ .first {
+  margin-left: -20%;
+}
+#redio3:checked ~ .first {
+  margin-left: -40%;
+}
+#redio4:checked ~ .first {
+  margin-left: -60%;
+}
+
 .nav-auto {
   position: absolute;
   width: 800px;
@@ -107,6 +121,21 @@
 }
 
 #radio4:checked ~ .nav-auto .a-b4 {
+  background-color: orange;
+}
+
+#redio1:checked ~ .nav-auto .a-b1 {
+  background-color: orange;
+}
+#redio2:checked ~ .nav-auto .a-b2 {
+  background-color: orange;
+}
+
+#redio3:checked ~ .nav-auto .a-b3 {
+  background-color: orange;
+}
+
+#redio4:checked ~ .nav-auto .a-b4 {
   background-color: orange;
 }
 
