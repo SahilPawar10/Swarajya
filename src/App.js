@@ -2,9 +2,7 @@ import { RoundaboutLeftSharp } from "@mui/icons-material";
 import Home from "./MainLayout/Home/Home";
 import Mission from "./MainLayout/Abouts_us/OurMission/Mission";
 import Program from "./MainLayout/Programs/Program";
-import { Router, Routes, Route } from "react-router-dom";
-import Navbar from "./MainLayout/Navbar/Navbar";
-import Footer from "./MainLayout/footer/Footer";
+import { Routes, Route } from "react-router-dom";
 import About from "./MainLayout/Abouts_us/About_Us/About";
 import Team from "./MainLayout/Abouts_us/Our_Team/Team";
 import Belief from "./MainLayout/Abouts_us/Our_Belief/Belief";
@@ -18,13 +16,13 @@ import Donation from "./MainLayout/Pages/Donation";
 import FoundingStory from "./MainLayout/Pages/FoundingStory";
 import Register from "./MainLayout/screens/Register/Register";
 import Login from "./MainLayout/screens/Login/Login";
-import Layout2 from "./AdminLayout/Layout2/LayoutAdmin";
 import AdminHome from "./AdminLayout/adminHome/AdminHome";
 import Visitors from "./AdminLayout/Visitors/Visitors";
 import Accounts from "./AdminLayout/Accounts/Accounts";
 import Profile from "./AdminLayout/Profile/Profile";
 import Forgot_Password from "./MainLayout/screens/Password_Reset/Forgot_Password";
 import Reset_Password from "./MainLayout/screens/Password_Reset/Reset_Password";
+import SendMai from "./MainLayout/Pages/SendMai";
 
 function App() {
   return (
@@ -49,6 +47,7 @@ function App() {
         <Route path="/visitors" element={<Visitors />} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/mail" element={<SendMai />} />
         <Route path="/forgot_password" element={<Forgot_Password />} />
         <Route path="/reset_password/:token" element={<Reset_Password />} />
       </Routes>

@@ -91,3 +91,12 @@ export const getIpDetails = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const sendNotice = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/auth/send-notice`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

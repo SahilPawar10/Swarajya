@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./rePassword.css";
 import { forgotPass } from "../../../api/apiService";
-import { Link } from "react-router-dom";
-
-import slider2 from "../../../assets/Banner-6.jpg";
-import slider3 from "../../../assets/WhatsApp Image 2023-11-11 at 11.12.22 PM.jpeg";
-import slider4 from "../../../assets/Banner-7.jpg";
 
 function Forgot_Password() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
-    // const name = e.target.value;
     const value = e.target.value;
-
     setEmail(value);
   };
 
