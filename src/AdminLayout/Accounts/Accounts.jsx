@@ -42,13 +42,17 @@ function Accounts() {
             </div>
           </div>
           <div className="annual-reports">
-            <div className="report-heading">Annual Reports</div>
+            <div className="report-heading"> Reports</div>
             <div className="reports">
               <div>
-                <a href="">FY 2024-25</a>
+                <a href="https://docs.google.com/spreadsheets/d/1yo6ixPgr9Q0xuD_qrK6IMcAiIDzU_EWqmHVy5v2UgQk/edit?gid=0#gid=0">
+                  Credit Book
+                </a>
               </div>
               <div>
-                <a href="">FY 2024-25</a>
+                <a href="https://docs.google.com/spreadsheets/d/1mVv6eMKLPtctwi8iaUI4GDz_HB1HKq5rovHekaVf9OQ/edit?gid=0#gid=0">
+                  Expense Book
+                </a>
               </div>
             </div>
           </div>
