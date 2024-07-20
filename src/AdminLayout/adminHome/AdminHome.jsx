@@ -14,12 +14,10 @@ function AdminHome() {
       .catch((err) => console.log(err));
   }, []);
 
-  useEffect(() => {
-    // console.log(team);
-  }, [team]);
+
 
   return (
-    <div>
+    <div id="adminHome">
       <div className="search-bar">
         <input type="text" placeholder="Search Here" />
         <button>
@@ -48,7 +46,7 @@ function AdminHome() {
                 <td>{team.number}</td>
                 <td>{team.email}</td>
                 <td>{team?.gender ? team.gender : "not updated"}</td>
-                <td>{team?.picturePath ? team.picturePath : "not updated"}</td>
+                <td>{team?.picturePath ?  <img src={team.picturePath} alt="" />  : "not updated"}</td>
                 <td>{team?.address ? team.address : "not updated"}</td>
                 <td>
                   <MoreVertIcon sx={{ transform: "rotate(0deg)" }} />

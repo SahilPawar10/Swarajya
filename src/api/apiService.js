@@ -100,3 +100,12 @@ export const sendNotice = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const changeProfile = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/users/changeProfile`;
+    Axios.put(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from "react";
 import "./profile.css";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
-import profileImg from "../../assets/member2 (2).jpeg";
+import profileImg from "../../assets/logo1.jpg";
 import { Link } from "react-router-dom";
 import { getOneUser, updateUser } from "../../api/apiService";
+import ProfileChangeDialog from './ProfileChangeDialog'
 
 function Profile() {
   const [edit, setedit] = useState(false);
   const [userData, setUserData] = useState({});
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    
+    setIsDialogOpen(false);
+    setUser()
+  };
 
   const [editData, setEditData] = useState();
 
@@ -15,7 +28,7 @@ function Profile() {
     setedit(!edit);
   };
 
-  useEffect(() => {
+  const setUser = ()=>{
     const id = localStorage.getItem("userId");
     if (id) {
       getOneUser(id)
@@ -27,7 +40,11 @@ function Profile() {
           console.error(error);
         });
     }
-  }, []);
+    console.log("EseEffect");
+  }
+  useEffect(() => {
+    setUser()
+  }, [isDialogOpen]);
 
   const handleform = async () => {
     console.log(editData);
@@ -53,12 +70,18 @@ function Profile() {
         <div className="profile-left-tab">
           <div className="profile-left-tab-innner">
             <div className="profile-img">
-              <img src={profileImg} alt="" />
+              {userData.picturePath ?
+              <img src={userData.picturePath} alt="" /> 
+              :<img src={profileImg} alt="" /> }
+          
             </div>
-            <h4>{userData?.firstName + " " + userData.lastName} </h4>
-            <h6>Since 14,feb,2024</h6>
+              {userData.firstName ? <h4>{ userData?.firstName + " " + userData?.lastName }</h4> : <h4>Swarajya</h4>}
+                
+             {/* <h4>{userData?.firstName ? userData?.firstName:'Loading' + " " + userData.lastName} </h4> */}
+            {/* <h6>Since 14,feb,2024</h6> */}
             <div className="profile-btns">
-              <div>Change Profile</div>
+              <div  onClick={handleOpenDialog}>Change Profile</div>
+              <ProfileChangeDialog isOpen={isDialogOpen} onClose={handleCloseDialog} profileId={userData.id}/>
               <div>
                 <Link to="/forgot_password">Reset Password</Link>
               </div>
