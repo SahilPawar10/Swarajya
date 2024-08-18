@@ -212,6 +212,21 @@ function Sidebar({ menu = "menu" }) {
               SendMail
             </Link>
           </li>
+          <li id="chat">
+            <span>
+              <AccountCircleIcon
+                sx={{
+                  transform: "rotate(0deg)",
+                  fontSize: "1.4rem",
+                  color: "#fd7e14",
+                  paddingTop: "0.3rem",
+                }}
+              />
+            </span>
+            <Link to="/mycontacts" className="side-menu">
+              Chat
+            </Link>
+          </li>
         </ul>
       </div>
     </div>

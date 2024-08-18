@@ -23,6 +23,7 @@ import Profile from "./AdminLayout/Profile/Profile";
 import Forgot_Password from "./MainLayout/screens/Password_Reset/Forgot_Password";
 import Reset_Password from "./MainLayout/screens/Password_Reset/Reset_Password";
 import SendMai from "./MainLayout/Pages/SendMai";
+import MyContacts from "./chat/MyContacts";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/mail" element={<SendMai />} />
+        <Route path="/mycontacts" element={<MyContacts />} />
         <Route path="/forgot_password" element={<Forgot_Password />} />
         <Route path="/reset_password/:token" element={<Reset_Password />} />
       </Routes>
