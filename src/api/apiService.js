@@ -109,3 +109,12 @@ export const changeProfile = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const sendGreetings = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/auth/send-greetings`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
