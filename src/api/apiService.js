@@ -118,3 +118,30 @@ export const sendGreetings = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const getAllMessage = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/chat/getMsg`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const sendMessage = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/chat/sendMsg`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getContacts = (id) => {
+  return new Promise((resolve, reject) => {
+    const url = `/chat/contacts/${id}`;
+    Axios.post(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
