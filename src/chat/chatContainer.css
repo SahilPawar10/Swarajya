@@ -313,7 +313,7 @@
   margin-right: 10px;
 }
 
-@media (min-width: 380px) and (max-width: 480px) {
+@media (min-width: 320px) and (max-width: 480px) {
   .chat-sidebar-menu {
     width: 100%;
   }
