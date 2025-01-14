@@ -35,7 +35,10 @@ function Chattting() {
 
   useEffect(() => {
     if (currentuser) {
-      socket.current = io(host);
+      socket.current = io(host, {
+        withCredentials: true, // Include credentials
+        transports: ["websocket"], // Ensure WebSocket connection
+      });
 
       socket.current.emit("add-user", currentuser.id);
 
