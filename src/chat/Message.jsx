@@ -49,7 +49,7 @@ function Message({ currentchat, currentUser, socket }) {
     };
     await sendMessage(data)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -74,7 +74,7 @@ function Message({ currentchat, currentUser, socket }) {
   };
   useEffect(() => {
     if (socket.current) {
-      // console.log("Socket connected and listener set up.");
+      console.log("Socket connected and listener set up.");
       socket.current.on("msg-recieve", (msg) => {
         SetarrivalMessage({ fromself: false, message: msg });
       });

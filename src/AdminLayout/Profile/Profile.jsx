@@ -4,7 +4,7 @@ import LayoutAdmin from "../Layout2/LayoutAdmin";
 import profileImg from "../../assets/logo1.jpg";
 import { Link } from "react-router-dom";
 import { getOneUser, updateUser } from "../../api/apiService";
-import ProfileChangeDialog from './ProfileChangeDialog'
+import ProfileChangeDialog from "./ProfileChangeDialog";
 
 function Profile() {
   const [edit, setedit] = useState(false);
@@ -17,9 +17,8 @@ function Profile() {
   };
 
   const handleCloseDialog = () => {
-    
     setIsDialogOpen(false);
-    setUser()
+    setUser();
   };
 
   const [editData, setEditData] = useState();
@@ -28,22 +27,23 @@ function Profile() {
     setedit(!edit);
   };
 
-  const setUser = ()=>{
+  const setUser = async () => {
     const id = localStorage.getItem("userId");
+    console.log(JSON.parse(id), "id");
     if (id) {
-      getOneUser(id)
+      getOneUser(JSON.parse(id))
         .then((res) => {
           setUserData(res.data);
-          console.log(res.data);
+          console.log(res.data, "res");
         })
         .catch((error) => {
           console.error(error);
         });
     }
-    console.log("EseEffect");
-  }
+    console.log("UseEffect");
+  };
   useEffect(() => {
-    setUser()
+    setUser();
   }, [isDialogOpen]);
 
   const handleform = async () => {
@@ -70,18 +70,27 @@ function Profile() {
         <div className="profile-left-tab">
           <div className="profile-left-tab-innner">
             <div className="profile-img">
-              {userData.picturePath ?
-              <img src={userData.picturePath} alt="" /> 
-              :<img src={profileImg} alt="" /> }
-          
+              {userData.picturePath ? (
+                <img src={userData.picturePath} alt="" />
+              ) : (
+                <img src={profileImg} alt="" />
+              )}
             </div>
-              {userData.firstName ? <h4>{ userData?.firstName + " " + userData?.lastName }</h4> : <h4>Swarajya</h4>}
-                
-             {/* <h4>{userData?.firstName ? userData?.firstName:'Loading' + " " + userData.lastName} </h4> */}
+            {userData.firstName ? (
+              <h4>{userData?.firstName + " " + userData?.lastName}</h4>
+            ) : (
+              <h4>Swarajya</h4>
+            )}
+
+            {/* <h4>{userData?.firstName ? userData?.firstName:'Loading' + " " + userData.lastName} </h4> */}
             {/* <h6>Since 14,feb,2024</h6> */}
             <div className="profile-btns">
-              <div  onClick={handleOpenDialog}>Change Profile</div>
-              <ProfileChangeDialog isOpen={isDialogOpen} onClose={handleCloseDialog} profileId={userData.id}/>
+              <div onClick={handleOpenDialog}>Change Profile</div>
+              <ProfileChangeDialog
+                isOpen={isDialogOpen}
+                onClose={handleCloseDialog}
+                profileId={userData.id}
+              />
               <div>
                 <Link to="/forgot_password">Reset Password</Link>
               </div>

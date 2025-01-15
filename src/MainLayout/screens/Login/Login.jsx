@@ -36,6 +36,7 @@ function Login() {
         localStorage.setItem("access_token", res.data.tokens.access.token);
         localStorage.setItem("refresh_token", res.data.tokens.refresh.token);
         localStorage.setItem("swarajya-user", JSON.stringify(res.data.user));
+        localStorage.setItem("userId", JSON.stringify(res.data.user.id));
         navigate("/admin");
       })
       .catch((err) => {
