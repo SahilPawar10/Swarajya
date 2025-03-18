@@ -37,7 +37,7 @@ function Accounts() {
             <div className="report-heading"> Shivjayanti</div>
             <div className="reports">
               <div>
-                <a href="https://docs.google.com/spreadsheets/d/1NLAfqo1T52y6fXhj2DJLmTXvjqspOA8HEE9qFDXfcqM/edit?usp=sharing">
+                <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7PDpZTqAEQYLm4ysNboPtUbFd6p__S_WOJMsAe_KSWV18rtbb833JnFAigWRlZMTyoZ8dZeQvTnpX/pub?output=pdf">
                   FY 2025-26
                 </a>
               </div>
