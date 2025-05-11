@@ -15,7 +15,7 @@
 }
 .admin-page {
   flex: 80%;
- }
+}
 
 .user-profile {
   display: flex;
@@ -29,11 +29,15 @@
 /* -------------------------------------Team------------------------------ */
 #visitors {
   position: relative;
+  max-width: 100%;
+  height: 85vh;
+  overflow-x: auto;
 }
-#adminHome{
-  margin: 0 5%;
-  height: 50%;
-
+#adminHome {
+  position: relative;
+  max-width: 100%;
+  height: 85vh;
+  overflow-x: auto;
 }
 .team-table {
   /* width: 100vw; */
