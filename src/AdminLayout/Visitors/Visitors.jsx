@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { getVisitor } from "../../api/apiService";
+import "./visitor.css";
 
 function Visitors() {
   const [data, setData] = useState([]);
@@ -27,46 +28,30 @@ function Visitors() {
         </button>
       </div>
       {/* Table */}
-      <div className="team-table">
+      <div className="visitor-table">
         <table>
           <thead>
             <tr>
-              <th className="teamtable-heading">Sr.no</th>
-              <th className="teamtable-heading">Name</th>
-              <th className="teamtable-heading">Number</th>
-              <th className="teamtable-heading">Email</th>
-              <th className="teamtable-heading">Action</th>
+              <th className="visitortable-heading">Sr.no</th>
+              <th className="visitortable-heading">Name</th>
+              <th className="visitortable-heading">Number</th>
+              <th className="visitortable-heading">Email</th>
+              <th className="visitortable-heading">Action</th>
             </tr>
           </thead>
           <tbody>
             {data.map((visitor, index) => (
               <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{visitor.name}</td>
-                <td>{visitor.number}</td>
-                <td>{visitor.email}</td>
-                <td>
+                <td data-label="Sr.no">{index + 1}</td>
+                <td data-label="Name">{visitor.name}</td>
+                <td data-label="Number">{visitor.number}</td>
+                <td data-label="Email">{visitor.email}</td>
+                <td data-label="Action">
                   <button>Approve</button>
                   <button>Reject</button>
                 </td>
               </tr>
             ))}
-            {/* <tr>
-              <td>1</td>
-              <td>Sahil Pawar</td>
-              <td>9764804327</td>
-              <td>sahilpawar@gmail.com</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Sahil Pawar</td>
-              <td>9764804327</td>
-              <td>sahilpawar@gmail.com</td>
-              <td>
-                <button>Approve</button>
-                <button>Reject</button>
-              </td>
-            </tr> */}
           </tbody>
         </table>
       </div>

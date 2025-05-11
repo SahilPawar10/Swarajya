@@ -42,12 +42,12 @@ function Accounts() {
                 </a>
               </div>
               <div>
-                <a href="https://docs.google.com/spreadsheets/d/1NLAfqo1T52y6fXhj2DJLmTXvjqspOA8HEE9qFDXfcqM/edit?usp=sharing">
-                  FY 2024-25
+                <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSmp16THfF1Ir-lnR9VtxgWaD-ETWB6SxcGeNliA5w9SbYTyq0zy0kE9ycEX4ruQl_0oVYrS4QYs0WJ/pub?output=pdf">
+                  2024
                 </a>
               </div>
               <div>
-                <a href="">FY 2023-24</a>
+                <a href="">2023</a>
               </div>
             </div>
           </div>
@@ -60,14 +60,12 @@ function Accounts() {
                 </a>
               </div>
               <div>
-                <a href="https://docs.google.com/spreadsheets/d/1mVv6eMKLPtctwi8iaUI4GDz_HB1HKq5rovHekaVf9OQ/edit?gid=0#gid=0">
+                <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQyNXmLHO9Xo-hK5GnakkZdTrwzALXrt0oU7v77imhUM8_knYSpeay33LccIrWgPR4yhtemM95DYG8P/pubhtml?gid=0&single=true">
                   Expense 2024
                 </a>
               </div>
               <div>
-                <a href="https://docs.google.com/spreadsheets/d/1mVv6eMKLPtctwi8iaUI4GDz_HB1HKq5rovHekaVf9OQ/edit?gid=0#gid=0">
-                  Expense 2023
-                </a>
+                <a href="#">Expense 2023</a>
               </div>
             </div>
           </div>

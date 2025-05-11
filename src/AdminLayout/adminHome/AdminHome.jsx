@@ -6,6 +6,16 @@ import { getTeamData } from "../../api/apiService";
 function AdminHome() {
   const [team, setTeam] = useState([]);
 
+  const [modalImage, setModalImage] = useState(null);
+
+  const handleImageClick = (src) => {
+    setModalImage(src);
+  };
+
+  const closeModal = () => {
+    setModalImage(null);
+  };
+
   useEffect(() => {
     getTeamData()
       .then((res) => {
@@ -13,8 +23,6 @@ function AdminHome() {
       })
       .catch((err) => console.log(err));
   }, []);
-
-
 
   return (
     <div id="adminHome">
@@ -24,18 +32,18 @@ function AdminHome() {
           <span>Search</span>
         </button>
       </div>
-      <div className="team-table">
+      <div className="visitor-table">
         <table>
           <thead>
             <tr>
-              <th className="teamtable-heading">Sr.no</th>
-              <th className="teamtable-heading">Name</th>
-              <th className="teamtable-heading">Number</th>
-              <th className="teamtable-heading">Email</th>
-              <th className="teamtable-heading">Gender</th>
-              <th className="teamtable-heading">Picture</th>
-              <th className="teamtable-heading">Address</th>
-              <th className="teamtable-heading">Action</th>
+              <th className="visitortable-heading-heading">Sr.no</th>
+              <th className="visitortable-heading-heading">Name</th>
+              <th className="visitortable-heading-heading">Number</th>
+              <th className="visitortable-heading-heading">Email</th>
+              <th className="visitortable-heading-heading">Gender</th>
+              <th className="visitortable-heading-heading">Picture</th>
+              <th className="visitortable-heading-heading">Address</th>
+              <th className="visitortable-heading-heading">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -46,7 +54,23 @@ function AdminHome() {
                 <td>{team.number}</td>
                 <td>{team.email}</td>
                 <td>{team?.gender ? team.gender : "not updated"}</td>
-                <td>{team?.picturePath ?  <img src={team.picturePath} alt="" />  : "not updated"}</td>
+                <td>
+                  {team?.picturePath ? (
+                    <div className="hover-image-wrapper">
+                      <img
+                        src={team.picturePath}
+                        alt="thumb"
+                        className="thumbnail"
+                      />
+                      <div className="hover-modal">
+                        <img src={team.picturePath} alt="enlarged" />
+                      </div>
+                    </div>
+                  ) : (
+                    "not updated"
+                  )}
+                </td>
+
                 <td>{team?.address ? team.address : "not updated"}</td>
                 <td>
                   <MoreVertIcon sx={{ transform: "rotate(0deg)" }} />
@@ -78,6 +102,14 @@ function AdminHome() {
           </tbody>
         </table>
       </div>
+
+      {/* Modal */}
+      {modalImage && (
+        <div className="image-modal" onClick={closeModal}>
+          <span className="close">&times;</span>
+          <img src={modalImage} alt="Full view" className="modal-content" />
+        </div>
+      )}
     </div>
   );
 }
