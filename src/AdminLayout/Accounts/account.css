@@ -1,0 +1,274 @@
+/* Dashboard.css */
+
+/* Layout */
+.account-dashboard {
+  font-family: Arial, sans-serif;
+  background-color: #f5f6fa;
+  padding: 20px;
+}
+
+/* Top Navigation */
+.account-top-nav {
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.account-nav-left {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.account-logo {
+  color: #6aff00;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.account-nav-links span {
+  margin-right: 15px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.account-nav-links .active {
+  color: #4285f4;
+}
+
+.account-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-icon {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+/* Main Content Grid */
+.account-main-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Accounts */
+.accounts-dashboard {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.accounts-card {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.accounts-card span {
+  display: block;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.balance {
+  background: linear-gradient(to right, #0aa221, #67e472);
+}
+
+.credits {
+  background: linear-gradient(to right, #f7971e, #ffd200);
+}
+
+.debits {
+  background: linear-gradient(to right, #ff4b2b, #ff416c);
+}
+
+.loanouts {
+  background: linear-gradient(to right, #7f00ff, #e100ff);
+}
+
+/* Actions */
+.accounts-actions {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.accounts-buttons-user {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+  /* margin-bottom: 20px; */
+}
+
+.accounts-buttons-admin {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  /* margin-bottom: 20px; */
+}
+
+.account-btn {
+  padding: 50px;
+  border: 1px solid #ccc;
+
+  /* background: linear-gradient(to right, #a3c6a5, #0a8911); */
+  /* border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: medium;
+  font-weight: 600; */
+
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.account-btn.loan-btn {
+  background-color: #c5a4f3;
+}
+.account-btn.monthly-btn {
+  background-color: #b2e0ff;
+}
+.account-btn.debit-btn {
+  background-color: #ffc7a5;
+}
+.account-btn.credit-btn {
+  background-color: #b2f5ea;
+}
+.account-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  /* background: #f0f0f0; */
+}
+
+/* Transfers and Spending */
+.transfer-info,
+.spending {
+  margin-bottom: 15px;
+}
+
+.transfer-info .amount,
+.spending .amount {
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.progress {
+  height: 6px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress .bar {
+  width: 75%;
+  height: 100%;
+  background: #3b82f6;
+}
+
+/* History */
+.history {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 25px 0;
+  font-size: 14px;
+}
+
+.positive {
+  color: #16a34a;
+}
+
+.negative {
+  color: #dc2626;
+}
+
+/* ---------------------acccounts credits css---------------------------------- */
+
+.account-credits-table-container {
+  padding: 20px;
+  overflow-x: auto;
+  background-color: #f9f9f9;
+}
+
+.client-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.client-table th,
+.client-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.client-table thead {
+  background-color: #f0f0f0;
+  font-weight: 600;
+  color: #333;
+}
+
+.client-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.blue-link {
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.status {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.status.client {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status.prospect {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.bold-score {
+  font-weight: bold;
+}
