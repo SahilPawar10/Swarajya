@@ -1,9 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
 import "./account.css";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+
+import {
+  adminRoles,
+  createCreditEntry,
+  createDebitEntry,
+  dashBoarReport,
+  getActiveLoans,
+  getAllCreditsRecord,
+  getAllDebitsRecord,
+  getAllInstallment,
+} from "../../api/apiService";
+import { TextField } from "@mui/material";
+import CustomizedSnackbars from "../../MainLayout/Components/ContactUS/CustomizedSnackbars";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,32 +81,213 @@ const clients = [
     created: "25/10/2022",
   },
 ];
-function Accounts() {
-  const [value, setValue] = React.useState(0);
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+function Accounts() {
+  const [open, setOpen] = React.useState(false);
+  const [debitModal, setdebitModal] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleDebitOpen = () => setdebitModal(true);
+  const handleDebitClose = () => setdebitModal(false);
+  const [selectedDate, setSelectedDate] = React.useState(dayjs());
+  const [loading, setLoading] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const [value, setValue] = React.useState(0);
+  const [role, setRole] = React.useState("user");
+  const [tableData, setTableData] = React.useState([]);
+  const [credit, setCredit] = React.useState();
+  const [debit, setDebit] = React.useState();
+  const [snack, setSnack] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const [dashReport, setdashReport] = React.useState({
+    balance: 0,
+    credits: 0,
+    debits: 0,
+    loan: 0,
+    monthly: [],
+  });
+
+  const handleSnackClose = () => {
+    setSnack((prev) => ({ ...prev, open: false }));
+  };
+
+  const handleDateChange = (newValue, form) => {
+    console.log(newValue, form, "newValue");
+    setSelectedDate(newValue);
+    if (form === "credit") {
+      setCredit((prev) => ({
+        ...prev,
+        date: newValue.format("DD-MM-YYYY"),
+      }));
+    } else if (form === "debit") {
+      setDebit((prev) => ({
+        ...prev,
+        date: newValue.format("DD-MM-YYYY"),
+      }));
+    }
+  };
+
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setCredit((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const onDebitChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setDebit((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleCreditEntrySubmit = async () => {
+    // console.log(credit, "debitForm");
+    setLoading(true);
+    await createCreditEntry(credit)
+      .then((res) => {
+        console.log(res.data);
+        // setMessage("record inserted successfuly");
+        setLoading(false);
+        setSnack({
+          open: true,
+          message: "Data saved successfully!",
+          severity: "success",
+        });
+        handleClose();
+        setCredit();
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        setSnack({
+          open: true,
+          message: "something went wrong",
+          severity: "error",
+        });
+      });
+  };
+  const handleDebitEntrySubmit = async () => {
+    setLoading(true);
+    await createDebitEntry(debit)
+      .then((res) => {
+        console.log(res.data);
+        console.log(res, "res");
+        // setMessage("record inserted successfuly");
+        setLoading(false);
+        setSnack({
+          open: true,
+          message: "Data saved successfully!",
+          severity: "success",
+        });
+        handleClose();
+        setDebit();
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        // setMessage(err.response.data.message);
+        setSnack({
+          open: true,
+          message: "something went wrong",
+          severity: "error",
+        });
+      });
+  };
   const handleChange = (event, newValue) => {
+    if (newValue === 1) {
+      getAllCredits();
+    } else if (newValue === 2) {
+      getAllDebits();
+    } else if (newValue === 3) {
+      getAllDebits();
+    } else if (newValue === 4) {
+      getAllInstallMentRcords();
+    } else if (newValue === 5) {
+      getLoanSummary();
+    }
     setValue(newValue);
   };
 
-  const [role, setRole] = React.useState("user");
   const setUser = async () => {
     const role = localStorage.getItem("userRole");
     setRole(JSON.parse(role));
     // setRole("admin");
+  };
 
-    // if (id) {
-    //   getOneUser(JSON.parse(id))
-    //     .then((res) => {
-    //       setUserData(res.data);
-    //       console.log(res.data, "res");
-    //     })
-    //     .catch((error) => {
-    //       console.error(error);
-    //     });
-    // }
+  const getAllCredits = async () => {
+    getAllCreditsRecord()
+      .then((res) => {
+        // console.log(res.data, "res");
+        setTableData(res.data);
+      })
+      .catch((err) => console.log(err, "err"));
+    // setRole("admin");
+  };
+
+  const getAllDebits = async () => {
+    getAllDebitsRecord()
+      .then((res) => {
+        // console.log(res.data, "resDebit");
+        setTableData(res.data);
+      })
+      .catch((err) => console.log(err, "err"));
+    // setRole("admin");
+  };
+
+  const getAllInstallMentRcords = async () => {
+    getAllInstallment()
+      .then((res) => {
+        // console.log(res.data, "installments");
+        setTableData(res.data);
+      })
+      .catch((err) => console.log(err, "err"));
+  };
+
+  const getLoanSummary = async () => {
+    getActiveLoans()
+      .then((res) => {
+        // console.log(res.data, "installments");
+        setTableData(res.data);
+      })
+      .catch((err) => console.log(err, "err"));
+  };
+  const dashboardReport = async () => {
+    dashBoarReport()
+      .then((res) => {
+        setdashReport((prev) => ({
+          ...prev,
+          balance: res.data.totalBalance,
+          credits: res.data.overAllCredits,
+          debits: res.data.overAllDebits,
+          loan: res.data.totalLoanuts,
+          monthly: res.data.monthly,
+        }));
+      })
+      .catch((err) => console.log(err));
   };
   useEffect(() => {
     setUser();
+    dashboardReport();
   }, []);
 
   return (
@@ -157,9 +359,14 @@ function Accounts() {
           </div>
         </div>
       </div> */}
-
       <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box
+          sx={{
+            borderBottom: 1,
+
+            borderColor: "divider",
+          }}
+        >
           <Tabs
             value={value}
             onChange={handleChange}
@@ -179,16 +386,16 @@ function Accounts() {
             <div className="accounts-dashboard">
               <h2>Accounts</h2>
               <div className="accounts-card  balance ">
-                16000 <span>Available Balance</span>
+                {dashReport.balance} <span>Available Balance</span>
               </div>
               <div className="accounts-card credits">
-                23000 <span>Total Credits</span>
+                {dashReport.credits} <span>Total Credits</span>
               </div>
               <div className="accounts-card debits">
-                1,676.11 <span>Total Debits</span>
+                {dashReport.debits} <span>Total Debits</span>
               </div>
               <div className="accounts-card loanouts">
-                12000 <span>Total Loanouts</span>
+                {dashReport.loan} <span>Total Loanouts</span>
               </div>
             </div>
 
@@ -201,12 +408,18 @@ function Accounts() {
                   Loan Application
                 </button>
                 <button className="account-btn monthly-btn">Monthly</button>
-                {role === "admin" && (
+                {adminRoles.includes(role) && (
                   <>
-                    <button className="account-btn debit-btn">
+                    <button
+                      className="account-btn debit-btn"
+                      onClick={handleDebitOpen}
+                    >
                       Debit Entry
                     </button>
-                    <button className="account-btn  credit-btn">
+                    <button
+                      className="account-btn  credit-btn"
+                      onClick={handleOpen}
+                    >
                       Credit Entry
                     </button>
                   </>
@@ -217,7 +430,14 @@ function Accounts() {
             {/* History */}
             <div className="history">
               <h2>Monthly</h2>
-              <div className="history-item">
+              {dashReport.monthly.length > 0 &&
+                dashReport.monthly.map((record, index) => (
+                  <div key={index} className="history-item">
+                    <span>{record.member.firstName} </span>
+                    <span className="positive">{record.amount}</span>
+                  </div>
+                ))}
+              {/* <div className="history-item">
                 <span>Sahil Pawar </span>
                 <span className="positive">300</span>
               </div>
@@ -232,79 +452,83 @@ function Accounts() {
               <div className="history-item">
                 <span>Amar Pawar</span>
                 <span className="positive">100</span>
+              </div> */}
+            </div>
+          </div>
+        </CustomTabPanel>
+        {/* Credit Table */}
+        <CustomTabPanel value={value} index={1}>
+          <div className="cretis-table">
+            <div className="account-credits">
+              <div className="account-credits-table-container">
+                <table className="client-table">
+                  <thead>
+                    <tr>
+                      <th>SR.NO</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Credits By</th>
+                      <th>description</th>
+                      {/* <th>Email</th>
+                      <th>Telephone</th>
+                      <th>Created</th> */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tableData?.map((c, i) => (
+                      <tr key={i}>
+                        <td>{i + 1}</td>
+                        <td className="blue-link">{c?.date}</td>
+                        <td>
+                          <span className={`status ${"client"}`}>
+                            {c?.amount} &#8377;
+                          </span>
+                        </td>
+                        {/* <td>{c.type}</td> */}
+                        <td className="bold-score">{c.creditBy || "-"}</td>
+                        <td>{c?.desc || "-"}</td>
+                        {/* <td>{c.phone}</td>
+                        <td>{c.created}</td> */}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <div className="account-credits">
-            <div className="account-credits-table-container">
-              <table className="client-table">
-                <thead>
-                  <tr>
-                    <th>Client ID</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Business Type</th>
-                    <th>Credit Score</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>Created</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {clients.map((c, i) => (
-                    <tr key={i}>
-                      <td>{c.id}</td>
-                      <td className="blue-link">{c.name}</td>
-                      <td>
-                        <span className={`status ${c.status.toLowerCase()}`}>
-                          {c.status}
-                        </span>
-                      </td>
-                      <td>{c.type}</td>
-                      <td className="bold-score">{c.score || "-"}</td>
-                      <td>{c.email || "-"}</td>
-                      <td>{c.phone}</td>
-                      <td>{c.created}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </CustomTabPanel>
+        {/* Debit Table */}
         <CustomTabPanel value={value} index={2}>
           <div className="account-credits">
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
                   <tr>
-                    <th>Client ID</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Business Type</th>
-                    <th>Credit Score</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>Created</th>
+                    <th>SR.NO</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Debits By</th>
+                    <th>description</th>
+                    {/* <th>Email</th>
+                      <th>Telephone</th>
+                      <th>Created</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {clients.map((c, i) => (
+                  {tableData?.map((c, i) => (
                     <tr key={i}>
-                      <td>{c.id}</td>
-                      <td className="blue-link">{c.name}</td>
+                      <td>{i + 1}</td>
+                      <td className="blue-link">{c.date}</td>
                       <td>
-                        <span className={`status ${c.status.toLowerCase()}`}>
-                          {c.status}
+                        <span className={`status ${"prospect"}`}>
+                          {c?.amount} &#8377;
                         </span>
                       </td>
-                      <td>{c.type}</td>
-                      <td className="bold-score">{c.score || "-"}</td>
-                      <td>{c.email || "-"}</td>
-                      <td>{c.phone}</td>
-                      <td>{c.created}</td>
+                      {/* <td>{c.type}</td> */}
+                      <td className="bold-score">{c.debitBy || "-"}</td>
+                      <td>{c?.desc || "-"}</td>
+                      {/* <td>{c.phone}</td>
+                        <td>{c.created}</td> */}
                     </tr>
                   ))}
                 </tbody>
@@ -312,6 +536,7 @@ function Accounts() {
             </div>
           </div>
         </CustomTabPanel>
+        {/* Monthly */}
         <CustomTabPanel value={value} index={3}>
           <div className="account-credits">
             <div className="account-credits-table-container">
@@ -340,9 +565,9 @@ function Accounts() {
                       </td>
                       <td>{c.type}</td>
                       <td className="bold-score">{c.score || "-"}</td>
-                      <td>{c.email || "-"}</td>
-                      <td>{c.phone}</td>
-                      <td>{c.created}</td>
+                      <td>{c?.email || "-"}</td>
+                      <td>{c?.phone}</td>
+                      <td>{c?.created}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -350,37 +575,39 @@ function Accounts() {
             </div>
           </div>
         </CustomTabPanel>
+        {/* Installment Table */}
         <CustomTabPanel value={value} index={4}>
           <div className="account-credits">
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
                   <tr>
-                    <th>Client ID</th>
+                    <th>SR.NO</th>
+                    {/* <th>Loan ID</th> */}
                     <th>Name</th>
-                    <th>Status</th>
-                    <th>Business Type</th>
-                    <th>Credit Score</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>Created</th>
+                    <th>Loan Amount</th>
+                    <th>Duration</th>
+                    <th>Total Payble</th>
+                    <th>Paid Amount</th>
+                    <th>Remaining</th>
+                    <th>Remark</th>
+                    {/* <th>Telephone</th>
+                    <th>Created</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {clients.map((c, i) => (
+                  {tableData.map((c, i) => (
                     <tr key={i}>
-                      <td>{c.id}</td>
-                      <td className="blue-link">{c.name}</td>
-                      <td>
-                        <span className={`status ${c.status.toLowerCase()}`}>
-                          {c.status}
-                        </span>
-                      </td>
-                      <td>{c.type}</td>
-                      <td className="bold-score">{c.score || "-"}</td>
-                      <td>{c.email || "-"}</td>
-                      <td>{c.phone}</td>
-                      <td>{c.created}</td>
+                      <td>{i + 1}</td>
+                      <td>{c?.name || "-"}</td>
+                      {/* <td>{c.loanId.id}</td> */}
+
+                      <td>{c?.loanId?.loanAmount || "-"}</td>
+                      <td>{c?.loanId?.duration || "-"}</td>
+                      <td>{c?.loanId?.totalPaybale || "-"}</td>
+                      <td>{c?.paidAmount || "-"}</td>
+                      <td>{c?.remaining || "-"}</td>
+                      <td>{c?.remark}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -388,37 +615,40 @@ function Accounts() {
             </div>
           </div>
         </CustomTabPanel>
+        {/* Loan Summary */}
         <CustomTabPanel value={value} index={5}>
           <div className="account-credits">
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
                   <tr>
-                    <th>Client ID</th>
+                    <th>SR.NO</th>
                     <th>Name</th>
-                    <th>Status</th>
-                    <th>Business Type</th>
-                    <th>Credit Score</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>Created</th>
+                    <th>Loan Amount</th>
+                    <th>Total Paybale</th>
+                    <th>Total Paid</th>
+                    <th>Remaining</th>
+                    <th>Duration</th>
+                    <th>percentage</th>
+                    <th>status</th>
+                    <th>reason</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {clients.map((c, i) => (
+                  {tableData.map((c, i) => (
                     <tr key={i}>
-                      <td>{c.id}</td>
-                      <td className="blue-link">{c.name}</td>
+                      <td>{i + 1}</td>
+                      <td>{c.memberName}</td>
                       <td>
-                        <span className={`status ${c.status.toLowerCase()}`}>
-                          {c.status}
-                        </span>
+                        <span>{c?.loanAmount}</span>
                       </td>
-                      <td>{c.type}</td>
-                      <td className="bold-score">{c.score || "-"}</td>
-                      <td>{c.email || "-"}</td>
-                      <td>{c.phone}</td>
-                      <td>{c.created}</td>
+                      <td>{c?.totalPayble}</td>
+                      <td className="bold-score">{c.toalPaid || "-"}</td>
+                      <td>{c?.totalRemaining || "-"}</td>
+                      <td>{c?.duration}</td>
+                      <td>{c?.percentage}</td>
+                      <td>{c?.status}</td>
+                      <td>{c?.reason}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -465,28 +695,188 @@ function Accounts() {
           </div>
         </CustomTabPanel>
       </Box>
+      {/* credit model */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-description"
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              fontSize: "30px",
+              color: "blueviolet",
+              fontWeight: "800",
+            }}
+          >
+            Credit Form
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select Date"
+              value={selectedDate}
+              id="credit-date"
+              onChange={(newValue) => {
+                handleDateChange(newValue, "credit");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  name="date"
+                  id="credit-date"
+                  {...params}
+                  fullWidth
+                  sx={{ marginTop: "30px" }}
+                />
+              )}
+            />
+          </LocalizationProvider>
+          <TextField
+            fullWidth
+            label="amount"
+            id="amount"
+            name="amount"
+            defaultValue="0"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={onChange}
+          />
+
+          {/* <TextField
+            fullWidth
+            label="Duration"
+            id="duration"
+            name="duration"
+            defaultValue="0"
+            onChange={onChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+          /> */}
+          <TextField
+            fullWidth
+            label="CreditBy"
+            id="creditBy"
+            name="creditBy"
+            onChange={onChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            // onChange={onChange}
+          />
+          <TextField
+            fullWidth
+            label="Descprition"
+            id="desc"
+            name="desc"
+            onChange={onChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+          />
+
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ marginBottom: "30px" }}
+            onClick={handleCreditEntrySubmit}
+          >
+            Submit
+            {/* {loading ? <i>Sending</i> : "Submit"} */}
+          </Button>
+        </Box>
+      </Modal>{" "}
+      ;{/* debit Modal */}
+      <Modal
+        open={debitModal}
+        onClose={handleDebitClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-description"
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              fontSize: "30px",
+              color: "blueviolet",
+              fontWeight: "800",
+            }}
+          >
+            Debit Form
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select Date"
+              value={selectedDate}
+              id="debit-date"
+              onChange={(newValue) => {
+                handleDateChange(newValue, "debit");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  name="date"
+                  id="debit-date"
+                  {...params}
+                  fullWidth
+                  sx={{ marginTop: "30px" }}
+                />
+              )}
+            />
+          </LocalizationProvider>
+          <TextField
+            fullWidth
+            label="amount"
+            id="debit-amount"
+            name="amount"
+            defaultValue="0"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={onDebitChange}
+          />
+
+          {/* <TextField
+            fullWidth
+            label="Duration"
+            id="duration"
+            name="duration"
+            defaultValue="0"
+            onChange={onChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+          /> */}
+          <TextField
+            fullWidth
+            label="DebitBy"
+            id="debitBy"
+            name="debitBy"
+            onChange={onDebitChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            // onChange={onChange}
+          />
+          <TextField
+            fullWidth
+            label="Descprition"
+            id="debit-desc"
+            name="desc"
+            onChange={onDebitChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+          />
+
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ marginBottom: "30px" }}
+            onClick={handleDebitEntrySubmit}
+          >
+            Submit
+            {/* {loading ? <i>Sending</i> : "Submit"} */}
+          </Button>
+        </Box>
+      </Modal>{" "}
+      <CustomizedSnackbars
+        open={snack.open}
+        message={snack.message}
+        severity={snack.severity}
+        onClose={handleSnackClose}
+      />
     </div>
   );
 }
 
 export default LayoutAdmin(Accounts, "account");
-
-// <div className="account-dashboard">
-//   {/* Top Navigation */}
-//   <div className="account-top-nav">
-//     <div className="account-nav-left">
-//       {/* <div className="account-logo">GF</div> */}
-//       <div className="account-nav-links">
-//         {/* <span className="active">Dashboard</span>
-//         <span>Credits</span>
-//         <span>Debits</span>
-//         <span>Monthly</span>
-//         <span>Installments</span>
-//         <span>Active Loan</span> */}
-//         {/* <span>Help</span> */}
-//       </div>
-//     </div>
-//   </div>
-
-//   {/* Main Content */}
-// </div>;
