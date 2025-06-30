@@ -2,6 +2,7 @@
 
 import Axios from "./axiosInterCepter";
 
+export const adminRoles = ["admin", "operator"];
 export const registerApi = (data) => {
   return new Promise((resolve, reject) => {
     const url = "/visitor";
@@ -141,6 +142,96 @@ export const getContacts = (id) => {
   return new Promise((resolve, reject) => {
     const url = `/chat/contacts/${id}`;
     Axios.post(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const dashBoarReport = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/dashBoardData`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getAllCreditsRecord = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/credits`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getAllDebitsRecord = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/debits`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getAllInstallment = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/installment`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getActiveLoans = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/get-summary`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const createCreditEntry = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/credits`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const createDebitEntry = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/debits`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const createInstallmentEntry = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/installment`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const createLoanEntry = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/create-entry`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const createMonthlyEntry = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/get-summary`;
+    Axios.post(url, data)
       .then((res) => resolve(res))
       .catch((err) => reject(err));
   });
