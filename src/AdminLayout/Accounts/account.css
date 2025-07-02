@@ -123,6 +123,14 @@ Dashboard.css
   /* margin-bottom: 20px; */
 }
 
+.accounts-buttons-operator {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  /* margin-bottom: 20px; */
+}
+
 .account-btn {
   padding: 50px;
   border: 1px solid #ccc;
@@ -291,4 +299,45 @@ Dashboard.css
 
 .react-datepicker-popper {
   z-index: 9999 !important;
+}
+
+.button-group-loan {
+  display: flex;
+  gap: 8px; /* space between buttons */
+}
+
+.btn-loan {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
+  transition: background-color 0.3s ease;
+}
+
+.approve {
+  background-color: #4caf50;
+  color: white;
+}
+
+.approve:hover {
+  background-color: #45a049;
+}
+
+.reject {
+  background-color: #f44336;
+  color: white;
+}
+
+.reject:hover {
+  background-color: #d32f2f;
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 50px;
 }

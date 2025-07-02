@@ -17,14 +17,24 @@ import {
   adminRoles,
   createCreditEntry,
   createDebitEntry,
+  createInstallmentEntry,
+  createLoanEntry,
   dashBoarReport,
   getActiveLoans,
   getAllCreditsRecord,
   getAllDebitsRecord,
   getAllInstallment,
+  getLoanRequest,
+  getUserWithoutPhoto,
 } from "../../api/apiService";
 import { TextField } from "@mui/material";
 import CustomizedSnackbars from "../../MainLayout/Components/ContactUS/CustomizedSnackbars";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import UserSelect from "./UsersSelect";
+import LoanSelect from "./LoanSelect";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -96,10 +106,14 @@ const style = {
 function Accounts() {
   const [open, setOpen] = React.useState(false);
   const [debitModal, setdebitModal] = React.useState(false);
+  const [loanAppModal, setloanAppModal] = React.useState(false);
+  const [installmentModel, setinstallmentModel] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleDebitOpen = () => setdebitModal(true);
   const handleDebitClose = () => setdebitModal(false);
+  const handleLoanApptClose = () => setloanAppModal(false);
+  const handleInstallmentClose = () => setinstallmentModel(false);
   const [selectedDate, setSelectedDate] = React.useState(dayjs());
   const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState("");
@@ -108,6 +122,17 @@ function Accounts() {
   const [tableData, setTableData] = React.useState([]);
   const [credit, setCredit] = React.useState();
   const [debit, setDebit] = React.useState();
+  // const [users, setUsers] = React.useState([]);
+  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedLoan, setSelectedLoan] = useState("");
+
+  const [loanForm, setLoanForm] = React.useState();
+  const [installmentForm, setInstallmentForm] = React.useState();
+
+  const handleSelectChange = (event) => {
+    setSelectedUser(event.target.value);
+  };
+
   const [snack, setSnack] = useState({
     open: false,
     message: "",
@@ -126,8 +151,45 @@ function Accounts() {
     setSnack((prev) => ({ ...prev, open: false }));
   };
 
+  const handleUserChange = (event, form) => {
+    setSelectedUser(event.target.value);
+    const name = event.target.name;
+    const value = event.target.value;
+
+    if (form === "loan") {
+      setLoanForm((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    } else if (form === "installment") {
+      setInstallmentForm((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleLoanChange = (event) => {
+    setSelectedLoan(event.target.value);
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setInstallmentForm((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleLoanAppOpen = () => {
+    setloanAppModal(true);
+  };
+  const handleInstallmentOpen = () => {
+    setSelectedUser();
+    setinstallmentModel(true);
+  };
+
   const handleDateChange = (newValue, form) => {
-    console.log(newValue, form, "newValue");
+    // console.log(newValue, form, "newValue");
     setSelectedDate(newValue);
     if (form === "credit") {
       setCredit((prev) => ({
@@ -136,6 +198,16 @@ function Accounts() {
       }));
     } else if (form === "debit") {
       setDebit((prev) => ({
+        ...prev,
+        date: newValue.format("DD-MM-YYYY"),
+      }));
+    } else if (form === "loan") {
+      setLoanForm((prev) => ({
+        ...prev,
+        date: newValue.format("DD-MM-YYYY"),
+      }));
+    } else if (form === "installment") {
+      setInstallmentForm((prev) => ({
         ...prev,
         date: newValue.format("DD-MM-YYYY"),
       }));
@@ -157,6 +229,26 @@ function Accounts() {
     const value = e.target.value;
 
     setDebit((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const onLoanFormChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setLoanForm((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const onInstallmentFormChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setInstallmentForm((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -187,6 +279,38 @@ function Accounts() {
         });
       });
   };
+
+  const handleInstallmentEntrySubmit = async () => {
+    console.log(installmentForm, "installmentForm");
+    setLoading(true);
+    await createInstallmentEntry(installmentForm)
+      .then((res) => {
+        console.log(res.data);
+        // setMessage("record inserted successfuly");
+        setLoading(false);
+        setSnack({
+          open: true,
+          message: "Data saved successfully!",
+          severity: "success",
+        });
+        handleInstallmentClose();
+        setInstallmentForm();
+        setSelectedUser();
+        setSelectedLoan();
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        setSnack({
+          open: true,
+          message: "something went wrong",
+          severity: "error",
+        });
+        setInstallmentForm();
+        handleInstallmentClose();
+        setSelectedUser();
+        setSelectedLoan();
+      });
+  };
   const handleDebitEntrySubmit = async () => {
     setLoading(true);
     await createDebitEntry(debit)
@@ -213,6 +337,33 @@ function Accounts() {
         });
       });
   };
+  const handleLoanEntrySubmit = async () => {
+    setLoading(true);
+    console.log(loanForm, "loanForm");
+    await createLoanEntry(loanForm)
+      .then((res) => {
+        // console.log(res, "res");
+        // setMessage("record inserted successfuly");
+        setLoading(false);
+        setSnack({
+          open: true,
+          message: "Application Submitted Successfully..!",
+          severity: "success",
+        });
+        handleLoanApptClose();
+        setLoanForm();
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        // setMessage(err.response.data.message);
+        setSnack({
+          open: true,
+          message: "something went wrong",
+          severity: "error",
+        });
+        handleLoanApptClose();
+      });
+  };
   const handleChange = (event, newValue) => {
     if (newValue === 1) {
       getAllCredits();
@@ -224,6 +375,8 @@ function Accounts() {
       getAllInstallMentRcords();
     } else if (newValue === 5) {
       getLoanSummary();
+    } else if (newValue === 6) {
+      loanPrequests();
     }
     setValue(newValue);
   };
@@ -243,6 +396,14 @@ function Accounts() {
       .catch((err) => console.log(err, "err"));
     // setRole("admin");
   };
+  // const getAllUsers = async () => {
+  //   getUserWithoutPhoto()
+  //     .then((res) => {
+  //       setUsers(res.data);
+  //     })
+  //     .catch((err) => console.log(err, "err"));
+  //   // setRole("admin");
+  // };
 
   const getAllDebits = async () => {
     getAllDebitsRecord()
@@ -267,6 +428,14 @@ function Accounts() {
     getActiveLoans()
       .then((res) => {
         // console.log(res.data, "installments");
+        setTableData(res.data);
+      })
+      .catch((err) => console.log(err, "err"));
+  };
+  const loanPrequests = async () => {
+    getLoanRequest()
+      .then((res) => {
+        console.log(res, "loan Req");
         setTableData(res.data);
       })
       .catch((err) => console.log(err, "err"));
@@ -378,8 +547,10 @@ function Accounts() {
             <Tab label="Monthly" {...a11yProps(4)} />
             <Tab label="Installments" {...a11yProps(5)} />
             <Tab label="Active Loan" {...a11yProps(6)} />
+            {role !== "user" && <Tab label="Approve Loan" {...a11yProps(7)} />}
           </Tabs>
         </Box>
+        {/* DashBoard */}
         <CustomTabPanel value={value} index={0}>
           <div className="account-main-content">
             {/* Accounts */}
@@ -404,7 +575,10 @@ function Accounts() {
             <div className="accounts-actions">
               <h2>Actions</h2>
               <div className={`accounts-buttons-${role}`}>
-                <button className="account-btn loan-btn">
+                <button
+                  className="account-btn loan-btn"
+                  onClick={handleLoanAppOpen}
+                >
                   Loan Application
                 </button>
                 <button className="account-btn monthly-btn">Monthly</button>
@@ -578,6 +752,17 @@ function Accounts() {
         {/* Installment Table */}
         <CustomTabPanel value={value} index={4}>
           <div className="account-credits">
+            <div className="tab-buttons">
+              <div class="button-group-loan">
+                <button
+                  class="btn-loan approve"
+                  onClick={handleInstallmentOpen}
+                >
+                  Add Installment
+                </button>
+                <button class="btn-loan reject">Export </button>
+              </div>
+            </div>
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
@@ -662,31 +847,36 @@ function Accounts() {
               <table className="client-table">
                 <thead>
                   <tr>
-                    <th>Client ID</th>
+                    <th>SR.NO</th>
+                    <th>Date</th>
                     <th>Name</th>
-                    <th>Status</th>
-                    <th>Business Type</th>
-                    <th>Credit Score</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>Created</th>
+                    <th>Loan Amount</th>
+                    <th>Duration</th>
+                    <th>Total Payble</th>
+                    <th>Percentage</th>
+                    <th>reason</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {clients.map((c, i) => (
+                  {tableData.map((c, i) => (
                     <tr key={i}>
-                      <td>{c.id}</td>
-                      <td className="blue-link">{c.name}</td>
+                      <td>{i + 1}</td>
+                      <td>{c?.date || "-"}</td>
+                      {/* <td>{c.loanId.id}</td> */}
+
+                      <td>{c?.name || "-"}</td>
+                      <td>{c?.loanAmount || "-"}</td>
+                      <td>{c?.duration || "-"}</td>
+                      <td>{c?.totalPaybale || "-"}</td>
+                      <td>{c?.percentage || "-"}</td>
+                      <td>{c?.reason}</td>
                       <td>
-                        <span className={`status ${c.status.toLowerCase()}`}>
-                          {c.status}
-                        </span>
+                        <div class="button-group-loan">
+                          <button class="btn-loan approve">Approve</button>
+                          <button class="btn-loan reject">Reject</button>
+                        </div>
                       </td>
-                      <td>{c.type}</td>
-                      <td className="bold-score">{c.score || "-"}</td>
-                      <td>{c.email || "-"}</td>
-                      <td>{c.phone}</td>
-                      <td>{c.created}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -863,6 +1053,191 @@ function Accounts() {
             fullWidth
             sx={{ marginBottom: "30px" }}
             onClick={handleDebitEntrySubmit}
+          >
+            Submit
+            {/* {loading ? <i>Sending</i> : "Submit"} */}
+          </Button>
+        </Box>
+      </Modal>{" "}
+      {/* Loan Application Model */}
+      <Modal
+        open={loanAppModal}
+        onClose={handleLoanApptClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-description"
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              fontSize: "30px",
+              color: "blueviolet",
+              fontWeight: "800",
+            }}
+          >
+            Loan Application
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select Date"
+              value={selectedDate}
+              id="loan-date"
+              onChange={(newValue) => {
+                handleDateChange(newValue, "loan");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  name="date"
+                  id="loan-date"
+                  {...params}
+                  fullWidth
+                  sx={{ marginTop: "30px" }}
+                />
+              )}
+            />
+          </LocalizationProvider>
+          <TextField
+            fullWidth
+            label="LoanAmount"
+            id="loan-amount"
+            name="loanAmount"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={onLoanFormChange}
+          />
+
+          <TextField
+            fullWidth
+            label="Name"
+            id="loan-amount"
+            name="name"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={onLoanFormChange}
+          />
+
+          <UserSelect
+            selectedUser={selectedUser}
+            handleUserChange={(event) => handleUserChange(event, "loan")}
+          />
+          <TextField
+            fullWidth
+            label="Duration"
+            id="loan-duration"
+            name="duration"
+            onChange={onLoanFormChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            // onChange={onChange}
+          />
+          <TextField
+            fullWidth
+            label="Reaon"
+            id="loan-desc"
+            name="reason"
+            onChange={onLoanFormChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+          />
+
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ marginBottom: "30px" }}
+            onClick={handleLoanEntrySubmit}
+          >
+            Submit
+            {/* {loading ? <i>Sending</i> : "Submit"} */}
+          </Button>
+        </Box>
+      </Modal>{" "}
+      {/* Installment Model*/}
+      <Modal
+        open={installmentModel}
+        onClose={handleInstallmentClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-description"
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              fontSize: "30px",
+              color: "blueviolet",
+              fontWeight: "800",
+            }}
+          >
+            Installment
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select Date"
+              value={selectedDate}
+              id="installment-date"
+              onChange={(newValue) => {
+                handleDateChange(newValue, "installment");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  name="date"
+                  id="installment-date"
+                  {...params}
+                  fullWidth
+                  sx={{ marginTop: "30px" }}
+                />
+              )}
+            />
+          </LocalizationProvider>
+          <TextField
+            fullWidth
+            label="Amount"
+            id="installment-amount"
+            name="paidAmount"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={onInstallmentFormChange}
+          />
+
+          <TextField
+            fullWidth
+            label="Name"
+            id="installment-amount"
+            name="name"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={onInstallmentFormChange}
+          />
+
+          <UserSelect
+            selectedUser={selectedUser}
+            handleUserChange={(event) => handleUserChange(event, "installment")}
+          />
+          <LoanSelect
+            selectedLoan={selectedLoan}
+            handleLoanChange={handleLoanChange}
+            member={selectedUser}
+          />
+          <TextField
+            fullWidth
+            label="Remark"
+            id="installment-remark"
+            name="remark"
+            onChange={onInstallmentFormChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            // onChange={onChange}
+          />
+          {/* <TextField
+            fullWidth
+            label="Reaon"
+            id="loan-desc"
+            name="reason"
+            onChange={onLoanFormChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+          /> */}
+
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ marginBottom: "30px" }}
+            onClick={handleInstallmentEntrySubmit}
           >
             Submit
             {/* {loading ? <i>Sending</i> : "Submit"} */}
