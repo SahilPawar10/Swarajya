@@ -236,3 +236,30 @@ export const createMonthlyEntry = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const getLoanRequest = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/loan-req`;
+    Axios.get(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getUserWithoutPhoto = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/users/user-without-photo`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getLoanByMember = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/loanby-member`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
