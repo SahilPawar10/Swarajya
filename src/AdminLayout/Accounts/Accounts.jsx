@@ -183,6 +183,7 @@ function Accounts() {
   const handleLoanAppOpen = () => {
     setloanAppModal(true);
   };
+
   const handleInstallmentOpen = () => {
     setSelectedUser();
     setinstallmentModel(true);
