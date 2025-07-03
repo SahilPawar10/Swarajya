@@ -5,7 +5,22 @@ import { getLoanByMember } from "../../api/apiService";
 const ITEM_HEIGHT = 48;
 const MENU_HEIGHT = 6 * ITEM_HEIGHT;
 
-const LoanSelect = ({ selectedLoan, handleLoanChange, member }) => {
+const MonthData = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+export const LoanSelect = ({ selectedLoan, handleLoanChange, member }) => {
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -61,4 +76,41 @@ const LoanSelect = ({ selectedLoan, handleLoanChange, member }) => {
   );
 };
 
-export default LoanSelect;
+export const MonthSelect = ({ selecteMonth, handleMonthChange }) => {
+  const [loans, setLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    console.log(selecteMonth, "member");
+  }, []);
+
+  return (
+    <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
+      <InputLabel id="loan-select-label">Select Month</InputLabel>
+      <Select
+        labelId="month-select-label"
+        id="month-select"
+        name="month"
+        value={selecteMonth}
+        label="Select Month"
+        onChange={handleMonthChange}
+        MenuProps={{
+          PaperProps: {
+            style: {
+              maxHeight: MENU_HEIGHT,
+              overflowY: "auto",
+            },
+          },
+        }}
+      >
+        {MonthData.map((month, i) => (
+          <MenuItem key={i + month} value={month}>
+            {month}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
+// export default LoanSelect;
