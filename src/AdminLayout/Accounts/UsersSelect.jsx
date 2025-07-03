@@ -15,6 +15,8 @@ const MENU_HEIGHT = 6 * ITEM_HEIGHT; // Show 6 items before scrolling
 export default function UserSelect({ selectedUser, handleUserChange }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [role, setRole] = React.useState("user");
+  const [userId, setUserId] = React.useState();
 
   const getAllUsers = async () => {
     getUserWithoutPhoto()
@@ -33,6 +35,13 @@ export default function UserSelect({ selectedUser, handleUserChange }) {
   };
 
   useEffect(() => {
+    const role = localStorage.getItem("userRole");
+    setRole(JSON.parse(role));
+
+    if (role === "user") {
+      const userId = localStorage.getItem("userId");
+      setUserId(JSON.parse(userId));
+    }
     // Replace with your real API URL
     getAllUsers();
   }, []);

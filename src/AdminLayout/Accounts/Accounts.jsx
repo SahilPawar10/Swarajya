@@ -12,8 +12,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress,
+} from "@mui/material";
 
 import {
+  addMonthlyEntry,
   adminRoles,
   createCreditEntry,
   createDebitEntry,
@@ -26,15 +34,12 @@ import {
   getAllInstallment,
   getLoanRequest,
   getUserWithoutPhoto,
+  updateLoanLoanStatus,
 } from "../../api/apiService";
 import { TextField } from "@mui/material";
 import CustomizedSnackbars from "../../MainLayout/Components/ContactUS/CustomizedSnackbars";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import UserSelect from "./UsersSelect";
-import LoanSelect from "./LoanSelect";
+import { LoanSelect, MonthSelect } from "./LoanSelect";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -108,12 +113,15 @@ function Accounts() {
   const [debitModal, setdebitModal] = React.useState(false);
   const [loanAppModal, setloanAppModal] = React.useState(false);
   const [installmentModel, setinstallmentModel] = React.useState(false);
+  const [monthlyModel, setMonthlyModel] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleDebitOpen = () => setdebitModal(true);
   const handleDebitClose = () => setdebitModal(false);
   const handleLoanApptClose = () => setloanAppModal(false);
   const handleInstallmentClose = () => setinstallmentModel(false);
+  const handleMonthlyOpen = () => setMonthlyModel(true);
+  const handleMonthlyClose = () => setMonthlyModel(false);
   const [selectedDate, setSelectedDate] = React.useState(dayjs());
   const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState("");
@@ -125,6 +133,8 @@ function Accounts() {
   // const [users, setUsers] = React.useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedLoan, setSelectedLoan] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("Jan");
+  const [monthlyForm, setMonthlyform] = useState("");
 
   const [loanForm, setLoanForm] = React.useState();
   const [installmentForm, setInstallmentForm] = React.useState();
@@ -166,6 +176,11 @@ function Accounts() {
         ...prevState,
         [name]: value,
       }));
+    } else if (form === "monthly") {
+      setMonthlyform((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
   };
 
@@ -180,6 +195,57 @@ function Accounts() {
     }));
   };
 
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setMonthlyform((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleMonthFormChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setMonthlyform((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleMonthlySubmit = () => {
+    console.log(monthlyForm, ",monthlyform");
+
+    addMonthlyEntry(monthlyForm)
+      .then((res) => {
+        console.log(res.data);
+        // setMessage("record inserted successfuly");
+        setLoading(false);
+        setSnack({
+          open: true,
+          message: "Entry added ",
+          severity: "success",
+        });
+        handleMonthlyClose();
+        setMonthlyform();
+        setSelectedUser();
+        dashboardReport();
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        setSnack({
+          open: true,
+          message: "something went wrong",
+          severity: "error",
+        });
+        setMonthlyform();
+        setSelectedUser();
+      });
+  };
+
   const handleLoanAppOpen = () => {
     setloanAppModal(true);
   };
@@ -189,8 +255,31 @@ function Accounts() {
     setinstallmentModel(true);
   };
 
+  const handleUpdateLoanStatus = async () => {
+    setLoading(true);
+    await updateLoanLoanStatus()
+      .then((res) => {
+        console.log(res.data);
+        // setMessage("record inserted successfuly");
+        setLoading(false);
+        setSnack({
+          open: true,
+          message: "Data saved successfully!",
+          severity: "success",
+        });
+        getLoanSummary();
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        setSnack({
+          open: true,
+          message: "something went wrong",
+          severity: "error",
+        });
+      });
+  };
+
   const handleDateChange = (newValue, form) => {
-    // console.log(newValue, form, "newValue");
     setSelectedDate(newValue);
     if (form === "credit") {
       setCredit((prev) => ({
@@ -209,6 +298,11 @@ function Accounts() {
       }));
     } else if (form === "installment") {
       setInstallmentForm((prev) => ({
+        ...prev,
+        date: newValue.format("DD-MM-YYYY"),
+      }));
+    } else if (form === "monthly") {
+      setMonthlyform((prev) => ({
         ...prev,
         date: newValue.format("DD-MM-YYYY"),
       }));
@@ -270,6 +364,7 @@ function Accounts() {
         });
         handleClose();
         setCredit();
+        dashboardReport();
       })
       .catch((err) => {
         console.log(err, "err");
@@ -282,7 +377,10 @@ function Accounts() {
   };
 
   const handleInstallmentEntrySubmit = async () => {
-    console.log(installmentForm, "installmentForm");
+    if (!installmentForm?.date) {
+      installmentForm.date = selectedDate.format("DD-MM-YYYY");
+    }
+
     setLoading(true);
     await createInstallmentEntry(installmentForm)
       .then((res) => {
@@ -298,6 +396,8 @@ function Accounts() {
         setInstallmentForm();
         setSelectedUser();
         setSelectedLoan();
+        getAllInstallMentRcords();
+        dashboardReport();
       })
       .catch((err) => {
         console.log(err, "err");
@@ -316,8 +416,8 @@ function Accounts() {
     setLoading(true);
     await createDebitEntry(debit)
       .then((res) => {
-        console.log(res.data);
-        console.log(res, "res");
+        // console.log(res.data);
+        // console.log(res, "res");
         // setMessage("record inserted successfuly");
         setLoading(false);
         setSnack({
@@ -325,8 +425,9 @@ function Accounts() {
           message: "Data saved successfully!",
           severity: "success",
         });
-        handleClose();
+        handleDebitClose();
         setDebit();
+        dashboardReport();
       })
       .catch((err) => {
         console.log(err, "err");
@@ -340,7 +441,7 @@ function Accounts() {
   };
   const handleLoanEntrySubmit = async () => {
     setLoading(true);
-    console.log(loanForm, "loanForm");
+    // console.log(loanForm, "loanForm");
     await createLoanEntry(loanForm)
       .then((res) => {
         // console.log(res, "res");
@@ -353,6 +454,7 @@ function Accounts() {
         });
         handleLoanApptClose();
         setLoanForm();
+        dashboardReport();
       })
       .catch((err) => {
         console.log(err, "err");
@@ -582,7 +684,12 @@ function Accounts() {
                 >
                   Loan Application
                 </button>
-                <button className="account-btn monthly-btn">Monthly</button>
+                <button
+                  className="account-btn monthly-btn"
+                  onClick={handleMonthlyOpen}
+                >
+                  Monthly
+                </button>
                 {adminRoles.includes(role) && (
                   <>
                     <button
@@ -804,12 +911,27 @@ function Accounts() {
         {/* Loan Summary */}
         <CustomTabPanel value={value} index={5}>
           <div className="account-credits">
+            {role !== "user" && (
+              <div className="tab-buttons">
+                <div class="button-group-loan">
+                  <button
+                    class="btn-loan approve"
+                    onClick={handleUpdateLoanStatus}
+                  >
+                    Update LoanStatus
+                  </button>
+                  <button class="btn-loan reject">Export </button>
+                </div>
+              </div>
+            )}
+
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
                   <tr>
                     <th>SR.NO</th>
                     <th>Name</th>
+                    <th>Date</th>
                     <th>Loan Amount</th>
                     <th>Total Paybale</th>
                     <th>Total Paid</th>
@@ -824,12 +946,13 @@ function Accounts() {
                   {tableData.map((c, i) => (
                     <tr key={i}>
                       <td>{i + 1}</td>
-                      <td>{c.memberName}</td>
+                      <td>{c?.memberName}</td>
+                      <td>{c?.date}</td>
                       <td>
                         <span>{c?.loanAmount}</span>
                       </td>
                       <td>{c?.totalPayble}</td>
-                      <td className="bold-score">{c.toalPaid || "-"}</td>
+                      <td className="bold-score">{c?.toalPaid || "-"}</td>
                       <td>{c?.totalRemaining || "-"}</td>
                       <td>{c?.duration}</td>
                       <td>{c?.percentage}</td>
@@ -1176,7 +1299,14 @@ function Accounts() {
               value={selectedDate}
               id="installment-date"
               onChange={(newValue) => {
-                handleDateChange(newValue, "installment");
+                // Only call when date changes
+                if (!newValue?.isSame(selectedDate, "day")) {
+                  handleDateChange(newValue, "monthly");
+                }
+              }}
+              onAccept={(newValue) => {
+                // Called even when selecting the same date again
+                handleDateChange(newValue, "monthly");
               }}
               renderInput={(params) => (
                 <TextField
@@ -1209,6 +1339,7 @@ function Accounts() {
 
           <UserSelect
             selectedUser={selectedUser}
+            value={selectedLoan}
             handleUserChange={(event) => handleUserChange(event, "installment")}
           />
           <LoanSelect
@@ -1239,6 +1370,84 @@ function Accounts() {
             fullWidth
             sx={{ marginBottom: "30px" }}
             onClick={handleInstallmentEntrySubmit}
+          >
+            Submit
+            {/* {loading ? <i>Sending</i> : "Submit"} */}
+          </Button>
+        </Box>
+      </Modal>{" "}
+      {/* Monthly Model */}
+      <Modal
+        open={monthlyModel}
+        onClose={handleMonthlyClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-description"
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              fontSize: "30px",
+              color: "blueviolet",
+              fontWeight: "800",
+            }}
+          >
+            Monthly
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select Date"
+              value={selectedDate}
+              id="monthly-date"
+              onChange={(newValue) => {
+                handleDateChange(newValue, "monthly");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  name="date"
+                  id="monthly-date"
+                  {...params}
+                  fullWidth
+                  sx={{ marginTop: "30px" }}
+                />
+              )}
+            />
+          </LocalizationProvider>
+          <TextField
+            fullWidth
+            label="Select Year"
+            id="year"
+            name="year"
+            onChange={handleMonthFormChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            // onChange={onChange}
+          />
+          <MonthSelect
+            selecteMonth={selectedMonth}
+            handleMonthChange={handleMonthChange}
+            member={selectedUser}
+          />
+          <UserSelect
+            selectedUser={selectedUser}
+            value={selectedLoan}
+            handleUserChange={(event) => handleUserChange(event, "monthly")}
+          />
+          <TextField
+            fullWidth
+            label="amount"
+            id="monthly-amount"
+            name="amount"
+            defaultValue="0"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={handleMonthFormChange}
+          />
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ marginBottom: "30px" }}
+            onClick={handleMonthlySubmit}
           >
             Submit
             {/* {loading ? <i>Sending</i> : "Submit"} */}

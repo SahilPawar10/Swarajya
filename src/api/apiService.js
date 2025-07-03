@@ -263,3 +263,21 @@ export const getLoanByMember = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const updateLoanLoanStatus = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/update-loan-status`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const addMonthlyEntry = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/monthly`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
