@@ -281,3 +281,12 @@ export const addMonthlyEntry = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+export const updateLoanRequest = (id) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/loan-req`;
+    Axios.post(url, id)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
