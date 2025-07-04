@@ -35,6 +35,7 @@ import {
   getLoanRequest,
   getUserWithoutPhoto,
   updateLoanLoanStatus,
+  updateLoanRequest,
 } from "../../api/apiService";
 import { TextField } from "@mui/material";
 import CustomizedSnackbars from "../../MainLayout/Components/ContactUS/CustomizedSnackbars";
@@ -217,7 +218,7 @@ function Accounts() {
   };
 
   const handleMonthlySubmit = () => {
-    console.log(monthlyForm, ",monthlyform");
+    // console.log(monthlyForm, ",monthlyform");
 
     addMonthlyEntry(monthlyForm)
       .then((res) => {
@@ -557,6 +558,19 @@ function Accounts() {
       })
       .catch((err) => console.log(err));
   };
+
+  const approveLoanRequest = async (id) => {
+    updateLoanRequest({ id: id })
+      .then((res) => {
+        setSnack({
+          open: true,
+          message: "Request approved successfully!",
+          severity: "success",
+        });
+        loanPrequests();
+      })
+      .catch((err) => console.log(err));
+  };
   useEffect(() => {
     setUser();
     dashboardReport();
@@ -712,13 +726,13 @@ function Accounts() {
             {/* History */}
             <div className="history">
               <h2>Monthly</h2>
-              {dashReport.monthly.length > 0 &&
+              {/* {dashReport.monthly.length > 0 &&
                 dashReport.monthly.map((record, index) => (
                   <div key={index} className="history-item">
                     <span>{record.member.firstName} </span>
                     <span className="positive">{record.amount}</span>
                   </div>
-                ))}
+                ))} */}
               {/* <div className="history-item">
                 <span>Sahil Pawar </span>
                 <span className="positive">300</span>
@@ -821,35 +835,43 @@ function Accounts() {
         {/* Monthly */}
         <CustomTabPanel value={value} index={3}>
           <div className="account-credits">
+            {role !== "user" && (
+              <div className="tab-buttons">
+                <div class="button-group-loan">
+                  <button class="btn-loan approve">createSingle </button>
+
+                  <button
+                    class="btn-loan approve"
+                    onClick={handleUpdateLoanStatus}
+                  >
+                    Sample File
+                  </button>
+                  <button class="btn-loan approve">Import </button>
+                  <button class="btn-loan approve">Export </button>
+                </div>
+              </div>
+            )}
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
                   <tr>
-                    <th>Client ID</th>
+                    <th>SR.NO</th>
+                    <th>Date</th>
                     <th>Name</th>
-                    <th>Status</th>
-                    <th>Business Type</th>
-                    <th>Credit Score</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>Created</th>
+                    <th>Month</th>
+                    <th>Year</th>
+                    <th>Amount</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {clients.map((c, i) => (
+                  {dashReport.monthly.map((c, i) => (
                     <tr key={i}>
-                      <td>{c.id}</td>
-                      <td className="blue-link">{c.name}</td>
-                      <td>
-                        <span className={`status ${c.status.toLowerCase()}`}>
-                          {c.status}
-                        </span>
-                      </td>
-                      <td>{c.type}</td>
-                      <td className="bold-score">{c.score || "-"}</td>
-                      <td>{c?.email || "-"}</td>
-                      <td>{c?.phone}</td>
-                      <td>{c?.created}</td>
+                      <td>{i + 1}</td>
+                      <td>{c?.date}</td>
+                      <td>{c?.member.firstName + "" + c?.member.lastName}</td>
+                      <td>{c?.month}</td>
+                      <td>{c?.year || "-"}</td>
+                      <td>{c?.amount}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -965,6 +987,7 @@ function Accounts() {
             </div>
           </div>
         </CustomTabPanel>
+        {/* Approval Tab */}
         <CustomTabPanel value={value} index={6}>
           <div className="account-credits">
             <div className="account-credits-table-container">
@@ -997,7 +1020,14 @@ function Accounts() {
                       <td>{c?.reason}</td>
                       <td>
                         <div class="button-group-loan">
-                          <button class="btn-loan approve">Approve</button>
+                          <button
+                            class="btn-loan approve"
+                            onClick={() => {
+                              approveLoanRequest(c.id);
+                            }}
+                          >
+                            Approve
+                          </button>
                           <button class="btn-loan reject">Reject</button>
                         </div>
                       </td>
