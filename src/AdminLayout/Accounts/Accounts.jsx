@@ -28,12 +28,14 @@ import {
   createInstallmentEntry,
   createLoanEntry,
   dashBoarReport,
+  downloadSampleMonthlyFile,
   getActiveLoans,
   getAllCreditsRecord,
   getAllDebitsRecord,
   getAllInstallment,
   getLoanRequest,
   getUserWithoutPhoto,
+  importMonthlyFile,
   updateLoanLoanStatus,
   updateLoanRequest,
 } from "../../api/apiService";
@@ -41,6 +43,7 @@ import { TextField } from "@mui/material";
 import CustomizedSnackbars from "../../MainLayout/Components/ContactUS/CustomizedSnackbars";
 import UserSelect from "./UsersSelect";
 import { LoanSelect, MonthSelect } from "./LoanSelect";
+import InputFileUpload from "./InputFileUpload";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -571,6 +574,48 @@ function Accounts() {
       })
       .catch((err) => console.log(err));
   };
+
+  const monthlySampleFileDownload = async (id) => {
+    const res = await downloadSampleMonthlyFile();
+
+    const blob = new Blob([res.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Sample-Monthly-Data.xlsx";
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(link.href);
+    setSnack({
+      open: true,
+      message: "File downloaded successfully!",
+      severity: "success",
+    });
+  };
+
+  const handleExcelUpload = (files) => {
+    console.log("Import file selected:", files[0]);
+    // Upload logic specific to invoice
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    if (files.length > 0) {
+      importMonthlyFile(formData)
+        .then((res) => {
+          // setLoading(false);
+          setSnack({
+            open: true,
+            message: "File Imported Successfully!",
+            severity: "success",
+          });
+          dashboardReport();
+        })
+        .catch((error) => {
+          console.error(error);
+          setLoading(false);
+        });
+    }
+  };
   useEffect(() => {
     setUser();
     dashboardReport();
@@ -578,73 +623,6 @@ function Accounts() {
 
   return (
     <div id="accounts">
-      {/* <div className="about-container">
-        <p>
-          We believe in being transparent about our financials. As a valuable
-          contributor, you have the right to garner a fair understanding of our
-          incomes and investments through monthly amount.
-        </p>
-        <p>Click to see the Financial Statements. </p>
-
-        <div className="f-reports">
-          <div className="monthly-reports">
-            <div className="report-heading">Monthly</div>
-            <div className="reports">
-              <div>
-                <a href="https://docs.google.com/spreadsheets/d/1CaeGAa3aPscag36dYJLUtvsWVnxoHEF7L0O9RQmrxyA/edit?gid=0#gid=0">
-                  FY 2025-26
-                </a>
-              </div>
-              <div>
-                <a href="https://docs.google.com/spreadsheets/d/1wNQJwdVCl8qCVO49Lb2DdiWRmFXUmH5c8BfKHASfM1s/edit#gid=0">
-                  FY 2024-25
-                </a>
-              </div>
-              <div>
-                <a href="https://docs.google.com/spreadsheets/d/1YJS2AmaRTa0FQvlwST1tIjgT0Xm9JCFC72-26zLcbao/edit?usp=sharing">
-                  FY 2023-24
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="shivjayanti-reports">
-            <div className="report-heading"> Shivjayanti</div>
-            <div className="reports">
-              <div>
-                <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7PDpZTqAEQYLm4ysNboPtUbFd6p__S_WOJMsAe_KSWV18rtbb833JnFAigWRlZMTyoZ8dZeQvTnpX/pub?output=pdf">
-                  FY 2025-26
-                </a>
-              </div>
-              <div>
-                <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSmp16THfF1Ir-lnR9VtxgWaD-ETWB6SxcGeNliA5w9SbYTyq0zy0kE9ycEX4ruQl_0oVYrS4QYs0WJ/pub?output=pdf">
-                  2024
-                </a>
-              </div>
-              <div>
-                <a href="">2023</a>
-              </div>
-            </div>
-          </div>
-          <div className="annual-reports">
-            <div className="report-heading"> Reports</div>
-            <div className="reports">
-              <div>
-                <a href="https://docs.google.com/spreadsheets/d/1mVv6eMKLPtctwi8iaUI4GDz_HB1HKq5rovHekaVf9OQ/edit?gid=0#gid=0">
-                  Expense 2025
-                </a>
-              </div>
-              <div>
-                <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQyNXmLHO9Xo-hK5GnakkZdTrwzALXrt0oU7v77imhUM8_knYSpeay33LccIrWgPR4yhtemM95DYG8P/pubhtml?gid=0&single=true">
-                  Expense 2024
-                </a>
-              </div>
-              <div>
-                <a href="#">Expense 2023</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
@@ -664,7 +642,9 @@ function Accounts() {
             <Tab label="Monthly" {...a11yProps(4)} />
             <Tab label="Installments" {...a11yProps(5)} />
             <Tab label="Active Loan" {...a11yProps(6)} />
+
             {role !== "user" && <Tab label="Approve Loan" {...a11yProps(7)} />}
+            <Tab label="Old DashBoard" {...a11yProps(8)} />
           </Tabs>
         </Box>
         {/* DashBoard */}
@@ -839,14 +819,17 @@ function Accounts() {
               <div className="tab-buttons">
                 <div class="button-group-loan">
                   <button class="btn-loan approve">createSingle </button>
-
                   <button
                     class="btn-loan approve"
-                    onClick={handleUpdateLoanStatus}
+                    onClick={monthlySampleFileDownload}
                   >
                     Sample File
                   </button>
-                  <button class="btn-loan approve">Import </button>
+                  {/* <button class="btn-loan approve">Import </button> */}
+                  <InputFileUpload
+                    onFilesSelected={handleExcelUpload}
+                    label="Import"
+                  />
                   <button class="btn-loan approve">Export </button>
                 </div>
               </div>
@@ -1035,6 +1018,77 @@ function Accounts() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </CustomTabPanel>
+
+        <CustomTabPanel value={value} index={7}>
+          <div className="about-container">
+            <p>
+              We believe in being transparent about our financials. As a
+              valuable contributor, you have the right to garner a fair
+              understanding of our incomes and investments through monthly
+              amount.
+            </p>
+            <p>Click to see the Financial Statements. </p>
+
+            <div className="f-reports">
+              <div className="monthly-reports">
+                <div className="report-heading">Monthly</div>
+                <div className="reports">
+                  <div>
+                    <a href="https://docs.google.com/spreadsheets/d/1CaeGAa3aPscag36dYJLUtvsWVnxoHEF7L0O9RQmrxyA/edit?gid=0#gid=0">
+                      FY 2025-26
+                    </a>
+                  </div>
+                  <div>
+                    <a href="https://docs.google.com/spreadsheets/d/1wNQJwdVCl8qCVO49Lb2DdiWRmFXUmH5c8BfKHASfM1s/edit#gid=0">
+                      FY 2024-25
+                    </a>
+                  </div>
+                  <div>
+                    <a href="https://docs.google.com/spreadsheets/d/1YJS2AmaRTa0FQvlwST1tIjgT0Xm9JCFC72-26zLcbao/edit?usp=sharing">
+                      FY 2023-24
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="shivjayanti-reports">
+                <div className="report-heading"> Shivjayanti</div>
+                <div className="reports">
+                  <div>
+                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7PDpZTqAEQYLm4ysNboPtUbFd6p__S_WOJMsAe_KSWV18rtbb833JnFAigWRlZMTyoZ8dZeQvTnpX/pub?output=pdf">
+                      FY 2025-26
+                    </a>
+                  </div>
+                  <div>
+                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSmp16THfF1Ir-lnR9VtxgWaD-ETWB6SxcGeNliA5w9SbYTyq0zy0kE9ycEX4ruQl_0oVYrS4QYs0WJ/pub?output=pdf">
+                      2024
+                    </a>
+                  </div>
+                  <div>
+                    <a href="">2023</a>
+                  </div>
+                </div>
+              </div>
+              <div className="annual-reports">
+                <div className="report-heading"> Reports</div>
+                <div className="reports">
+                  <div>
+                    <a href="https://docs.google.com/spreadsheets/d/1mVv6eMKLPtctwi8iaUI4GDz_HB1HKq5rovHekaVf9OQ/edit?gid=0#gid=0">
+                      Expense 2025
+                    </a>
+                  </div>
+                  <div>
+                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQyNXmLHO9Xo-hK5GnakkZdTrwzALXrt0oU7v77imhUM8_knYSpeay33LccIrWgPR4yhtemM95DYG8P/pubhtml?gid=0&single=true">
+                      Expense 2024
+                    </a>
+                  </div>
+                  <div>
+                    <a href="#">Expense 2023</a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </CustomTabPanel>
