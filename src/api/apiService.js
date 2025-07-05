@@ -290,3 +290,22 @@ export const updateLoanRequest = (id) => {
       .catch((err) => reject(err));
   });
 };
+
+export const downloadSampleMonthlyFile = () => {
+  return Axios.get("/loan/export-monthly", {
+    responseType: "blob", // ← This tells Axios to treat response as binary
+  });
+};
+
+export const importMonthlyFile = (formData) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/import-monthly`;
+    Axios.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
