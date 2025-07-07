@@ -55,9 +55,9 @@ Dashboard.css
 /* Main Content Grid */
 .account-main-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-  margin-top: 20px;
+  align-items: start;
 }
 
 /* Accounts */
@@ -196,7 +196,7 @@ Dashboard.css
 }
 
 /* History */
-.history {
+/* .history {
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -208,6 +208,81 @@ Dashboard.css
   justify-content: space-between;
   margin: 25px 0;
   font-size: 14px;
+} */
+
+.history {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.account-card-box {
+  height: 330px;
+  overflow: auto;
+}
+
+.history-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #111827;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 16px;
+  color: #374151;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.payer-name {
+  font-weight: 500;
+}
+
+.payer-amount {
+  color: #16a34a; /* Green */
+  font-weight: bold;
+}
+
+/* Top payer highlight */
+.top-payer {
+  background-color: #ecfdf5;
+  border-radius: 6px;
+  padding: 12px 10px;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation-fill-mode: both;
+}
+
+.urcontribution {
+  background: linear-gradient(to right, #f7971e, #ffd200);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  font-size: 35px;
+  text-align: center;
 }
 
 .positive {
@@ -341,4 +416,11 @@ Dashboard.css
   display: flex;
   justify-content: flex-end;
   margin-right: 50px;
+}
+
+.tab-buttons-monthly {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 50px;
+  margin-left: 60px;
 }

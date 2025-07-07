@@ -309,3 +309,21 @@ export const importMonthlyFile = (formData) => {
       .catch((err) => reject(err));
   });
 };
+
+export const getAllMonthlyData = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/monthly`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getContributionData = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/contribution`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

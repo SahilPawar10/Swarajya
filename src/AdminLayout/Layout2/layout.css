@@ -124,8 +124,8 @@
 /* -----------------------------Accounts------------------------ */
 .about-container {
   position: relative;
-  width: 80%;
-  margin: 10% 20px 0px 20px;
+  /* width: 80%;
+  margin: 10% 20px 0px 20px; */
   background-color: antiquewhite;
 }
 
