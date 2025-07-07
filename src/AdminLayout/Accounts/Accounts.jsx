@@ -33,6 +33,8 @@ import {
   getAllCreditsRecord,
   getAllDebitsRecord,
   getAllInstallment,
+  getAllMonthlyData,
+  getContributionData,
   getLoanRequest,
   getUserWithoutPhoto,
   importMonthlyFile,
@@ -44,6 +46,8 @@ import CustomizedSnackbars from "../../MainLayout/Components/ContactUS/Customize
 import UserSelect from "./UsersSelect";
 import { LoanSelect, MonthSelect } from "./LoanSelect";
 import InputFileUpload from "./InputFileUpload";
+import { generateExcelFileBuffer } from "../../utils/common";
+import { json } from "react-router-dom";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -112,6 +116,37 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
+const filterdMonthyData = (data) => {
+  const filteredData = data.map((row) => {
+    return {
+      Date: row.date,
+      month: row.month,
+      year: row.year,
+      member: row.member.firstName + " " + row.member.lastName,
+      Amount: row.amount,
+    };
+  });
+
+  return filteredData;
+};
+
+const filterdInstallmentData = (data) => {
+  const filteredData = data.map((row) => {
+    return {
+      Date: row.date,
+      Name: row.name,
+      LoanAmount: row.loanId?.loanAmount,
+      TotalPaybale: row.loanId?.totalPaybale,
+      Duration: row.duration,
+      PaidAmount: row.paidAmount,
+      Remaining: row.remaining,
+      Remark: row.remark,
+    };
+  });
+
+  return filteredData;
+};
 function Accounts() {
   const [open, setOpen] = React.useState(false);
   const [debitModal, setdebitModal] = React.useState(false);
@@ -131,17 +166,25 @@ function Accounts() {
   const [message, setMessage] = React.useState("");
   const [value, setValue] = React.useState(0);
   const [role, setRole] = React.useState("user");
+  const [userId, setUserId] = React.useState("");
   const [tableData, setTableData] = React.useState([]);
   const [credit, setCredit] = React.useState();
   const [debit, setDebit] = React.useState();
   // const [users, setUsers] = React.useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedLoan, setSelectedLoan] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("Jan");
+  const [selectedMonth, setSelectedMonth] = useState("");
   const [monthlyForm, setMonthlyform] = useState("");
+
+  const [monthlyTableData, setMonthlyTableData] = useState([]);
+  const [contribution, setContribution] = useState([]);
 
   const [loanForm, setLoanForm] = React.useState();
   const [installmentForm, setInstallmentForm] = React.useState();
+  const [yourContribution, setYourContribution] = useState([]);
+
+  // const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
 
   const handleSelectChange = (event) => {
     setSelectedUser(event.target.value);
@@ -431,7 +474,8 @@ function Accounts() {
         });
         handleDebitClose();
         setDebit();
-        dashboardReport();
+        // dashboardReport();
+        getAllDebits();
       })
       .catch((err) => {
         console.log(err, "err");
@@ -477,7 +521,7 @@ function Accounts() {
     } else if (newValue === 2) {
       getAllDebits();
     } else if (newValue === 3) {
-      getAllDebits();
+      getAllMonthly(); //monthly
     } else if (newValue === 4) {
       getAllInstallMentRcords();
     } else if (newValue === 5) {
@@ -490,7 +534,10 @@ function Accounts() {
 
   const setUser = async () => {
     const role = localStorage.getItem("userRole");
+    const id = localStorage.getItem("userId");
     setRole(JSON.parse(role));
+    setUserId(JSON.parse(id));
+    console.log(userId, "UserId");
     // setRole("admin");
   };
 
@@ -517,6 +564,16 @@ function Accounts() {
       .then((res) => {
         // console.log(res.data, "resDebit");
         setTableData(res.data);
+      })
+      .catch((err) => console.log(err, "err"));
+    // setRole("admin");
+  };
+
+  const getAllMonthly = async () => {
+    getAllMonthlyData()
+      .then((res) => {
+        // console.log(res.data, "resDebit");
+        setMonthlyTableData(res.data);
       })
       .catch((err) => console.log(err, "err"));
     // setRole("admin");
@@ -556,7 +613,7 @@ function Accounts() {
           credits: res.data.overAllCredits,
           debits: res.data.overAllDebits,
           loan: res.data.totalLoanuts,
-          monthly: res.data.monthly,
+          // monthly: res.data.monthly,
         }));
       })
       .catch((err) => console.log(err));
@@ -594,6 +651,24 @@ function Accounts() {
     });
   };
 
+  const exportDataDownload = (data, fileName) => {
+    const res = generateExcelFileBuffer(data, fileName);
+    const blob = new Blob([res], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(link.href);
+    setSnack({
+      open: true,
+      message: "File downloaded successfully!",
+      severity: "success",
+    });
+  };
+
   const handleExcelUpload = (files) => {
     console.log("Import file selected:", files[0]);
     // Upload logic specific to invoice
@@ -609,17 +684,58 @@ function Accounts() {
             severity: "success",
           });
           dashboardReport();
+          getAllMonthly();
         })
         .catch((error) => {
           console.error(error);
           setLoading(false);
+
+          setSnack({
+            open: true,
+            message: "Error Upoading File..",
+            severity: "error",
+          });
         });
     }
   };
+
+  const getContribution = () => {
+    getContributionData()
+      .then((res) => {
+        // console.log(res.data, "installments");
+        setContribution(res.data);
+
+        const user = contribution?.filter((item) => item.user.id === userId);
+        console.log("currUSer", user, userId);
+      })
+      .catch((err) => console.log(err, "err"));
+  };
+
+  const filteredData = monthlyTableData?.filter((item) => {
+    const matchMonth = selectedMonth ? item.month === selectedMonth : true;
+    const matchYear = selectedYear
+      ? item.year?.toString() === selectedYear
+      : true;
+    return matchMonth && matchYear;
+  });
+
+  const YourContribution = contribution?.filter(
+    (item) => item.user.id === userId
+  );
+
   useEffect(() => {
     setUser();
+    getContribution();
     dashboardReport();
   }, []);
+
+  useEffect(() => {
+    if (userId && contribution?.length > 0) {
+      const filtered = contribution.filter((item) => item.user._id === userId);
+      setYourContribution(filtered);
+      console.log(contribution, "yourContribution", userId);
+    }
+  }, [userId, contribution]);
 
   return (
     <div id="accounts">
@@ -641,8 +757,7 @@ function Accounts() {
             <Tab label="Debits" {...a11yProps(3)} />
             <Tab label="Monthly" {...a11yProps(4)} />
             <Tab label="Installments" {...a11yProps(5)} />
-            <Tab label="Active Loan" {...a11yProps(6)} />
-
+            <Tab label="Active Loan" {...a11yProps(6)} />0
             {role !== "user" && <Tab label="Approve Loan" {...a11yProps(7)} />}
             <Tab label="Old DashBoard" {...a11yProps(8)} />
           </Tabs>
@@ -680,9 +795,13 @@ function Accounts() {
                 </button>
                 <button
                   className="account-btn monthly-btn"
-                  onClick={handleMonthlyOpen}
+                  // onClick={handleMonthlyOpen}
                 >
-                  Monthly
+                  {/* Monthly */}
+                  <span className="urcontribution">
+                    {" "}
+                    {yourContribution[0]?.totalAmount || "Monthly"}
+                  </span>
                 </button>
                 {adminRoles.includes(role) && (
                   <>
@@ -703,32 +822,34 @@ function Accounts() {
               </div>
             </div>
 
-            {/* History */}
             <div className="history">
-              <h2>Monthly</h2>
-              {/* {dashReport.monthly.length > 0 &&
-                dashReport.monthly.map((record, index) => (
-                  <div key={index} className="history-item">
-                    <span>{record.member.firstName} </span>
-                    <span className="positive">{record.amount}</span>
-                  </div>
-                ))} */}
-              {/* <div className="history-item">
-                <span>Sahil Pawar </span>
-                <span className="positive">300</span>
+              <h2>Contribution</h2>
+              <div className="account-card-box">
+                {contribution.length > 0 &&
+                  contribution.map((record, index) => (
+                    <div
+                      key={index}
+                      className={`history-item fade-in ${
+                        index === 0 ? "top-payer" : "top-payer"
+                      }`}
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <span className="payer-name">
+                        {record.user.firstName + " " + record.user.lastName}
+                        {index === 0
+                          ? "🥇"
+                          : index === 1
+                          ? "🥈"
+                          : index === 2
+                          ? "🥉"
+                          : ""}
+                      </span>
+                      <span className="payer-amount">
+                        ₹{record.totalAmount}
+                      </span>
+                    </div>
+                  ))}
               </div>
-              <div className="history-item">
-                <span>Dipak Pawar</span>
-                <span className="positive">150</span>
-              </div>
-              <div className="history-item">
-                <span>Vishal Nikam</span>
-                <span className="positive">150</span>
-              </div>
-              <div className="history-item">
-                <span>Amar Pawar</span>
-                <span className="positive">100</span>
-              </div> */}
             </div>
           </div>
         </CustomTabPanel>
@@ -736,6 +857,23 @@ function Accounts() {
         <CustomTabPanel value={value} index={1}>
           <div className="cretis-table">
             <div className="account-credits">
+              {role !== "user" && (
+                <div className="tab-buttons">
+                  <div class="button-group-loan">
+                    <button class="btn-loan approve" onClick={handleOpen}>
+                      Add Credit
+                    </button>
+                    <button
+                      class="btn-loan reject"
+                      onClick={() => {
+                        exportDataDownload(tableData, "creditEntry.xlsx");
+                      }}
+                    >
+                      Export{" "}
+                    </button>
+                  </div>
+                </div>
+              )}
               <div className="account-credits-table-container">
                 <table className="client-table">
                   <thead>
@@ -776,6 +914,23 @@ function Accounts() {
         {/* Debit Table */}
         <CustomTabPanel value={value} index={2}>
           <div className="account-credits">
+            {role !== "user" && (
+              <div className="tab-buttons">
+                <div class="button-group-loan">
+                  <button class="btn-loan approve" onClick={handleDebitOpen}>
+                    Add Debit
+                  </button>
+                  <button
+                    class="btn-loan reject"
+                    onClick={() => {
+                      exportDataDownload(tableData, "debitEntry.xlsx");
+                    }}
+                  >
+                    Export{" "}
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
@@ -815,25 +970,84 @@ function Accounts() {
         {/* Monthly */}
         <CustomTabPanel value={value} index={3}>
           <div className="account-credits">
-            {role !== "user" && (
-              <div className="tab-buttons">
-                <div class="button-group-loan">
-                  <button class="btn-loan approve">createSingle </button>
-                  <button
-                    class="btn-loan approve"
-                    onClick={monthlySampleFileDownload}
-                  >
-                    Sample File
-                  </button>
-                  {/* <button class="btn-loan approve">Import </button> */}
-                  <InputFileUpload
-                    onFilesSelected={handleExcelUpload}
-                    label="Import"
-                  />
-                  <button class="btn-loan approve">Export </button>
-                </div>
+            <div className="tab-buttons-monthly">
+              <div style={{ display: "flex", gap: "10px" }}>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                >
+                  <option value="">All Months</option>
+                  {[
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                  ].map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                >
+                  <option value="">All Years</option>
+                  {[...new Set(monthlyTableData.map((c) => c.year))]
+                    .filter((y) => y)
+                    .map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                </select>
               </div>
-            )}
+              <div>
+                {" "}
+                {role !== "user" && (
+                  // <div className="tab-buttons">
+                  <div class="button-group-loan">
+                    <button
+                      class="btn-loan approve"
+                      onClick={handleMonthlyOpen}
+                    >
+                      createSingle{" "}
+                    </button>
+                    <button
+                      class="btn-loan approve"
+                      onClick={monthlySampleFileDownload}
+                    >
+                      Sample File
+                    </button>
+                    {/* <button class="btn-loan approve">Import </button> */}
+                    <InputFileUpload
+                      onFilesSelected={handleExcelUpload}
+                      label="Import"
+                    />
+                    <button
+                      class="btn-loan approve"
+                      onClick={() => {
+                        exportDataDownload(
+                          filterdMonthyData(monthlyTableData),
+                          "monthly.xlsx"
+                        );
+                      }}
+                    >
+                      Export{" "}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
@@ -847,11 +1061,11 @@ function Accounts() {
                   </tr>
                 </thead>
                 <tbody>
-                  {dashReport.monthly.map((c, i) => (
+                  {filteredData.map((c, i) => (
                     <tr key={i}>
                       <td>{i + 1}</td>
                       <td>{c?.date}</td>
-                      <td>{c?.member.firstName + "" + c?.member.lastName}</td>
+                      <td>{c?.member.firstName + " " + c?.member.lastName}</td>
                       <td>{c?.month}</td>
                       <td>{c?.year || "-"}</td>
                       <td>{c?.amount}</td>
@@ -865,17 +1079,30 @@ function Accounts() {
         {/* Installment Table */}
         <CustomTabPanel value={value} index={4}>
           <div className="account-credits">
-            <div className="tab-buttons">
-              <div class="button-group-loan">
-                <button
-                  class="btn-loan approve"
-                  onClick={handleInstallmentOpen}
-                >
-                  Add Installment
-                </button>
-                <button class="btn-loan reject">Export </button>
+            {role !== "user" && (
+              <div className="tab-buttons">
+                <div class="button-group-loan">
+                  <button
+                    class="btn-loan approve"
+                    onClick={handleInstallmentOpen}
+                  >
+                    Add Installment
+                  </button>
+                  <button
+                    class="btn-loan reject"
+                    onClick={() => {
+                      exportDataDownload(
+                        filterdInstallmentData(tableData),
+                        "installment.xlsx"
+                      );
+                    }}
+                  >
+                    Export{" "}
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
+
             <div className="account-credits-table-container">
               <table className="client-table">
                 <thead>
@@ -956,8 +1183,8 @@ function Accounts() {
                       <td>
                         <span>{c?.loanAmount}</span>
                       </td>
-                      <td>{c?.totalPayble}</td>
-                      <td className="bold-score">{c?.toalPaid || "-"}</td>
+                      <td>{c?.totalPaybale}</td>
+                      <td className="bold-score">{c?.totalPaid || "-"}</td>
                       <td>{c?.totalRemaining || "-"}</td>
                       <td>{c?.duration}</td>
                       <td>{c?.percentage}</td>
@@ -1180,7 +1407,7 @@ function Accounts() {
           </Button>
         </Box>
       </Modal>{" "}
-      ;{/* debit Modal */}
+      {/* debit Modal */}
       <Modal
         open={debitModal}
         onClose={handleDebitClose}
