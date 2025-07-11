@@ -424,3 +424,134 @@ Dashboard.css
   margin-right: 50px;
   margin-left: 60px;
 }
+
+@media (min-width: 320px) and (max-width: 480px) {
+  #accounts {
+    width: 390px;
+  }
+  .account-main-content {
+    display: grid;
+    /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+    /* gap: 20px; */
+    /* align-items: start; */
+  }
+  .accounts-buttons-admin {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .accounts-buttons-operator {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .account-credits-table-container {
+    padding: 0;
+  }
+  .tab-buttons-monthly {
+    display: flex;
+    /* justify-content: space-between; */
+    overflow-y: auto;
+    margin-right: 2px;
+    margin-left: 2px;
+  }
+  .button-group-loan {
+    display: flex;
+    gap: 8px;
+    margin-left: 10px;
+  }
+  .css-heg063-MuiTabs-flexContainer {
+    overflow: auto;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  #accounts {
+    width: 400px; /* Use full width for better fluid layout */
+    padding: 0 10px;
+  }
+
+  .account-main-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+
+  .accounts-buttons-admin,
+  .accounts-buttons-operator {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two buttons per row */
+    gap: 10px;
+  }
+
+  .account-credits-table-container {
+    padding: 10px;
+    overflow-x: auto; /* Enable horizontal scroll if table overflows */
+  }
+
+  .tab-buttons-monthly {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px;
+  }
+
+  .button-group-loan {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: 15px;
+  }
+
+  .css-heg063-MuiTabs-flexContainer {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1270px) {
+  #accounts {
+    width: 600px; /* Use full width for better fluid layout */
+    padding: 0 10px;
+    overflow: auto;
+  }
+
+  .account-main-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+
+  .accounts-buttons-admin,
+  .accounts-buttons-operator {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two buttons per row */
+    gap: 10px;
+  }
+
+  .account-credits-table-container {
+    /* padding: 10px; */
+    overflow-x: auto; /* Enable horizontal scroll if table overflows */
+  }
+
+  .tab-buttons-monthly {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px;
+  }
+
+  .button-group-loan {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: 15px;
+  }
+
+  .css-heg063-MuiTabs-flexContainer {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+}
