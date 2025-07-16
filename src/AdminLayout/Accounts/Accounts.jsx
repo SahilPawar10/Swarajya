@@ -398,6 +398,10 @@ function Accounts() {
 
   const handleCreditEntrySubmit = async () => {
     // console.log(credit, "debitForm");
+
+    if (!credit?.date) {
+      credit.date = selectedDate.format("DD-MM-YYYY");
+    }
     setLoading(true);
     await createCreditEntry(credit)
       .then((res) => {
@@ -414,6 +418,7 @@ function Accounts() {
         dashboardReport();
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err, "err");
         setSnack({
           open: true,
@@ -426,7 +431,7 @@ function Accounts() {
   const handleInstallmentEntrySubmit = async () => {
     if (!installmentForm?.date) {
       installmentForm.date = selectedDate.format("DD-MM-YYYY");
-    }
+    } else if (!installmentForm?.member) installmentForm.member = selectedUser;
 
     setLoading(true);
     await createInstallmentEntry(installmentForm)
@@ -457,9 +462,13 @@ function Accounts() {
         handleInstallmentClose();
         setSelectedUser();
         setSelectedLoan();
+        setLoading(false);
       });
   };
   const handleDebitEntrySubmit = async () => {
+    if (!debit?.date) {
+      debit.date = selectedDate.format("DD-MM-YYYY");
+    }
     setLoading(true);
     await createDebitEntry(debit)
       .then((res) => {
@@ -479,6 +488,7 @@ function Accounts() {
       })
       .catch((err) => {
         console.log(err, "err");
+        setLoading(false);
         // setMessage(err.response.data.message);
         setSnack({
           open: true,
@@ -490,6 +500,10 @@ function Accounts() {
   const handleLoanEntrySubmit = async () => {
     setLoading(true);
     // console.log(loanForm, "loanForm");
+
+    if (!loanForm?.date) {
+      loanForm.date = selectedDate.format("DD-MM-YYYY");
+    } else if (!loanForm?.member) loanForm.member = selectedUser;
     await createLoanEntry(loanForm)
       .then((res) => {
         // console.log(res, "res");
@@ -506,6 +520,7 @@ function Accounts() {
       })
       .catch((err) => {
         console.log(err, "err");
+        setLoading(false);
         // setMessage(err.response.data.message);
         setSnack({
           open: true,

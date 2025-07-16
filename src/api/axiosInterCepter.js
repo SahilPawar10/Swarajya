@@ -13,7 +13,7 @@ axiosInstance.interceptors.request.use(
 
     if (access_token) {
       const { exp } = jwtDecode(access_token);
-      console.log(exp);
+      console.log(exp, "expry");
       if (Date.now() >= exp * 1000) {
         localStorage.clear();
         if (refresh_token) {
