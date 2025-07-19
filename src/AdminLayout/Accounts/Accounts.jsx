@@ -48,6 +48,7 @@ import { LoanSelect, MonthSelect } from "./LoanSelect";
 import InputFileUpload from "./InputFileUpload";
 import { generateExcelFileBuffer } from "../../utils/common";
 import { json } from "react-router-dom";
+import CircularWithValueLabel from "../../MainLayout/screens/Loading";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -557,12 +558,17 @@ function Accounts() {
   };
 
   const getAllCredits = async () => {
+    setLoading(true);
     getAllCreditsRecord()
       .then((res) => {
+        setLoading(false);
         // console.log(res.data, "res");
         setTableData(res.data);
       })
-      .catch((err) => console.log(err, "err"));
+      .catch((err) => {
+        console.log(err, "err");
+        setLoading(false);
+      });
     // setRole("admin");
   };
   // const getAllUsers = async () => {
@@ -575,41 +581,61 @@ function Accounts() {
   // };
 
   const getAllDebits = async () => {
+    setLoading(true);
     getAllDebitsRecord()
       .then((res) => {
+        setLoading(false);
         // console.log(res.data, "resDebit");
         setTableData(res.data);
       })
-      .catch((err) => console.log(err, "err"));
+      .catch((err) => {
+        console.log(err, "err");
+        setLoading(false);
+      });
     // setRole("admin");
   };
 
   const getAllMonthly = async () => {
+    setLoading(true);
     getAllMonthlyData()
       .then((res) => {
+        setLoading(false);
         // console.log(res.data, "resDebit");
         setMonthlyTableData(res.data);
       })
-      .catch((err) => console.log(err, "err"));
+      .catch((err) => {
+        console.log(err, "err");
+        setLoading(false);
+      });
     // setRole("admin");
   };
 
   const getAllInstallMentRcords = async () => {
+    setLoading(true);
     getAllInstallment()
       .then((res) => {
+        setLoading(false);
         // console.log(res.data, "installments");
         setTableData(res.data);
       })
-      .catch((err) => console.log(err, "err"));
+      .catch((err) => {
+        console.log(err, "err");
+        setLoading(false);
+      });
   };
 
   const getLoanSummary = async () => {
+    setLoading(true);
     getActiveLoans()
       .then((res) => {
+        setLoading(false);
         // console.log(res.data, "installments");
         setTableData(res.data);
       })
-      .catch((err) => console.log(err, "err"));
+      .catch((err) => {
+        console.log(err, "err");
+        setLoading(false);
+      });
   };
   const loanPrequests = async () => {
     getLoanRequest()
@@ -870,18 +896,82 @@ function Accounts() {
         </CustomTabPanel>
         {/* Credit Table */}
         <CustomTabPanel value={value} index={1}>
-          <div className="cretis-table">
+          {loading ? (
+            <CircularWithValueLabel />
+          ) : (
+            <div className="cretis-table">
+              <div className="account-credits">
+                {role !== "user" && (
+                  <div className="tab-buttons">
+                    <div class="button-group-loan">
+                      <button class="btn-loan approve" onClick={handleOpen}>
+                        Add Credit
+                      </button>
+                      <button
+                        class="btn-loan reject"
+                        onClick={() => {
+                          exportDataDownload(tableData, "creditEntry.xlsx");
+                        }}
+                      >
+                        Export{" "}
+                      </button>
+                    </div>
+                  </div>
+                )}
+                <div className="account-credits-table-container">
+                  <table className="client-table">
+                    <thead>
+                      <tr>
+                        <th>SR.NO</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Credits By</th>
+                        <th>description</th>
+                        {/* <th>Email</th>
+                      <th>Telephone</th>
+                      <th>Created</th> */}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {tableData?.map((c, i) => (
+                        <tr key={i}>
+                          <td>{i + 1}</td>
+                          <td className="blue-link">{c?.date}</td>
+                          <td>
+                            <span className={`status ${"client"}`}>
+                              {c?.amount} &#8377;
+                            </span>
+                          </td>
+                          {/* <td>{c.type}</td> */}
+                          <td className="bold-score">{c.creditBy || "-"}</td>
+                          <td>{c?.desc || "-"}</td>
+                          {/* <td>{c.phone}</td>
+                        <td>{c.created}</td> */}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+        </CustomTabPanel>
+        {/* Debit Table */}
+        <CustomTabPanel value={value} index={2}>
+          {loading ? (
+            <CircularWithValueLabel />
+          ) : (
             <div className="account-credits">
               {role !== "user" && (
                 <div className="tab-buttons">
                   <div class="button-group-loan">
-                    <button class="btn-loan approve" onClick={handleOpen}>
-                      Add Credit
+                    <button class="btn-loan approve" onClick={handleDebitOpen}>
+                      Add Debit
                     </button>
                     <button
                       class="btn-loan reject"
                       onClick={() => {
-                        exportDataDownload(tableData, "creditEntry.xlsx");
+                        exportDataDownload(tableData, "debitEntry.xlsx");
                       }}
                     >
                       Export{" "}
@@ -896,7 +986,7 @@ function Accounts() {
                       <th>SR.NO</th>
                       <th>Date</th>
                       <th>Amount</th>
-                      <th>Credits By</th>
+                      <th>Debits By</th>
                       <th>description</th>
                       {/* <th>Email</th>
                       <th>Telephone</th>
@@ -907,14 +997,14 @@ function Accounts() {
                     {tableData?.map((c, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
-                        <td className="blue-link">{c?.date}</td>
+                        <td className="blue-link">{c.date}</td>
                         <td>
-                          <span className={`status ${"client"}`}>
+                          <span className={`status ${"prospect"}`}>
                             {c?.amount} &#8377;
                           </span>
                         </td>
                         {/* <td>{c.type}</td> */}
-                        <td className="bold-score">{c.creditBy || "-"}</td>
+                        <td className="bold-score">{c.debitBy || "-"}</td>
                         <td>{c?.desc || "-"}</td>
                         {/* <td>{c.phone}</td>
                         <td>{c.created}</td> */}
@@ -924,293 +1014,251 @@ function Accounts() {
                 </table>
               </div>
             </div>
-          </div>
-        </CustomTabPanel>
-        {/* Debit Table */}
-        <CustomTabPanel value={value} index={2}>
-          <div className="account-credits">
-            {role !== "user" && (
-              <div className="tab-buttons">
-                <div class="button-group-loan">
-                  <button class="btn-loan approve" onClick={handleDebitOpen}>
-                    Add Debit
-                  </button>
-                  <button
-                    class="btn-loan reject"
-                    onClick={() => {
-                      exportDataDownload(tableData, "debitEntry.xlsx");
-                    }}
-                  >
-                    Export{" "}
-                  </button>
-                </div>
-              </div>
-            )}
-            <div className="account-credits-table-container">
-              <table className="client-table">
-                <thead>
-                  <tr>
-                    <th>SR.NO</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Debits By</th>
-                    <th>description</th>
-                    {/* <th>Email</th>
-                      <th>Telephone</th>
-                      <th>Created</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableData?.map((c, i) => (
-                    <tr key={i}>
-                      <td>{i + 1}</td>
-                      <td className="blue-link">{c.date}</td>
-                      <td>
-                        <span className={`status ${"prospect"}`}>
-                          {c?.amount} &#8377;
-                        </span>
-                      </td>
-                      {/* <td>{c.type}</td> */}
-                      <td className="bold-score">{c.debitBy || "-"}</td>
-                      <td>{c?.desc || "-"}</td>
-                      {/* <td>{c.phone}</td>
-                        <td>{c.created}</td> */}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          )}
         </CustomTabPanel>
         {/* Monthly */}
         <CustomTabPanel value={value} index={3}>
-          <div className="account-credits">
-            <div className="tab-buttons-monthly">
-              <div style={{ display: "flex", gap: "10px" }}>
-                <select
-                  value={selectedMonth}
-                  onChange={(e) => setSelectedMonth(e.target.value)}
-                >
-                  <option value="">All Months</option>
-                  {[
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                  ].map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(e.target.value)}
-                >
-                  <option value="">All Years</option>
-                  {[...new Set(monthlyTableData.map((c) => c.year))]
-                    .filter((y) => y)
-                    .map((y) => (
-                      <option key={y} value={y}>
-                        {y}
+          {loading ? (
+            <CircularWithValueLabel />
+          ) : (
+            <div className="account-credits">
+              <div className="tab-buttons-monthly">
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                  >
+                    <option value="">All Months</option>
+                    {[
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ].map((m) => (
+                      <option key={m} value={m}>
+                        {m}
                       </option>
                     ))}
-                </select>
+                  </select>
+
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                  >
+                    <option value="">All Years</option>
+                    {[...new Set(monthlyTableData.map((c) => c.year))]
+                      .filter((y) => y)
+                      .map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div>
+                  {" "}
+                  {role !== "user" && (
+                    // <div className="tab-buttons">
+                    <div class="button-group-loan">
+                      <button
+                        class="btn-loan approve"
+                        onClick={handleMonthlyOpen}
+                      >
+                        createSingle{" "}
+                      </button>
+                      <button
+                        class="btn-loan approve"
+                        onClick={monthlySampleFileDownload}
+                      >
+                        Sample File
+                      </button>
+                      {/* <button class="btn-loan approve">Import </button> */}
+                      <InputFileUpload
+                        onFilesSelected={handleExcelUpload}
+                        label="Import"
+                      />
+                      <button
+                        class="btn-loan approve"
+                        onClick={() => {
+                          exportDataDownload(
+                            filterdMonthyData(monthlyTableData),
+                            "monthly.xlsx"
+                          );
+                        }}
+                      >
+                        Export{" "}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div>
-                {" "}
-                {role !== "user" && (
-                  // <div className="tab-buttons">
+              <div className="account-credits-table-container">
+                <table className="client-table">
+                  <thead>
+                    <tr>
+                      <th>SR.NO</th>
+                      <th>Date</th>
+                      <th>Name</th>
+                      <th>Month</th>
+                      <th>Year</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredData.map((c, i) => (
+                      <tr key={i}>
+                        <td>{i + 1}</td>
+                        <td>{c?.date}</td>
+                        <td>
+                          {c?.member.firstName + " " + c?.member.lastName}
+                        </td>
+                        <td>{c?.month}</td>
+                        <td>{c?.year || "-"}</td>
+                        <td>{c?.amount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </CustomTabPanel>
+        {/* Installment Table */}
+        <CustomTabPanel value={value} index={4}>
+          {loading ? (
+            <CircularWithValueLabel />
+          ) : (
+            <div className="account-credits">
+              {role !== "user" && (
+                <div className="tab-buttons">
                   <div class="button-group-loan">
                     <button
                       class="btn-loan approve"
-                      onClick={handleMonthlyOpen}
+                      onClick={handleInstallmentOpen}
                     >
-                      createSingle{" "}
+                      Add Installment
                     </button>
                     <button
-                      class="btn-loan approve"
-                      onClick={monthlySampleFileDownload}
-                    >
-                      Sample File
-                    </button>
-                    {/* <button class="btn-loan approve">Import </button> */}
-                    <InputFileUpload
-                      onFilesSelected={handleExcelUpload}
-                      label="Import"
-                    />
-                    <button
-                      class="btn-loan approve"
+                      class="btn-loan reject"
                       onClick={() => {
                         exportDataDownload(
-                          filterdMonthyData(monthlyTableData),
-                          "monthly.xlsx"
+                          filterdInstallmentData(tableData),
+                          "installment.xlsx"
                         );
                       }}
                     >
                       Export{" "}
                     </button>
                   </div>
-                )}
-              </div>
-            </div>
-            <div className="account-credits-table-container">
-              <table className="client-table">
-                <thead>
-                  <tr>
-                    <th>SR.NO</th>
-                    <th>Date</th>
-                    <th>Name</th>
-                    <th>Month</th>
-                    <th>Year</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredData.map((c, i) => (
-                    <tr key={i}>
-                      <td>{i + 1}</td>
-                      <td>{c?.date}</td>
-                      <td>{c?.member.firstName + " " + c?.member.lastName}</td>
-                      <td>{c?.month}</td>
-                      <td>{c?.year || "-"}</td>
-                      <td>{c?.amount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </CustomTabPanel>
-        {/* Installment Table */}
-        <CustomTabPanel value={value} index={4}>
-          <div className="account-credits">
-            {role !== "user" && (
-              <div className="tab-buttons">
-                <div class="button-group-loan">
-                  <button
-                    class="btn-loan approve"
-                    onClick={handleInstallmentOpen}
-                  >
-                    Add Installment
-                  </button>
-                  <button
-                    class="btn-loan reject"
-                    onClick={() => {
-                      exportDataDownload(
-                        filterdInstallmentData(tableData),
-                        "installment.xlsx"
-                      );
-                    }}
-                  >
-                    Export{" "}
-                  </button>
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="account-credits-table-container">
-              <table className="client-table">
-                <thead>
-                  <tr>
-                    <th>SR.NO</th>
-                    {/* <th>Loan ID</th> */}
-                    <th>Name</th>
-                    <th>Loan Amount</th>
-                    <th>Duration</th>
-                    <th>Total Payble</th>
-                    <th>Paid Amount</th>
-                    <th>Remaining</th>
-                    <th>Remark</th>
-                    {/* <th>Telephone</th>
+              <div className="account-credits-table-container">
+                <table className="client-table">
+                  <thead>
+                    <tr>
+                      <th>SR.NO</th>
+                      {/* <th>Loan ID</th> */}
+                      <th>Name</th>
+                      <th>Loan Amount</th>
+                      <th>Duration</th>
+                      <th>Total Payble</th>
+                      <th>Paid Amount</th>
+                      <th>Remaining</th>
+                      <th>Remark</th>
+                      {/* <th>Telephone</th>
                     <th>Created</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableData.map((c, i) => (
-                    <tr key={i}>
-                      <td>{i + 1}</td>
-                      <td>{c?.name || "-"}</td>
-                      {/* <td>{c.loanId.id}</td> */}
-
-                      <td>{c?.loanId?.loanAmount || "-"}</td>
-                      <td>{c?.loanId?.duration || "-"}</td>
-                      <td>{c?.loanId?.totalPaybale || "-"}</td>
-                      <td>{c?.paidAmount || "-"}</td>
-                      <td>{c?.remaining || "-"}</td>
-                      <td>{c?.remark}</td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {tableData.map((c, i) => (
+                      <tr key={i}>
+                        <td>{i + 1}</td>
+                        <td>{c?.name || "-"}</td>
+                        {/* <td>{c.loanId.id}</td> */}
+
+                        <td>{c?.loanId?.loanAmount || "-"}</td>
+                        <td>{c?.loanId?.duration || "-"}</td>
+                        <td>{c?.loanId?.totalPaybale || "-"}</td>
+                        <td>{c?.paidAmount || "-"}</td>
+                        <td>{c?.remaining || "-"}</td>
+                        <td>{c?.remark}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          )}
         </CustomTabPanel>
         {/* Loan Summary */}
         <CustomTabPanel value={value} index={5}>
-          <div className="account-credits">
-            {role !== "user" && (
-              <div className="tab-buttons">
-                <div class="button-group-loan">
-                  <button
-                    class="btn-loan approve"
-                    onClick={handleUpdateLoanStatus}
-                  >
-                    Update LoanStatus
-                  </button>
-                  <button class="btn-loan reject">Export </button>
+          {loading ? (
+            <CircularWithValueLabel />
+          ) : (
+            <div className="account-credits">
+              {role !== "user" && (
+                <div className="tab-buttons">
+                  <div class="button-group-loan">
+                    <button
+                      class="btn-loan approve"
+                      onClick={handleUpdateLoanStatus}
+                    >
+                      Update LoanStatus
+                    </button>
+                    <button class="btn-loan reject">Export </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="account-credits-table-container">
-              <table className="client-table">
-                <thead>
-                  <tr>
-                    <th>SR.NO</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Loan Amount</th>
-                    <th>Total Paybale</th>
-                    <th>Total Paid</th>
-                    <th>Remaining</th>
-                    <th>Duration</th>
-                    <th>percentage</th>
-                    <th>status</th>
-                    <th>reason</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableData.map((c, i) => (
-                    <tr key={i}>
-                      <td>{i + 1}</td>
-                      <td>{c?.memberName}</td>
-                      <td>{c?.date}</td>
-                      <td>
-                        <span>{c?.loanAmount}</span>
-                      </td>
-                      <td>{c?.totalPaybale}</td>
-                      <td className="bold-score">{c?.totalPaid || "-"}</td>
-                      <td>{c?.totalRemaining || "-"}</td>
-                      <td>{c?.duration}</td>
-                      <td>{c?.percentage}</td>
-                      <td>{c?.status}</td>
-                      <td>{c?.reason}</td>
+              <div className="account-credits-table-container">
+                <table className="client-table">
+                  <thead>
+                    <tr>
+                      <th>SR.NO</th>
+                      <th>Name</th>
+                      <th>Date</th>
+                      <th>Loan Amount</th>
+                      <th>Total Paybale</th>
+                      <th>Total Paid</th>
+                      <th>Remaining</th>
+                      <th>Duration</th>
+                      <th>percentage</th>
+                      <th>status</th>
+                      <th>reason</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {tableData.map((c, i) => (
+                      <tr key={i}>
+                        <td>{i + 1}</td>
+                        <td>{c?.memberName}</td>
+                        <td>{c?.date}</td>
+                        <td>
+                          <span>{c?.loanAmount}</span>
+                        </td>
+                        <td>{c?.totalPaybale}</td>
+                        <td className="bold-score">{c?.totalPaid || "-"}</td>
+                        <td>{c?.totalRemaining || "-"}</td>
+                        <td>{c?.duration}</td>
+                        <td>{c?.percentage}</td>
+                        <td>{c?.status}</td>
+                        <td>{c?.reason}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          )}
         </CustomTabPanel>
         {/* Approval Tab */}
         <CustomTabPanel value={value} index={6}>
