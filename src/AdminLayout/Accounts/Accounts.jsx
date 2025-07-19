@@ -186,6 +186,7 @@ function Accounts() {
 
   // const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+  const [selectedMontlyUser, setselectedMontlyUser] = useState("");
 
   const handleSelectChange = (event) => {
     setSelectedUser(event.target.value);
@@ -757,7 +758,12 @@ function Accounts() {
     const matchYear = selectedYear
       ? item.year?.toString() === selectedYear
       : true;
-    return matchMonth && matchYear;
+
+    const matchUser = selectedMontlyUser
+      ? item?.member.firstName + " " + item?.member.lastName ===
+        selectedMontlyUser
+      : true;
+    return matchMonth && matchYear && matchUser;
   });
 
   const YourContribution = contribution?.filter(
@@ -1062,6 +1068,27 @@ function Accounts() {
                         </option>
                       ))}
                   </select>
+                  <select
+                    value={setselectedMontlyUser}
+                    onChange={(e) => setselectedMontlyUser(e.target.value)}
+                  >
+                    <option value="" disabled selected={!selectedMontlyUser}>
+                      {selectedMontlyUser || "All Members"}
+                    </option>{" "}
+                    {[
+                      ...new Set(
+                        monthlyTableData.map(
+                          (c) => c?.member.firstName + " " + c?.member.lastName
+                        )
+                      ),
+                    ]
+                      .filter((y) => y)
+                      .map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                  </select>
                 </div>
                 <div>
                   {" "}
@@ -1168,6 +1195,7 @@ function Accounts() {
                       <th>SR.NO</th>
                       {/* <th>Loan ID</th> */}
                       <th>Name</th>
+                      <th>Date</th>
                       <th>Loan Amount</th>
                       <th>Duration</th>
                       <th>Total Payble</th>
@@ -1183,8 +1211,7 @@ function Accounts() {
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td>{c?.name || "-"}</td>
-                        {/* <td>{c.loanId.id}</td> */}
-
+                        <td>{c.date}</td>
                         <td>{c?.loanId?.loanAmount || "-"}</td>
                         <td>{c?.loanId?.duration || "-"}</td>
                         <td>{c?.loanId?.totalPaybale || "-"}</td>
