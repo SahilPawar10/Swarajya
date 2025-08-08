@@ -268,7 +268,7 @@ function Accounts() {
   const handleMonthlySubmit = () => {
     // console.log(monthlyForm, ",monthlyform");
 
-    if (!loanForm?.date) {
+    if (!monthlyForm?.month) {
       monthlyForm.month = selectedMonth;
     }
 
