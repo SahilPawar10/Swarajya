@@ -174,7 +174,7 @@ function Accounts() {
   // const [users, setUsers] = React.useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedLoan, setSelectedLoan] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("Jan");
   const [monthlyForm, setMonthlyform] = useState("");
 
   const [monthlyTableData, setMonthlyTableData] = useState([]);
@@ -267,6 +267,10 @@ function Accounts() {
 
   const handleMonthlySubmit = () => {
     // console.log(monthlyForm, ",monthlyform");
+
+    if (!loanForm?.date) {
+      monthlyForm.month = selectedMonth;
+    }
 
     addMonthlyEntry(monthlyForm)
       .then((res) => {
@@ -1628,6 +1632,15 @@ function Accounts() {
             label="LoanAmount"
             id="loan-amount"
             name="loanAmount"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={onLoanFormChange}
+          />
+
+          <TextField
+            fullWidth
+            label="Percentage"
+            id="loan-percentage"
+            name="percentage"
             sx={{ marginTop: "10px", marginBottom: "20px" }}
             onChange={onLoanFormChange}
           />
