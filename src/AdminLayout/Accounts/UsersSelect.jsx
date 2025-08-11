@@ -47,7 +47,7 @@ export default function UserSelect({ selectedUser, handleUserChange }) {
   }, []);
 
   return (
-    <FormControl fullWidth sx={{ marginTop: "10px", marginBottom: "20px" }}>
+    <FormControl fullWidth sx={{ marginBottom: "20px" }}>
       <InputLabel id="user-select-label">Select User</InputLabel>
       <Select
         labelId="user-select-label"

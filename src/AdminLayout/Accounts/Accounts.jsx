@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { Grid } from "@mui/material";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -512,8 +513,17 @@ function Accounts() {
     } else if (!loanForm?.member) loanForm.member = selectedUser;
     await createLoanEntry(loanForm)
       .then((res) => {
-        // console.log(res, "res");
-        // setMessage("record inserted successfuly");
+        const url = window.URL.createObjectURL(
+          new Blob([res.data], { type: "application/pdf" })
+        );
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "loan-agreement.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
         setLoading(false);
         setSnack({
           open: true,
@@ -1258,6 +1268,8 @@ function Accounts() {
                       <th>Name</th>
                       <th>Date</th>
                       <th>Loan Amount</th>
+                      <th>Min Paybale</th>
+                      <th>EMI</th>
                       <th>Total Paybale</th>
                       <th>Total Paid</th>
                       <th>Remaining</th>
@@ -1276,6 +1288,8 @@ function Accounts() {
                         <td>
                           <span>{c?.loanAmount}</span>
                         </td>
+                        <td>{c?.minRequiredPay || "-"}</td>
+                        <td>{c?.emi || "-"}</td>
                         <td>{c?.totalPaybale}</td>
                         <td className="bold-score">{c?.totalPaid || "-"}</td>
                         <td>{c?.totalRemaining || "-"}</td>
@@ -1342,7 +1356,7 @@ function Accounts() {
             </div>
           </div>
         </CustomTabPanel>
-
+        {/* old Dashboard */}
         <CustomTabPanel value={value} index={7}>
           <div className="about-container">
             <p>
@@ -1595,7 +1609,15 @@ function Accounts() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box
+          // sx={style}
+          sx={{
+            ...style,
+            width: "900px", // wider modal
+            maxWidth: "90%",
+            padding: "30px",
+          }}
+        >
           <Typography
             id="modal-modal-description"
             sx={{
@@ -1608,85 +1630,110 @@ function Accounts() {
           >
             Loan Application
           </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Select Date"
-              value={selectedDate}
-              id="loan-date"
-              onChange={(newValue) => {
-                handleDateChange(newValue, "loan");
-              }}
-              renderInput={(params) => (
-                <TextField
-                  name="date"
-                  id="loan-date"
-                  {...params}
-                  fullWidth
-                  sx={{ marginTop: "30px" }}
+
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            {/* Date Picker */}
+            <Grid item xs={12} sm={6}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Select Date"
+                  value={selectedDate}
+                  onChange={(newValue) => handleDateChange(newValue, "loan")}
+                  renderInput={(params) => <TextField {...params} fullWidth />}
                 />
-              )}
-            />
-          </LocalizationProvider>
-          <TextField
-            fullWidth
-            label="LoanAmount"
-            id="loan-amount"
-            name="loanAmount"
-            sx={{ marginTop: "10px", marginBottom: "20px" }}
-            onChange={onLoanFormChange}
-          />
+              </LocalizationProvider>
+            </Grid>
 
-          <TextField
-            fullWidth
-            label="Percentage"
-            id="loan-percentage"
-            name="percentage"
-            sx={{ marginTop: "10px", marginBottom: "20px" }}
-            onChange={onLoanFormChange}
-          />
+            {/* Loan Type */}
+            {/* Loan Type */}
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id="loan-type-label">Loan Type</InputLabel>
+                <Select
+                  labelId="loan-type-label"
+                  name="loanType"
+                  value={loanForm?.loanType || ""}
+                  onChange={onLoanFormChange}
+                  label="LoanType"
+                >
+                  <MenuItem value="instant">Instant</MenuItem>
+                  <MenuItem value="long-term">Long-term</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
 
-          <TextField
-            fullWidth
-            label="Name"
-            id="loan-amount"
-            name="name"
-            sx={{ marginTop: "10px", marginBottom: "20px" }}
-            onChange={onLoanFormChange}
-          />
+            {/* Loan Amount */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Loan Amount"
+                name="loanAmount"
+                onChange={onLoanFormChange}
+              />
+            </Grid>
 
-          <UserSelect
-            selectedUser={selectedUser}
-            handleUserChange={(event) => handleUserChange(event, "loan")}
-          />
-          <TextField
-            fullWidth
-            label="Duration"
-            id="loan-duration"
-            name="duration"
-            onChange={onLoanFormChange}
-            sx={{ marginTop: "10px", marginBottom: "20px" }}
-            // onChange={onChange}
-          />
-          <TextField
-            fullWidth
-            label="Reaon"
-            id="loan-desc"
-            name="reason"
-            onChange={onLoanFormChange}
-            sx={{ marginTop: "10px", marginBottom: "20px" }}
-          />
+            {/* Percentage */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Percentage"
+                name="percentage"
+                onChange={onLoanFormChange}
+              />
+            </Grid>
 
-          <Button
-            variant="contained"
-            fullWidth
-            sx={{ marginBottom: "30px" }}
-            onClick={handleLoanEntrySubmit}
-          >
-            Submit
-            {/* {loading ? <i>Sending</i> : "Submit"} */}
-          </Button>
+            {/* Name */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                onChange={onLoanFormChange}
+              />
+            </Grid>
+
+            {/* User Select */}
+            <Grid item xs={12} sm={6}>
+              <UserSelect
+                selectedUser={selectedUser}
+                handleUserChange={(event) => handleUserChange(event, "loan")}
+              />
+            </Grid>
+
+            {/* Duration */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Duration"
+                name="duration"
+                onChange={onLoanFormChange}
+              />
+            </Grid>
+
+            {/* Reason */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Reason"
+                name="reason"
+                onChange={onLoanFormChange}
+              />
+            </Grid>
+
+            {/* Submit Button */}
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{ marginBottom: "30px" }}
+                onClick={handleLoanEntrySubmit}
+              >
+                {loading ? "Sending" : "Submit"}
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
-      </Modal>{" "}
+      </Modal>
       {/* Installment Model*/}
       <Modal
         open={installmentModel}

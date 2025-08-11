@@ -222,7 +222,7 @@ export const createInstallmentEntry = (data) => {
 export const createLoanEntry = (data) => {
   return new Promise((resolve, reject) => {
     const url = `/loan/create-entry`;
-    Axios.post(url, data)
+    Axios.post(url, data, { responseType: "blob" })
       .then((res) => resolve(res))
       .catch((err) => reject(err));
   });
