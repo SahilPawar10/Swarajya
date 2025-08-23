@@ -36,9 +36,11 @@ import {
   getAllInstallment,
   getAllMonthlyData,
   getContributionData,
+  getDirectPayLoanInfo,
   getLoanRequest,
   getUserWithoutPhoto,
   importMonthlyFile,
+  settleDirectAmount,
   updateLoanLoanStatus,
   updateLoanRequest,
 } from "../../api/apiService";
@@ -155,11 +157,19 @@ function Accounts() {
   const [loanAppModal, setloanAppModal] = React.useState(false);
   const [installmentModel, setinstallmentModel] = React.useState(false);
   const [monthlyModel, setMonthlyModel] = React.useState(false);
+  const [directPay, setdirectPayModal] = React.useState(false);
+  const [directPayLoanInfo, setdirectPayLoanInfo] = React.useState();
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleDebitOpen = () => setdebitModal(true);
   const handleDebitClose = () => setdebitModal(false);
   const handleLoanApptClose = () => setloanAppModal(false);
+  const handleDirectPayClose = () => setdirectPayModal(false);
+  const handleDirectPayOpen = (id) => {
+    directPayLoanData(id);
+  };
+
   const handleInstallmentClose = () => setinstallmentModel(false);
   const handleMonthlyOpen = () => setMonthlyModel(true);
   const handleMonthlyClose = () => setMonthlyModel(false);
@@ -188,6 +198,8 @@ function Accounts() {
   // const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedMontlyUser, setselectedMontlyUser] = useState("");
+
+  const [filterType, setFilterType] = React.useState("all");
 
   const handleSelectChange = (event) => {
     setSelectedUser(event.target.value);
@@ -546,6 +558,26 @@ function Accounts() {
         handleLoanApptClose();
       });
   };
+
+  const handlesettleDirectAmount = async (id) => {
+    if (!id) return;
+    setLoading(true);
+    const data = {
+      id: id,
+    };
+    console.log(data, "data");
+
+    settleDirectAmount(data)
+      .then((res) => {
+        setLoading(false);
+        setdirectPayModal(false);
+        // console.log(res.data, "installments");
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        setLoading(false);
+      });
+  };
   const handleChange = (event, newValue) => {
     if (newValue === 1) {
       getAllCredits();
@@ -767,6 +799,24 @@ function Accounts() {
       .catch((err) => console.log(err, "err"));
   };
 
+  const directPayLoanData = async (id) => {
+    setLoading(true);
+    const data = {
+      id: id,
+    };
+    getDirectPayLoanInfo(data)
+      .then((res) => {
+        setLoading(false);
+        setdirectPayModal(true);
+        // console.log(res.data, "installments");
+        setdirectPayLoanInfo(res.data);
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        setLoading(false);
+      });
+  };
+
   const filteredData = monthlyTableData?.filter((item) => {
     const matchMonth = selectedMonth ? item.month === selectedMonth : true;
     const matchYear = selectedYear
@@ -780,9 +830,34 @@ function Accounts() {
     return matchMonth && matchYear && matchUser;
   });
 
-  const YourContribution = contribution?.filter(
-    (item) => item.user.id === userId
-  );
+  const filteredCreditData = React.useMemo(() => {
+    if (filterType === "monthly") {
+      return tableData.filter((item) =>
+        item?.desc?.toLowerCase().startsWith("monthly")
+      );
+    }
+    if (filterType === "sound") {
+      return tableData.filter((item) =>
+        item?.desc?.toLowerCase().startsWith("sound")
+      );
+    }
+    if (filterType === "installment") {
+      return tableData.filter((item) =>
+        item?.desc?.toLowerCase().startsWith("installment")
+      );
+    }
+    if (filterType === "other") {
+      return tableData.filter(
+        (item) =>
+          !(
+            item?.desc?.toLowerCase().startsWith("monthly") ||
+            item?.desc?.toLowerCase().startsWith("sound") ||
+            item?.desc?.toLowerCase().startsWith("installment")
+          )
+      );
+    }
+    return tableData;
+  }, [tableData, filterType]);
 
   useEffect(() => {
     setUser();
@@ -794,7 +869,6 @@ function Accounts() {
     if (userId && contribution?.length > 0) {
       const filtered = contribution.filter((item) => item.user._id === userId);
       setYourContribution(filtered);
-      console.log(contribution, "yourContribution", userId);
     }
   }, [userId, contribution]);
 
@@ -921,23 +995,39 @@ function Accounts() {
           ) : (
             <div className="cretis-table">
               <div className="account-credits">
+                {/* Filter Dropdown */}
+                <div style={{ marginBottom: "10px" }}>
+                  <select
+                    style={{ height: "33px", marginLeft: "17px" }}
+                    value={filterType}
+                    onChange={(e) => setFilterType(e.target.value)}
+                  >
+                    <option value="all">All</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="sound">Sound</option>
+                    <option value="installment">Installments</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
                 {role !== "user" && (
                   <div className="tab-buttons">
-                    <div class="button-group-loan">
-                      <button class="btn-loan approve" onClick={handleOpen}>
+                    <div className="button-group-loan">
+                      <button className="btn-loan approve" onClick={handleOpen}>
                         Add Credit
                       </button>
                       <button
-                        class="btn-loan reject"
-                        onClick={() => {
-                          exportDataDownload(tableData, "creditEntry.xlsx");
-                        }}
+                        className="btn-loan reject"
+                        onClick={() =>
+                          exportDataDownload(tableData, "creditEntry.xlsx")
+                        }
                       >
-                        Export{" "}
+                        Export
                       </button>
                     </div>
                   </div>
                 )}
+
                 <div className="account-credits-table-container">
                   <table className="client-table">
                     <thead>
@@ -946,14 +1036,11 @@ function Accounts() {
                         <th>Date</th>
                         <th>Amount</th>
                         <th>Credits By</th>
-                        <th>description</th>
-                        {/* <th>Email</th>
-                      <th>Telephone</th>
-                      <th>Created</th> */}
+                        <th>Description</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {tableData?.map((c, i) => (
+                      {filteredCreditData?.map((c, i) => (
                         <tr key={i}>
                           <td>{i + 1}</td>
                           <td className="blue-link">{c?.date}</td>
@@ -962,11 +1049,8 @@ function Accounts() {
                               {c?.amount} &#8377;
                             </span>
                           </td>
-                          {/* <td>{c.type}</td> */}
                           <td className="bold-score">{c.creditBy || "-"}</td>
                           <td>{c?.desc || "-"}</td>
-                          {/* <td>{c.phone}</td>
-                        <td>{c.created}</td> */}
                         </tr>
                       ))}
                     </tbody>
@@ -976,6 +1060,7 @@ function Accounts() {
             </div>
           )}
         </CustomTabPanel>
+
         {/* Debit Table */}
         <CustomTabPanel value={value} index={2}>
           {loading ? (
@@ -1264,7 +1349,7 @@ function Accounts() {
                 <table className="client-table">
                   <thead>
                     <tr>
-                      <th>SR.NO</th>
+                      <th>Id</th>
                       <th>Name</th>
                       <th>Date</th>
                       <th>Loan Amount</th>
@@ -1272,11 +1357,12 @@ function Accounts() {
                       <th>EMI</th>
                       <th>Total Paybale</th>
                       <th>Total Paid</th>
-                      <th>Remaining</th>
-                      <th>Duration</th>
-                      <th>percentage</th>
+                      <th>remains</th>
+                      <th>Days</th>
+                      <th>%</th>
                       <th>status</th>
                       <th>reason</th>
+                      <th>Options</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1297,6 +1383,20 @@ function Accounts() {
                         <td>{c?.percentage}</td>
                         <td>{c?.status}</td>
                         <td>{c?.reason}</td>
+                        {c?.status !== "paid" && Number(c?.emi) ? (
+                          <td>
+                            <button
+                              class="btn-loan approve"
+                              onClick={() => {
+                                handleDirectPayOpen(c.id);
+                              }}
+                            >
+                              Direct Pay
+                            </button>
+                          </td>
+                        ) : (
+                          <td>-</td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -1915,6 +2015,108 @@ function Accounts() {
           </Button>
         </Box>
       </Modal>{" "}
+      {/* Direct Pay */}
+      <Modal
+        open={directPay}
+        onClose={handleDirectPayClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          // sx={style}
+          sx={{
+            ...style,
+            width: "900px", // wider modal
+            maxWidth: "90%",
+            padding: "30px",
+          }}
+        >
+          <Typography
+            id="modal-modal-description"
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              fontSize: "30px",
+              color: "blueviolet",
+              fontWeight: "800",
+            }}
+          >
+            Settle Direct
+          </Typography>
+
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            {/* Date Picker */}
+            {/* Loan Date */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Loan Amount"
+                name="loanAmount"
+                value={directPayLoanInfo?.date}
+                // onChange={onLoanFormChange}
+              />
+            </Grid>
+
+            {/* Percentage */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Percentage"
+                name="percentage"
+                value={directPayLoanInfo?.name}
+                onChange={onLoanFormChange}
+              />
+            </Grid>
+
+            {/* Name */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="totalRemaining"
+                name="totalRemaining"
+                value={directPayLoanInfo?.totalRemaining}
+                onChange={onLoanFormChange}
+              />
+            </Grid>
+
+            {/* Duration */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="totalPaybale"
+                name="duration"
+                value={directPayLoanInfo?.totalPaybale}
+                onChange={onLoanFormChange}
+              />
+            </Grid>
+
+            {/* Reason */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="duration"
+                name="duration"
+                value={directPayLoanInfo?.duration}
+                onChange={onLoanFormChange}
+              />
+            </Grid>
+
+            {/* Submit Button */}
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{ marginBottom: "30px" }}
+                onClick={() => {
+                  handlesettleDirectAmount(directPayLoanInfo?.id);
+                }}
+              >
+                {loading ? "Sending" : "Submit"}
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
       <CustomizedSnackbars
         open={snack.open}
         message={snack.message}

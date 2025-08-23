@@ -327,3 +327,21 @@ export const getContributionData = () => {
       .catch((err) => reject(err));
   });
 };
+
+export const getDirectPayLoanInfo = (id) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/pay-wholesome`;
+    Axios.post(url, id)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const settleDirectAmount = (id) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/settle-direct`;
+    Axios.post(url, id)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
