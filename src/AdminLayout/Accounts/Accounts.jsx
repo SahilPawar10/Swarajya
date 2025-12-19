@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import LayoutAdmin from "../Layout2/LayoutAdmin";
 import "./account.css";
 import Tabs from "@mui/material/Tabs";
@@ -52,6 +54,15 @@ import InputFileUpload from "./InputFileUpload";
 import { generateExcelFileBuffer } from "../../utils/common";
 import { json } from "react-router-dom";
 import CircularWithValueLabel from "../../MainLayout/screens/Loading";
+import {
+  fetchActiveLoans,
+  fetchContribution,
+  fetchCredits,
+  fetchDashBoardReport,
+  fetchDebits,
+  fetchInstallments,
+  fetchMonthly,
+} from "../../slices/acccount.slice";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,39 +86,6 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-
-const clients = [
-  {
-    id: "DEMO2",
-    name: "1Demo Two Ltd",
-    status: "Client",
-    type: "Limited",
-    score: "G",
-    email: "",
-    phone: "-",
-    created: "01/09/2022",
-  },
-  {
-    id: "20",
-    name: "208BusinessUp",
-    status: "Client",
-    type: "LLP",
-    score: "A",
-    email: "nupurlele123@gmail.com",
-    phone: "7424669908",
-    created: "03/08/2022",
-  },
-  {
-    id: "Mryy",
-    name: "Mryyy 11111 444444",
-    status: "Prospect",
-    type: "Limited",
-    score: "",
-    email: "",
-    phone: "-",
-    created: "25/10/2022",
-  },
-];
 
 const style = {
   position: "absolute",
@@ -188,9 +166,6 @@ function Accounts() {
   const [selectedMonth, setSelectedMonth] = useState("Jan");
   const [monthlyForm, setMonthlyform] = useState("");
 
-  const [monthlyTableData, setMonthlyTableData] = useState([]);
-  const [contribution, setContribution] = useState([]);
-
   const [loanForm, setLoanForm] = React.useState();
   const [installmentForm, setInstallmentForm] = React.useState();
   const [yourContribution, setYourContribution] = useState([]);
@@ -200,6 +175,8 @@ function Accounts() {
   const [selectedMontlyUser, setselectedMontlyUser] = useState("");
 
   const [filterType, setFilterType] = React.useState("all");
+
+  const dispatch = useDispatch();
 
   const handleSelectChange = (event) => {
     setSelectedUser(event.target.value);
@@ -211,13 +188,22 @@ function Accounts() {
     severity: "success",
   });
 
-  const [dashReport, setdashReport] = React.useState({
-    balance: 0,
-    credits: 0,
-    debits: 0,
-    loan: 0,
-    monthly: [],
-  });
+  const contribution = useSelector((state) => state.accounts.contribution);
+  const dashReport = useSelector((state) => state.accounts.dashboard);
+
+  const creditsData = useSelector((state) => state.accounts.credits);
+  const debitsData = useSelector((state) => state.accounts.debits);
+  const monthlyData = useSelector((state) => state.accounts.monthly);
+  const installmentData = useSelector((state) => state.accounts.installments);
+  const activeLoansData = useSelector((state) => state.accounts.activeLoans);
+
+  // const [dashReport, setdashReport] = React.useState({
+  //   balance: 0,
+  //   credits: 0,
+  //   debits: 0,
+  //   loan: 0,
+  //   monthly: [],
+  // });
 
   const handleSnackClose = () => {
     setSnack((prev) => ({ ...prev, open: false }));
@@ -605,84 +591,24 @@ function Accounts() {
   };
 
   const getAllCredits = async () => {
-    setLoading(true);
-    getAllCreditsRecord()
-      .then((res) => {
-        setLoading(false);
-        // console.log(res.data, "res");
-        setTableData(res.data);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-        setLoading(false);
-      });
-    // setRole("admin");
+    dispatch(fetchCredits());
   };
-  // const getAllUsers = async () => {
-  //   getUserWithoutPhoto()
-  //     .then((res) => {
-  //       setUsers(res.data);
-  //     })
-  //     .catch((err) => console.log(err, "err"));
-  //   // setRole("admin");
-  // };
 
   const getAllDebits = async () => {
-    setLoading(true);
-    getAllDebitsRecord()
-      .then((res) => {
-        setLoading(false);
-        // console.log(res.data, "resDebit");
-        setTableData(res.data);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-        setLoading(false);
-      });
+    dispatch(fetchDebits());
     // setRole("admin");
   };
 
   const getAllMonthly = async () => {
-    setLoading(true);
-    getAllMonthlyData()
-      .then((res) => {
-        setLoading(false);
-        // console.log(res.data, "resDebit");
-        setMonthlyTableData(res.data);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-        setLoading(false);
-      });
-    // setRole("admin");
+    dispatch(fetchMonthly());
   };
 
   const getAllInstallMentRcords = async () => {
-    setLoading(true);
-    getAllInstallment()
-      .then((res) => {
-        setLoading(false);
-        // console.log(res.data, "installments");
-        setTableData(res.data);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-        setLoading(false);
-      });
+    dispatch(fetchInstallments());
   };
 
   const getLoanSummary = async () => {
-    setLoading(true);
-    getActiveLoans()
-      .then((res) => {
-        setLoading(false);
-        // console.log(res.data, "installments");
-        setTableData(res.data);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-        setLoading(false);
-      });
+    dispatch(fetchActiveLoans());
   };
   const loanPrequests = async () => {
     getLoanRequest()
@@ -692,19 +618,9 @@ function Accounts() {
       })
       .catch((err) => console.log(err, "err"));
   };
+
   const dashboardReport = async () => {
-    dashBoarReport()
-      .then((res) => {
-        setdashReport((prev) => ({
-          ...prev,
-          balance: res.data.totalBalance,
-          credits: res.data.overAllCredits,
-          debits: res.data.overAllDebits,
-          loan: res.data.totalLoanuts,
-          // monthly: res.data.monthly,
-        }));
-      })
-      .catch((err) => console.log(err));
+    dispatch(fetchDashBoardReport());
   };
 
   const approveLoanRequest = async (id) => {
@@ -788,15 +704,9 @@ function Accounts() {
   };
 
   const getContribution = () => {
-    getContributionData()
-      .then((res) => {
-        // console.log(res.data, "installments");
-        setContribution(res.data);
-
-        const user = contribution?.filter((item) => item.user.id === userId);
-        console.log("currUSer", user, userId);
-      })
-      .catch((err) => console.log(err, "err"));
+    dispatch(fetchContribution());
+    const user = contribution?.filter((item) => item.user.id === userId);
+    console.log("currUSer", user, userId);
   };
 
   const directPayLoanData = async (id) => {
@@ -817,14 +727,14 @@ function Accounts() {
       });
   };
 
-  const filteredData = monthlyTableData?.filter((item) => {
+  const filterdMonthlyData = monthlyData?.filter((item) => {
     const matchMonth = selectedMonth ? item.month === selectedMonth : true;
     const matchYear = selectedYear
       ? item.year?.toString() === selectedYear
       : true;
 
     const matchUser = selectedMontlyUser
-      ? item?.member.firstName + " " + item?.member.lastName ===
+      ? item?.member?.firstName + " " + item?.member?.lastName ===
         selectedMontlyUser
       : true;
     return matchMonth && matchYear && matchUser;
@@ -832,22 +742,22 @@ function Accounts() {
 
   const filteredCreditData = React.useMemo(() => {
     if (filterType === "monthly") {
-      return tableData.filter((item) =>
+      return creditsData.filter((item) =>
         item?.desc?.toLowerCase().startsWith("monthly")
       );
     }
     if (filterType === "sound") {
-      return tableData.filter((item) =>
+      return creditsData.filter((item) =>
         item?.desc?.toLowerCase().startsWith("sound")
       );
     }
     if (filterType === "installment") {
-      return tableData.filter((item) =>
+      return creditsData.filter((item) =>
         item?.desc?.toLowerCase().startsWith("installment")
       );
     }
     if (filterType === "other") {
-      return tableData.filter(
+      return creditsData.filter(
         (item) =>
           !(
             item?.desc?.toLowerCase().startsWith("monthly") ||
@@ -856,14 +766,14 @@ function Accounts() {
           )
       );
     }
-    return tableData;
-  }, [tableData, filterType]);
+    return creditsData;
+  }, [creditsData, filterType]);
 
   useEffect(() => {
     setUser();
     getContribution();
     dashboardReport();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (userId && contribution?.length > 0) {
@@ -904,16 +814,16 @@ function Accounts() {
             <div className="accounts-dashboard">
               <h2>Accounts</h2>
               <div className="accounts-card  balance ">
-                {dashReport.balance} <span>Available Balance</span>
+                {dashReport?.totalBalance || 0} <span>Available Balance</span>
               </div>
               <div className="accounts-card credits">
-                {dashReport.credits} <span>Total Credits</span>
+                {dashReport?.overAllCredits || 0} <span>Total Credits</span>
               </div>
               <div className="accounts-card debits">
-                {dashReport.debits} <span>Total Debits</span>
+                {dashReport?.overAllDebits || 0} <span>Total Debits</span>
               </div>
               <div className="accounts-card loanouts">
-                {dashReport.loan} <span>Total Loanouts</span>
+                {dashReport?.totalLoanuts || 0} <span>Total Loanouts</span>
               </div>
             </div>
 
@@ -1019,7 +929,7 @@ function Accounts() {
                       <button
                         className="btn-loan reject"
                         onClick={() =>
-                          exportDataDownload(tableData, "creditEntry.xlsx")
+                          exportDataDownload(creditsData, "creditEntry.xlsx")
                         }
                       >
                         Export
@@ -1076,7 +986,7 @@ function Accounts() {
                     <button
                       class="btn-loan reject"
                       onClick={() => {
-                        exportDataDownload(tableData, "debitEntry.xlsx");
+                        exportDataDownload(debitsData, "debitEntry.xlsx");
                       }}
                     >
                       Export{" "}
@@ -1099,7 +1009,7 @@ function Accounts() {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableData?.map((c, i) => (
+                    {debitsData?.map((c, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td className="blue-link">{c.date}</td>
@@ -1159,7 +1069,7 @@ function Accounts() {
                     onChange={(e) => setSelectedYear(e.target.value)}
                   >
                     <option value="">All Years</option>
-                    {[...new Set(monthlyTableData.map((c) => c.year))]
+                    {[...new Set(monthlyData.map((c) => c.year))]
                       .filter((y) => y)
                       .map((y) => (
                         <option key={y} value={y}>
@@ -1176,8 +1086,9 @@ function Accounts() {
                     </option>{" "}
                     {[
                       ...new Set(
-                        monthlyTableData.map(
-                          (c) => c?.member.firstName + " " + c?.member.lastName
+                        monthlyData.map(
+                          (c) =>
+                            c?.member?.firstName + " " + c?.member?.lastName
                         )
                       ),
                     ]
@@ -1215,7 +1126,7 @@ function Accounts() {
                         class="btn-loan approve"
                         onClick={() => {
                           exportDataDownload(
-                            filterdMonthyData(monthlyTableData),
+                            filterdMonthyData(monthlyData),
                             "monthly.xlsx"
                           );
                         }}
@@ -1239,7 +1150,7 @@ function Accounts() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData.map((c, i) => (
+                    {filterdMonthlyData.map((c, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td>{c?.date}</td>
@@ -1276,7 +1187,7 @@ function Accounts() {
                       class="btn-loan reject"
                       onClick={() => {
                         exportDataDownload(
-                          filterdInstallmentData(tableData),
+                          filterdInstallmentData(installmentData),
                           "installment.xlsx"
                         );
                       }}
@@ -1306,7 +1217,7 @@ function Accounts() {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableData.map((c, i) => (
+                    {installmentData.map((c, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td>{c?.name || "-"}</td>
@@ -1366,7 +1277,7 @@ function Accounts() {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableData.map((c, i) => (
+                    {activeLoansData.map((c, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td>{c?.memberName}</td>
