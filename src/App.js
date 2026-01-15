@@ -20,6 +20,8 @@ import AdminHome from "./AdminLayout/adminHome/AdminHome";
 import Visitors from "./AdminLayout/Visitors/Visitors";
 import Accounts from "./AdminLayout/Accounts/Accounts";
 import Profile from "./AdminLayout/Profile/Profile";
+import NewProfile from "./AdminLayout/Profile/NewProfile";
+
 import Forgot_Password from "./MainLayout/screens/Password_Reset/Forgot_Password";
 import Reset_Password from "./MainLayout/screens/Password_Reset/Reset_Password";
 import SendMai from "./MainLayout/Pages/SendMai";
@@ -48,6 +50,7 @@ function App() {
         <Route path="/visitors" element={<Visitors />} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/newprofile" element={<NewProfile />} />
         <Route path="/mail" element={<SendMai />} />
         <Route path="/mycontacts" element={<MyContacts />} />
         <Route path="/forgot_password" element={<Forgot_Password />} />

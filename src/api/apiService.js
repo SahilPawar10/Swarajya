@@ -345,3 +345,21 @@ export const settleDirectAmount = (id) => {
       .catch((err) => reject(err));
   });
 };
+
+export const createWithDrawRequest = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/create-withdraw-req`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const approveWithDrawReq = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/accept-withdraw-req`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};

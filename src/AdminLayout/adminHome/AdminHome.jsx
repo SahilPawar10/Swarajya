@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import LayoutAdmin from "../Layout2/LayoutAdmin";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { getTeamData } from "../../api/apiService";
+import { get } from "react-scroll/modules/mixins/scroller";
+import { getUsersData } from "../../slices/acccount.slice";
 
 function AdminHome() {
-  const [team, setTeam] = useState([]);
+  // const [team, setTeam] = useState([]);
 
   const [modalImage, setModalImage] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const team = useSelector((state) => state.accounts.team);
 
   const handleImageClick = (src) => {
     setModalImage(src);
@@ -17,12 +25,10 @@ function AdminHome() {
   };
 
   useEffect(() => {
-    getTeamData()
-      .then((res) => {
-        setTeam(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    if (!team || team.length === 0) {
+      dispatch(getUsersData());
+    }
+  }, [dispatch]);
 
   return (
     <div id="adminHome">
@@ -43,6 +49,8 @@ function AdminHome() {
               <th className="visitortable-heading-heading">Gender</th>
               <th className="visitortable-heading-heading">Picture</th>
               <th className="visitortable-heading-heading">Address</th>
+              <th className="visitortable-heading-heading">Share</th>
+              <th className="visitortable-heading-heading">Active Since</th>
               <th className="visitortable-heading-heading">Action</th>
             </tr>
           </thead>
@@ -72,6 +80,15 @@ function AdminHome() {
                 </td>
 
                 <td>{team?.address ? team.address : "not updated"}</td>
+                <td>{team.currentShare}%</td>
+                <td>
+                  {" "}
+                  {new Date(team.activeSince).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </td>
                 <td>
                   <MoreVertIcon sx={{ transform: "rotate(0deg)" }} />
                 </td>

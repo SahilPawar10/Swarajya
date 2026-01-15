@@ -114,7 +114,7 @@ function Sidebar({ menu = "menu" }) {
                 }}
               />
             </span>
-            <Link className="side-menu">Gallery</Link>
+            <Link className="side-menu">Personal Account</Link>
           </li>
           <li id="Profile">
             <span>
@@ -210,7 +210,9 @@ function Sidebar({ menu = "menu" }) {
                 }}
               />
             </span>
-            <Link className="side-menu">Gallery</Link>
+            <Link to="/newprofile" className="side-menu">
+              Personal Acc
+            </Link>
           </li>
           <li id="Profile">
             <span>
