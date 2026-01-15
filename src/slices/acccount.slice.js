@@ -12,7 +12,12 @@ const initialState = {
   dashboard: null,
   monthly: [],
   contribution: [],
-
+  team: [],
+  profile: [],
+  accountsData: null,
+  savingsData: [],
+  withdrawReq: [],
+  users: [],
   status: {
     credits: "idle",
     debits: "idle",
@@ -22,6 +27,9 @@ const initialState = {
     monthly: "idle",
     contribution: "idle",
     addVehicle: "idle",
+    accountsData: "idle",
+    withdrawReq: "idle",
+    users: "idle",
   },
 
   error: null,
@@ -62,8 +70,6 @@ export const fetchDashBoardReport = createAsyncThunk(
   "accounts/dashBoardData",
   async () => {
     const res = await axiosInstance.get("/loan/dashBoardData");
-    console.log(res.data, "res");
-
     return res.data;
   }
 );
@@ -86,6 +92,51 @@ export const addVehicleEntry = createAsyncThunk(
   "vehicle/addVehicleEntry",
   async ({ payload, headers }) => {
     const res = await axiosInstance.post("/vehicle", payload, { headers });
+    return res.data;
+  }
+);
+
+export const getUsersData = createAsyncThunk("vehicle/users", async (id) => {
+  const res = await axiosInstance.get(`/users`);
+  return res.data;
+});
+
+export const getUserProfile = createAsyncThunk(
+  "vehicle/getUserProfile",
+  async (id) => {
+    const res = await axiosInstance.get(`/users/${id}`);
+    return res.data;
+  }
+);
+
+export const getUserAccountsDetails = createAsyncThunk(
+  "vehicle/getUserAccountsDetails",
+  async (id) => {
+    const res = await axiosInstance.get(`/loan/get-user-accounts?id=${id}`);
+    return res.data;
+  }
+);
+
+export const getUserSavingsData = createAsyncThunk(
+  "vehicle/getUserSavingsData",
+  async (id) => {
+    const res = await axiosInstance.get(`/users/user-with-savings?id=${id}`);
+    return res.data;
+  }
+);
+
+export const getWithdrawRequests = createAsyncThunk(
+  "accounts/getWithdrawRequests",
+  async () => {
+    const res = await axiosInstance.get("/loan/get-withdraw-req");
+    return res.data;
+  }
+);
+
+export const getAllUsers = createAsyncThunk(
+  "accounts/getAllUsers",
+  async () => {
+    const res = await axiosInstance.get("/users/user-without-photo");
     return res.data;
   }
 );
@@ -207,6 +258,87 @@ const accountSlice = createSlice({
       .addCase(addVehicleEntry.rejected, (state, action) => {
         state.status.addVehicle = "failed";
         state.error = action.error.message;
+      })
+
+      // -------- Get Team Detail VEHICLE --------
+      .addCase(getUsersData.pending, (state) => {
+        state.status.team = "loading";
+        state.error = null;
+      })
+      .addCase(getUsersData.fulfilled, (state, action) => {
+        state.status.team = "succeeded";
+        state.team = action.payload;
+      })
+      .addCase(getUsersData.rejected, (state, action) => {
+        state.status.team = "failed";
+        state.error = action.error.message;
+      })
+
+      // -------- Get Profile Details --------
+      .addCase(getUserProfile.pending, (state) => {
+        state.status.profile = "loading";
+        state.error = null;
+      })
+      .addCase(getUserProfile.fulfilled, (state, action) => {
+        state.status.profile = "succeeded";
+        state.profile = action.payload;
+      })
+      .addCase(getUserProfile.rejected, (state, action) => {
+        state.status.profile = "failed";
+        state.error = action.error.message;
+      })
+
+      // -------- Get Profile Details --------
+      .addCase(getUserAccountsDetails.pending, (state) => {
+        state.status.accountsData = "loading";
+        state.error = null;
+      })
+      .addCase(getUserAccountsDetails.fulfilled, (state, action) => {
+        state.status.accountsData = "succeeded";
+        state.accountsData = action.payload;
+      })
+      .addCase(getUserAccountsDetails.rejected, (state, action) => {
+        state.status.accountsData = "failed";
+        state.error = action.error.message;
+      })
+      // -------- Get Saving Details --------
+      .addCase(getUserSavingsData.pending, (state) => {
+        state.status.savingsData = "loading";
+        state.error = null;
+      })
+      .addCase(getUserSavingsData.fulfilled, (state, action) => {
+        state.status.savingsData = "succeeded";
+        state.savingsData = action.payload;
+      })
+      .addCase(getUserSavingsData.rejected, (state, action) => {
+        state.status.savingsData = "failed";
+        state.error = action.error.message;
+      })
+      // -------- Get Withdraw Req Details --------
+      .addCase(getWithdrawRequests.pending, (state) => {
+        state.status.withdrawReq = "loading";
+        state.error = null;
+      })
+      .addCase(getWithdrawRequests.fulfilled, (state, action) => {
+        state.status.withdrawReq = "succeeded";
+        state.withdrawReq = action.payload;
+      })
+      .addCase(getWithdrawRequests.rejected, (state, action) => {
+        state.status.withdrawReq = "failed";
+        state.error = action.error.message;
+      })
+      // -------- Get All Users Details --------
+      .addCase(getAllUsers.pending, (state) => {
+        state.status.users = "loading";
+        state.error = null;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.status.users = "succeeded";
+        state.users = action.payload;
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
+        state.status.users = "failed";
+        state.error = action.error.message;
       });
   },
 });
@@ -220,6 +352,11 @@ export const selectActiveLoans = (state) => state.accounts.activeLoans;
 export const selectDashboard = (state) => state.accounts.dashboard;
 export const selectMonthly = (state) => state.accounts.monthly;
 export const selectContribution = (state) => state.accounts.contribution;
+export const selectUsersData = (state) => state.accounts.team;
+export const selectUsersProfileData = (state) => state.accounts.profile;
+export const selectUserAccountsData = (state) => state.accounts.accountsData;
+export const selectAllUsers = (state) => state.accounts.accountsData;
+
 export const selectStatus = (state) => state.accounts.status;
 export const selectError = (state) => state.accounts.error;
 

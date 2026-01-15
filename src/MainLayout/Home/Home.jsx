@@ -64,11 +64,11 @@ const Home = (props) => {
         lat: position.coords.latitude,
         long: position.coords.longitude,
       };
-      await getIpDetails(data)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {});
+      // await getIpDetails(data)
+      //   .then((res) => {
+      //     console.log(res);
+      //   })
+      //   .catch((err) => {});
     }
 
     function showError(error) {

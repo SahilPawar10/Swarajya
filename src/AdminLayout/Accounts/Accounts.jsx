@@ -26,21 +26,14 @@ import {
 import {
   addMonthlyEntry,
   adminRoles,
+  approveWithDrawReq,
   createCreditEntry,
   createDebitEntry,
   createInstallmentEntry,
   createLoanEntry,
-  dashBoarReport,
   downloadSampleMonthlyFile,
-  getActiveLoans,
-  getAllCreditsRecord,
-  getAllDebitsRecord,
-  getAllInstallment,
-  getAllMonthlyData,
-  getContributionData,
   getDirectPayLoanInfo,
   getLoanRequest,
-  getUserWithoutPhoto,
   importMonthlyFile,
   settleDirectAmount,
   updateLoanLoanStatus,
@@ -62,6 +55,7 @@ import {
   fetchDebits,
   fetchInstallments,
   fetchMonthly,
+  getWithdrawRequests,
 } from "../../slices/acccount.slice";
 
 function CustomTabPanel(props) {
@@ -196,6 +190,7 @@ function Accounts() {
   const monthlyData = useSelector((state) => state.accounts.monthly);
   const installmentData = useSelector((state) => state.accounts.installments);
   const activeLoansData = useSelector((state) => state.accounts.activeLoans);
+  const withdrawReqData = useSelector((state) => state.accounts.withdrawReq);
 
   // const [dashReport, setdashReport] = React.useState({
   //   balance: 0,
@@ -576,7 +571,7 @@ function Accounts() {
     } else if (newValue === 5) {
       getLoanSummary();
     } else if (newValue === 6) {
-      loanPrequests();
+      getAllWithdrawReq();
     }
     setValue(newValue);
   };
@@ -613,7 +608,6 @@ function Accounts() {
   const loanPrequests = async () => {
     getLoanRequest()
       .then((res) => {
-        console.log(res, "loan Req");
         setTableData(res.data);
       })
       .catch((err) => console.log(err, "err"));
@@ -674,7 +668,6 @@ function Accounts() {
   };
 
   const handleExcelUpload = (files) => {
-    console.log("Import file selected:", files[0]);
     // Upload logic specific to invoice
     const formData = new FormData();
     formData.append("file", files[0]);
@@ -706,7 +699,24 @@ function Accounts() {
   const getContribution = () => {
     dispatch(fetchContribution());
     const user = contribution?.filter((item) => item.user.id === userId);
-    console.log("currUSer", user, userId);
+    // console.log("currUSer", user, userId);
+  };
+
+  const getAllWithdrawReq = async () => {
+    dispatch(getWithdrawRequests());
+  };
+
+  const approveWithDrawRequest = async (id) => {
+    approveWithDrawReq({ withdrawId: id })
+      .then((res) => {
+        setSnack({
+          open: true,
+          message: "Request approved successfully!",
+          severity: "success",
+        });
+        getAllWithdrawReq();
+      })
+      .catch((err) => console.log(err));
   };
 
   const directPayLoanData = async (id) => {
@@ -771,8 +781,12 @@ function Accounts() {
 
   useEffect(() => {
     setUser();
-    getContribution();
-    dashboardReport();
+    if (!contribution || contribution.length === 0) {
+      getContribution();
+    }
+    if (!dashReport || dashReport.length === 0) {
+      dashboardReport();
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -803,7 +817,7 @@ function Accounts() {
             <Tab label="Monthly" {...a11yProps(4)} />
             <Tab label="Installments" {...a11yProps(5)} />
             <Tab label="Active Loan" {...a11yProps(6)} />0
-            {role !== "user" && <Tab label="Approve Loan" {...a11yProps(7)} />}
+            {role !== "user" && <Tab label="Widrawals" {...a11yProps(7)} />}
             <Tab label="Old DashBoard" {...a11yProps(8)} />
           </Tabs>
         </Box>
@@ -1326,33 +1340,31 @@ function Accounts() {
                     <th>SR.NO</th>
                     <th>Date</th>
                     <th>Name</th>
-                    <th>Loan Amount</th>
-                    <th>Duration</th>
-                    <th>Total Payble</th>
+                    <th> Amount</th>
+                    {/* <th>Total Payble</th>
                     <th>Percentage</th>
                     <th>reason</th>
-                    <th>Action</th>
+                    <th>Action</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {tableData.map((c, i) => (
+                  {withdrawReqData.map((c, i) => (
                     <tr key={i}>
                       <td>{i + 1}</td>
                       <td>{c?.date || "-"}</td>
                       {/* <td>{c.loanId.id}</td> */}
 
-                      <td>{c?.name || "-"}</td>
-                      <td>{c?.loanAmount || "-"}</td>
-                      <td>{c?.duration || "-"}</td>
-                      <td>{c?.totalPaybale || "-"}</td>
+                      <td>{c?.username || "-"}</td>
+                      <td>{c?.amount || "-"}</td>
+                      {/* <td>{c?.totalPaybale || "-"}</td>
                       <td>{c?.percentage || "-"}</td>
-                      <td>{c?.reason}</td>
+                      <td>{c?.reason}</td> */}
                       <td>
                         <div class="button-group-loan">
                           <button
                             class="btn-loan approve"
                             onClick={() => {
-                              approveLoanRequest(c.id);
+                              approveWithDrawRequest(c.id);
                             }}
                           >
                             Approve

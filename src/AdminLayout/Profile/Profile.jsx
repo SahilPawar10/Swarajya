@@ -29,7 +29,7 @@ function Profile() {
 
   const setUser = async () => {
     const id = localStorage.getItem("userId");
-    console.log(JSON.parse(id), "id");
+
     if (id) {
       getOneUser(JSON.parse(id))
         .then((res) => {
@@ -40,7 +40,6 @@ function Profile() {
           console.error(error);
         });
     }
-    console.log("UseEffect");
   };
   useEffect(() => {
     setUser();
@@ -77,7 +76,18 @@ function Profile() {
               )}
             </div>
             {userData.firstName ? (
-              <h4>{userData?.firstName + " " + userData?.lastName}</h4>
+              <>
+                <h4>{userData?.firstName + " " + userData?.lastName}</h4>
+                <h6>
+                  Since:
+                  {new Date(userData.activeSince).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </h6>
+                <h6>Holding: {userData.currentShare}x</h6>
+              </>
             ) : (
               <h4>Swarajya</h4>
             )}
