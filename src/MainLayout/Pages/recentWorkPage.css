@@ -1,0 +1,122 @@
+.recent-work-page {
+  padding-bottom: 40px;
+}
+
+.recent-work-hero {
+  display: flex;
+  gap: 40px;
+  margin: 40px 0 20px 0;
+  align-items: center;
+}
+
+.recent-work-image {
+  flex: 1;
+}
+
+.recent-work-image img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  border-radius: 16px;
+  border: 3px solid #f3a63b;
+  background: #f7f7f7;
+}
+
+.recent-work-text {
+  flex: 1;
+}
+
+.recent-work-text h2 {
+  color: #004e7e;
+  margin-bottom: 12px;
+}
+
+.recent-work-text p {
+  color: #504e70;
+  line-height: 1.8rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.recent-work-gallery {
+  margin-top: 30px;
+}
+
+.recent-work-gallery h3 {
+  color: #004e7e;
+  margin-bottom: 16px;
+}
+
+.recent-work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.recent-work-card {
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  background: #f7f7f7;
+  aspect-ratio: 4 / 3;
+}
+
+.recent-work-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .recent-work-page .contenr-1200 {
+    padding: 0 16px;
+  }
+  .recent-work-hero {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .recent-work-image img {
+    max-height: 260px;
+  }
+
+  .recent-work-grid {
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    grid-template-columns: none;
+    overflow-x: auto;
+    gap: 16px;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 6px;
+  }
+
+  .recent-work-card {
+    scroll-snap-align: start;
+  }
+
+  .recent-work-grid::-webkit-scrollbar {
+    height: 0px;
+  }
+
+  .recent-work-grid {
+    scrollbar-width: none;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 900px) {
+  .recent-work-hero {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .recent-work-image img {
+    max-height: 320px;
+  }
+
+  .recent-work-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

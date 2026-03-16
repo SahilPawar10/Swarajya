@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./profile.css";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
-import profileImg from "../../assets/logo1.jpg";
+import profileImg from "../../assets/new swarajya logo.png";
 import { Link } from "react-router-dom";
 import { getOneUser, updateUser } from "../../api/apiService";
 import ProfileChangeDialog from "./ProfileChangeDialog";

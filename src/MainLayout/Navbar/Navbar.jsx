@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
-import logo from "../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
-import mobileLogo from "../../assets/logo1-removebg-preview.png";
+import logo from "../../assets/new swarajya logo.png";
+import mobileLogo from "../../assets/new swarajya logo.png";
 
 function Navbar() {
   const [shownav, setShownav] = useState(false);

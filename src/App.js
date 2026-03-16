@@ -14,6 +14,7 @@ import Contribution from "./MainLayout/Pages/Contribution";
 import Support from "./MainLayout/Pages/Support";
 import Donation from "./MainLayout/Pages/Donation";
 import FoundingStory from "./MainLayout/Pages/FoundingStory";
+import RecentWorkPage from "./MainLayout/Pages/RecentWorkPage";
 import Register from "./MainLayout/screens/Register/Register";
 import Login from "./MainLayout/screens/Login/Login";
 import AdminHome from "./AdminLayout/adminHome/AdminHome";
@@ -44,6 +45,7 @@ function App() {
         <Route path="/support" element={<Support />} />
         <Route path="/donation" element={<Donation />} />
         <Route path="/founding" element={<FoundingStory />} />
+        <Route path="/recent-work" element={<RecentWorkPage />} />
         <Route path="/sign-in" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminHome />} />
