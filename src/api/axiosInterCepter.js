@@ -15,22 +15,18 @@ axiosInstance.interceptors.request.use(
       const { exp } = jwtDecode(access_token);
       console.log(exp, "expry");
       if (Date.now() >= exp * 1000) {
-        localStorage.clear();
-        if (refresh_token) {
-          window.location.href = "/";
-          localStorage.clear();
-          // try {
-          //   const response = await axios.post(
-          //     'http://20.219.2.91:86/v1/auth/refresh-tokens', // refresh token URL
-          //     { refreshToken: refresh_token }
-          //   );
-          //   console.log(response.data.access);
-          //   localStorage.setItem('access_token', response.data.access);
-          //   localStorage.setItem('refresh_token', response.data.refresh);
-          //   config.headers['Authorization'] = `Bearer ${response.data.access}`;
-          // } catch (err) {
-          //   console.log(err);
-          // }
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("swarajya-user");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+
+        const isAuthRoute =
+          window.location.pathname === "/login" ||
+          window.location.pathname === "/sign-in";
+
+        if (refresh_token && !isAuthRoute) {
+          window.location.href = "/login";
         }
       } else {
         config.headers["Authorization"] = `Bearer ${access_token}`;
@@ -40,7 +36,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 axiosInstance.interceptors.response.use(
@@ -55,7 +51,7 @@ axiosInstance.interceptors.response.use(
       // window.location.href = '/';
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

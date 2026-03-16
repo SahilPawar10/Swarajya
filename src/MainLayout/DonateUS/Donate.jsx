@@ -3,7 +3,7 @@ import "./donate.css";
 import donateus from "../../assets/donateUS.jpg";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import smallLogo from "../../assets/marathi-logo-C3612F97FE-seeklogo.com.png";
+import smallLogo from "../../assets/new swarajya logo.png";
 
 function Donate() {
   return (

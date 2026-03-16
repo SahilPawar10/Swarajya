@@ -1,15 +1,13 @@
-import React, { useEffect ,useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./layout.css";
 import Sidebar from "../Sidebar/Sidebar";
 import Avatar from "@mui/material/Avatar";
-import avtar from "../../assets/logo1.jpg";
+import avtar from "../../assets/new swarajya logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { getOneUser, getVisitor } from "../../api/apiService";
 
 const LayoutAdmin = (Page, menu) => {
-
-
   return () => (
     <div>
       <div className="admin-layout">
