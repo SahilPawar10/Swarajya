@@ -8,6 +8,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
 
 function Sidebar({ menu = "menu" }) {
   const [sidebar, setsideBar] = useState(false);
@@ -146,6 +147,21 @@ function Sidebar({ menu = "menu" }) {
               Chat
             </Link>
           </li>
+          <li id="project-tracker">
+            <span>
+              <FactCheckIcon
+                sx={{
+                  transform: "rotate(0deg)",
+                  fontSize: "1.4rem",
+                  color: "#fd7e14",
+                  paddingTop: "0.3rem",
+                }}
+              />
+            </span>
+            <Link to="/project-tracker" className="side-menu">
+              Project Tracker
+            </Link>
+          </li>
         </ul>
       ) : (
         <h5 id={menu}></h5>
@@ -242,6 +258,21 @@ function Sidebar({ menu = "menu" }) {
             </span>
             <Link to="/mycontacts" className="side-menu">
               Chat
+            </Link>
+          </li>
+          <li id="project-tracker">
+            <span>
+              <FactCheckIcon
+                sx={{
+                  transform: "rotate(0deg)",
+                  fontSize: "1.4rem",
+                  color: "#fd7e14",
+                  paddingTop: "0.3rem",
+                }}
+              />
+            </span>
+            <Link to="/project-tracker" className="side-menu">
+              Project Tracker
             </Link>
           </li>
         </ul>

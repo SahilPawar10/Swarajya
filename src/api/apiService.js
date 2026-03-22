@@ -363,3 +363,125 @@ export const approveWithDrawReq = (data) => {
       .catch((err) => reject(err));
   });
 };
+
+// Project Tracker APIs
+export const createProject = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getProjects = () => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getProject = (id) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/${id}`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const updateProject = (id, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/${id}`;
+    Axios.put(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const deleteProject = (id) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/${id}`;
+    Axios.delete(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const createProjectComponent = (projectId, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/${projectId}/components`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getProjectComponents = (projectId) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/${projectId}/components`;
+    Axios.get(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const updateProjectComponent = (componentId, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/components/${componentId}`;
+    Axios.put(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const createProjectStep = (componentId, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/components/${componentId}/steps`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const updateProjectStep = (stepId, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/steps/${stepId}`;
+    Axios.put(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const addProjectStepAction = (stepId, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/steps/${stepId}/actions`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const addProjectStepComment = (stepId, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/projects/steps/${stepId}/comments`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const downloadProjectReport = (projectId) => {
+  return Axios.get(`/projects/${projectId}/report?scope=project`, {
+    responseType: "blob",
+  });
+};
+
+export const downloadComponentReport = (projectId, componentId) => {
+  return Axios.get(
+    `/projects/${projectId}/report?scope=component&componentId=${componentId}`,
+    { responseType: "blob" }
+  );
+};
