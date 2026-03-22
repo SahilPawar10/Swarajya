@@ -22,6 +22,7 @@ import Visitors from "./AdminLayout/Visitors/Visitors";
 import Accounts from "./AdminLayout/Accounts/Accounts";
 import Profile from "./AdminLayout/Profile/Profile";
 import NewProfile from "./AdminLayout/Profile/NewProfile";
+import ProjectTracker from "./AdminLayout/ProjectTracker/ProjectTracker";
 
 import Forgot_Password from "./MainLayout/screens/Password_Reset/Forgot_Password";
 import Reset_Password from "./MainLayout/screens/Password_Reset/Reset_Password";
@@ -55,6 +56,7 @@ function App() {
         <Route path="/newprofile" element={<NewProfile />} />
         <Route path="/mail" element={<SendMai />} />
         <Route path="/mycontacts" element={<MyContacts />} />
+        <Route path="/project-tracker" element={<ProjectTracker />} />
         <Route path="/forgot_password" element={<Forgot_Password />} />
         <Route path="/reset_password/:token" element={<Reset_Password />} />
       </Routes>
