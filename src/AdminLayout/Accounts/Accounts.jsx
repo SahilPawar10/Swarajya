@@ -507,7 +507,7 @@ function Accounts() {
     await createLoanEntry(loanForm)
       .then((res) => {
         const url = window.URL.createObjectURL(
-          new Blob([res.data], { type: "application/pdf" })
+          new Blob([res.data], { type: "application/pdf" }),
         );
         const a = document.createElement("a");
         a.href = url;
@@ -753,17 +753,17 @@ function Accounts() {
   const filteredCreditData = React.useMemo(() => {
     if (filterType === "monthly") {
       return creditsData.filter((item) =>
-        item?.desc?.toLowerCase().startsWith("monthly")
+        item?.desc?.toLowerCase().startsWith("monthly"),
       );
     }
     if (filterType === "sound") {
       return creditsData.filter((item) =>
-        item?.desc?.toLowerCase().startsWith("sound")
+        item?.desc?.toLowerCase().startsWith("sound"),
       );
     }
     if (filterType === "installment") {
       return creditsData.filter((item) =>
-        item?.desc?.toLowerCase().startsWith("installment")
+        item?.desc?.toLowerCase().startsWith("installment"),
       );
     }
     if (filterType === "other") {
@@ -773,7 +773,7 @@ function Accounts() {
             item?.desc?.toLowerCase().startsWith("monthly") ||
             item?.desc?.toLowerCase().startsWith("sound") ||
             item?.desc?.toLowerCase().startsWith("installment")
-          )
+          ),
       );
     }
     return creditsData;
@@ -898,10 +898,10 @@ function Accounts() {
                         {index === 0
                           ? "🥇"
                           : index === 1
-                          ? "🥈"
-                          : index === 2
-                          ? "🥉"
-                          : ""}
+                            ? "🥈"
+                            : index === 2
+                              ? "🥉"
+                              : ""}
                       </span>
                       <span className="payer-amount">
                         ₹{record.totalAmount}
@@ -1102,8 +1102,8 @@ function Accounts() {
                       ...new Set(
                         monthlyData.map(
                           (c) =>
-                            c?.member?.firstName + " " + c?.member?.lastName
-                        )
+                            c?.member?.firstName + " " + c?.member?.lastName,
+                        ),
                       ),
                     ]
                       .filter((y) => y)
@@ -1141,7 +1141,7 @@ function Accounts() {
                         onClick={() => {
                           exportDataDownload(
                             filterdMonthyData(monthlyData),
-                            "monthly.xlsx"
+                            "monthly.xlsx",
                           );
                         }}
                       >
@@ -1202,7 +1202,7 @@ function Accounts() {
                       onClick={() => {
                         exportDataDownload(
                           filterdInstallmentData(installmentData),
-                          "installment.xlsx"
+                          "installment.xlsx",
                         );
                       }}
                     >
@@ -1693,6 +1693,37 @@ function Accounts() {
                 name="loanAmount"
                 onChange={onLoanFormChange}
               />
+            </Grid>
+
+            {/* Percentage Note */}
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  backgroundColor: "#f5f7ff",
+                  border: "1px solid #d6ddff",
+                  borderRadius: "8px",
+                  padding: "12px 14px",
+                  fontSize: "13px",
+                  color: "#2b3a67",
+                }}
+              >
+                <Typography sx={{ fontWeight: 700, mb: 0.5 }}>
+                  Percentage slabs (Internal members)
+                </Typography>
+                <Typography sx={{ fontSize: "13px", lineHeight: 1.6 }}>
+                  Amount ≤ 5,000: 3%
+                  <br />
+                  Amount ≤ 10,000: 2.5%
+                  <br />
+                  Amount ≤ 25,000: 2%
+                  <br />
+                  Amount ≤ 50,000: 1%
+                </Typography>
+                <Typography sx={{ fontSize: "13px", lineHeight: 1.6, mt: 1 }}>
+                  Note: External members should be charged 5% or higher (as
+                  discussed).
+                </Typography>
+              </Box>
             </Grid>
 
             {/* Percentage */}
