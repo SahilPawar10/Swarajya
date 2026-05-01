@@ -5,18 +5,35 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllUsers,
   getUserAccountsDetails,
-  getUserProfile,
   getUserSavingsData,
-  getUsersData,
 } from "../../slices/acccount.slice";
 import UserAccounts from "../Accounts/UserAccounts";
 import WithdrawModal from "../Accounts/WithdrawModal ";
-import { logDOM } from "@testing-library/react";
+import {
+  createSavingsLedgerEntry,
+  downloadUserAccountStatement,
+} from "../../api/apiService";
+
+const formatCurrency = (amount) =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0));
+
+const getToday = () => {
+  const date = new Date();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 
 function NewProfilePage() {
-  // eslint-disable-next-line no-undef
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [savingsModal, setSavingsModal] = useState(false);
+  const [savingsTransactionType, setSavingsTransactionType] = useState("credit");
+  const [savingsForm, setSavingsForm] = useState({});
   const [selectedUserId, setSelectedUserId] = useState("");
 
   const dispatch = useDispatch();
@@ -27,6 +44,10 @@ function NewProfilePage() {
 
   const userId = localStorage.getItem("userId");
   const userRole = localStorage.getItem("userRole");
+  const parsedUserId = JSON.parse(userId);
+  const parsedUserRole = JSON.parse(userRole);
+  const activeUserId = selectedUserId || parsedUserId;
+  const savingsSummary = accountsData?.data?.savings || {};
 
   const accountSections = useMemo(() => {
     if (!accountsData || Object.keys(accountsData).length === 0) {
@@ -39,7 +60,7 @@ function NewProfilePage() {
         rows:
           accountsData.data.monthly?.map((item) => ({
             label: item.date,
-            value: `₹ ${item.amount}`,
+            value: formatCurrency(item.amount),
           })) || [],
       },
       {
@@ -47,7 +68,7 @@ function NewProfilePage() {
         rows:
           accountsData.data.loans?.map((item) => ({
             label: item.date,
-            value: `₹ ${item.loanAmount}`,
+            value: formatCurrency(item.loanAmount),
           })) || [],
       },
       {
@@ -55,7 +76,7 @@ function NewProfilePage() {
         rows:
           accountsData.data.installment?.map((item) => ({
             label: item.date,
-            value: `₹ ${item.paidAmount}`,
+            value: formatCurrency(item.paidAmount),
           })) || [],
       },
       {
@@ -63,7 +84,7 @@ function NewProfilePage() {
         rows:
           accountsData.data.earning?.map((item) => ({
             label: item.date,
-            value: `₹ ${item.amount}`,
+            value: formatCurrency(item.amount),
           })) || [],
       },
       {
@@ -71,84 +92,159 @@ function NewProfilePage() {
         rows:
           accountsData.data.withdraws?.map((item) => ({
             label: item?.date,
-            value: `₹ ${item?.amount}`,
+            value: formatCurrency(item?.amount),
+          })) || [],
+      },
+      {
+        title: "Savings Deposits",
+        rows:
+          accountsData.data.savings?.deposits?.map((item) => ({
+            label: item?.date,
+            value: formatCurrency(item?.amount),
+          })) || [],
+      },
+      {
+        title: "Savings Debits",
+        rows:
+          accountsData.data.savings?.debits?.map((item) => ({
+            label: item?.date,
+            value: formatCurrency(item?.amount),
           })) || [],
       },
     ];
   }, [accountsData]);
+
   useEffect(() => {
-    if (!profileData || profileData.length === 0) {
-      dispatch(getUserSavingsData(JSON.parse(userId)));
-    }
+    dispatch(getUserSavingsData(activeUserId));
+    dispatch(getUserAccountsDetails(activeUserId));
 
-    if (!accountsData || accountsData.length === 0) {
-      dispatch(getUserAccountsDetails(JSON.parse(userId)));
-    }
-
-    if (["admin", "operator"].includes(JSON.parse(userRole))) {
+    if (["admin", "operator"].includes(parsedUserRole)) {
       dispatch(getAllUsers());
     }
-  }, [dispatch, userId, accountsData]);
+  }, [dispatch, activeUserId, parsedUserRole]);
 
   const handleWithdraw = (amount) => {
     console.log("Withdraw amount:", amount);
-    // Call API or dispatch action here
   };
 
   const handleUserChange = (currUserId) => {
     setSelectedUserId(currUserId);
-    console.log(currUserId, "curruserid");
 
     if (!currUserId) return;
     dispatch(getUserAccountsDetails(currUserId));
     dispatch(getUserSavingsData(currUserId));
   };
 
+  const openSavingsModal = (transactionType) => {
+    setSavingsTransactionType(transactionType);
+    setSavingsForm({ date: getToday() });
+    setSavingsModal(true);
+  };
+
+  const closeSavingsModal = () => {
+    setSavingsModal(false);
+    setSavingsForm({});
+  };
+
+  const handleSavingsFormChange = (event) => {
+    const { name, value } = event.target;
+    setSavingsForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSavingsSubmit = async () => {
+    if (!activeUserId || !savingsForm.amount) return;
+
+    await createSavingsLedgerEntry({
+      userId: activeUserId,
+      amount: savingsForm.amount,
+      transactionType: savingsTransactionType,
+      desc: savingsForm.desc,
+      date: savingsForm.date || getToday(),
+    });
+
+    closeSavingsModal();
+    dispatch(getUserAccountsDetails(activeUserId));
+    dispatch(getUserSavingsData(activeUserId));
+  };
+
+  const handleDownloadStatement = async () => {
+    if (!activeUserId) return;
+
+    const res = await downloadUserAccountStatement(activeUserId);
+    const blob = new Blob([res.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const profileName = profileData?.[0]
+      ? `${profileData[0].firstName}_${profileData[0].lastName}`
+      : "account";
+
+    link.href = url;
+    link.download = `${profileName}_account_statement.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div id="newprofile">
       <div className="profile-container">
-        {/* <h2 className="page-title">My Profile</h2> */}
-        {/* Personal Information */}
         {profileData && profileData.length > 0 ? (
           <div className="card">
-            {/* <div className="card-header">
-              <h3>Account Information</h3>
-              <button onClick={() => setIsModalOpen(true)} className="edit-btn">
-                Withdraw
-              </button>
-
-              
-              <WithdrawModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSubmit={handleWithdraw}
-                savingId={profileData[0].savingsData?._id}
-              />
-            </div> */}
             <div className="card-header">
               <h3>Account Information</h3>
 
               <div className="header-actions">
-                <select
-                  className="user-select"
-                  value={selectedUserId}
-                  onChange={(e) => handleUserChange(e.target.value)}
-                >
-                  <option value="">Select User</option>
-                  {usersData.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.firstName}
-                    </option>
-                  ))}
-                </select>
+                {["admin", "operator"].includes(parsedUserRole) && (
+                  <select
+                    className="user-select"
+                    value={selectedUserId}
+                    onChange={(e) => handleUserChange(e.target.value)}
+                  >
+                    <option value="">Select User</option>
+                    {usersData.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.firstName} {user.lastName}
+                      </option>
+                    ))}
+                  </select>
+                )}
 
                 <button
                   onClick={() => setIsModalOpen(true)}
                   className="edit-btn"
-                  disabled={!selectedUserId} // optional
+                  disabled={!activeUserId}
                 >
                   Withdraw
                 </button>
+                <button
+                  onClick={handleDownloadStatement}
+                  className="edit-btn statement-btn"
+                  disabled={!activeUserId}
+                >
+                  Statement
+                </button>
+                {["admin", "operator"].includes(parsedUserRole) && (
+                  <>
+                    <button
+                      onClick={() => openSavingsModal("credit")}
+                      className="edit-btn savings-credit"
+                      disabled={!activeUserId}
+                    >
+                      Savings Credit
+                    </button>
+                    <button
+                      onClick={() => openSavingsModal("debit")}
+                      className="edit-btn savings-debit"
+                      disabled={!activeUserId}
+                    >
+                      Savings Debit
+                    </button>
+                  </>
+                )}
               </div>
 
               <WithdrawModal
@@ -162,23 +258,14 @@ function NewProfilePage() {
             <div className="grid">
               <Info
                 label="Name"
-                value={`${
-                  profileData[0].firstName + " " + profileData[0].lastName
-                }`}
+                value={`${profileData[0].firstName} ${profileData[0].lastName}`}
               />
               <Info
                 label="Eligibility"
                 value={`${profileData[0].iseligible === true ? "YES" : "NO"}`}
               />
-              <Info
-                label="Active Since"
-                value={`${profileData[0].activeSince}`}
-              />
-
-              <Info
-                label="Current Share"
-                value={`${profileData[0].currentShare}`}
-              />
+              <Info label="Active Since" value={`${profileData[0].activeSince}`} />
+              <Info label="Current Share" value={`${profileData[0].currentShare}`} />
               <Info
                 label="OverAll Invested"
                 value={`${profileData[0]?.savingsData?.overallInvested || "-"}`}
@@ -187,18 +274,74 @@ function NewProfilePage() {
                 label="Earned Interest"
                 value={`${profileData[0]?.savingsData?.earnedInterest || "-"}`}
               />
-              {/* <Info label="User Role" value="Admin" /> */}
+              <Info
+                label="Personal Savings Balance"
+                value={formatCurrency(savingsSummary.balance)}
+              />
+              <Info
+                label="Savings Deposits"
+                value={formatCurrency(savingsSummary.totalDeposits)}
+              />
+              <Info
+                label="Savings Debits"
+                value={formatCurrency(savingsSummary.totalDebits)}
+              />
             </div>
           </div>
         ) : (
           "Loading"
         )}
 
-        {/* Address */}
         <div className="card">
           <UserAccounts accountData={accountSections} />
         </div>
       </div>
+
+      {savingsModal && (
+        <div className="profile-modal-backdrop">
+          <div className="profile-modal">
+            <h3>
+              {savingsTransactionType === "credit"
+                ? "Personal Savings Credit"
+                : "Personal Savings Debit"}
+            </h3>
+            <label>
+              Date
+              <input
+                name="date"
+                value={savingsForm.date || ""}
+                onChange={handleSavingsFormChange}
+                placeholder="DD-MM-YYYY"
+              />
+            </label>
+            <label>
+              Amount
+              <input
+                name="amount"
+                type="number"
+                value={savingsForm.amount || ""}
+                onChange={handleSavingsFormChange}
+              />
+            </label>
+            <label>
+              Description
+              <textarea
+                name="desc"
+                value={savingsForm.desc || ""}
+                onChange={handleSavingsFormChange}
+              />
+            </label>
+            <div className="profile-modal-actions">
+              <button className="edit-btn secondary" onClick={closeSavingsModal}>
+                Cancel
+              </button>
+              <button className="edit-btn" onClick={handleSavingsSubmit}>
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

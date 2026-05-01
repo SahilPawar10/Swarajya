@@ -1,12 +1,16 @@
 .admin-layout {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .sidebar {
-  flex: 12%;
+  background: #ffffff;
   box-shadow: 9px 21px 32px -18px rgba(0, 0, 0, 0.2);
-  /* background-color: blueviolet; */
+  flex: 0 0 286px;
+  height: 100vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
 }
 
 .sidebar-header {
@@ -14,7 +18,8 @@
   height: 7%;
 }
 .admin-page {
-  flex: 80%;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .user-profile {
@@ -70,40 +75,49 @@
 }
 
 .search-bar {
-  margin: 5% 5% 0 5%;
+  align-items: stretch;
+  display: flex;
+  gap: 10px;
+  margin: 24px 5% 16px;
+  max-width: 640px;
 }
 
 .search-bar input {
-  border: 2px solid grey;
-  /* font-size: 30px; */
-  /* border-radius: 10px;
-   */
-  border-radius: 0;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-  height: 50px;
-  width: 25%;
+  border: 1px solid #d7dee8;
+  border-radius: 8px;
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.04);
+  color: #172033;
+  flex: 1 1 auto;
+  font-size: 14px;
+  height: 46px;
+  padding: 0 14px;
+  width: auto;
 }
 
 .search-bar input::placeholder {
-  font-size: 1.3em;
-  padding-left: 10px;
+  color: #98a2b3;
+  font-size: 14px;
 }
 .search-bar button {
-  /* font-size: 30px; */
-  height: 50px;
-  outline: none;
-  background-color: #fbda04;
-  border-radius: 0;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-
-  width: 10%;
+  background: #fba704;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  height: 46px;
+  min-width: 112px;
+  padding: 0 18px;
+  transition: background 0.18s ease, transform 0.18s ease;
 }
 
 .search-bar button span {
-  font-size: 1em;
+  font-size: 14px;
   font-weight: 700;
+}
+
+.search-bar button:hover {
+  background: #e89400;
+  transform: translateY(-1px);
 }
 
 .team-table table tbody tr td button {

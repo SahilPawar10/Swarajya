@@ -70,8 +70,8 @@ function Sidebar({ menu = "menu" }) {
               />
             </span>
 
-            <Link className="side-menu " to="/admin">
-              Home
+            <Link className="side-menu " to="/members">
+              Members
             </Link>
           </li>
           <li id="visit">
@@ -115,7 +115,9 @@ function Sidebar({ menu = "menu" }) {
                 }}
               />
             </span>
-            <Link className="side-menu">Personal Account</Link>
+            <Link to="/newprofile" className="side-menu">
+              Personal Account
+            </Link>
           </li>
           <li id="Profile">
             <span>
@@ -181,8 +183,8 @@ function Sidebar({ menu = "menu" }) {
               />
             </span>
 
-            <Link className="side-menu " to="/admin">
-              Home
+            <Link className="side-menu " to="/members">
+              Members
             </Link>
           </li>
           <li id="visit">

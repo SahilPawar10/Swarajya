@@ -22,6 +22,14 @@ import {
   MenuItem,
   CircularProgress,
 } from "@mui/material";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
+import CallMadeIcon from "@mui/icons-material/CallMade";
+import CloseIcon from "@mui/icons-material/Close";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import DescriptionIcon from "@mui/icons-material/Description";
+import InputIcon from "@mui/icons-material/Input";
+import SavingsIcon from "@mui/icons-material/Savings";
 
 import {
   addMonthlyEntry,
@@ -31,6 +39,7 @@ import {
   createDebitEntry,
   createInstallmentEntry,
   createLoanEntry,
+  createSavingsLedgerEntry,
   downloadSampleMonthlyFile,
   getDirectPayLoanInfo,
   getLoanRequest,
@@ -57,6 +66,7 @@ import {
   fetchMonthly,
   getWithdrawRequests,
 } from "../../slices/acccount.slice";
+import axiosInstance from "../../api/axiosInterCepter";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -123,14 +133,395 @@ const filterdInstallmentData = (data) => {
 
   return filteredData;
 };
+
+const formatCurrency = (amount) =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0));
+
+const formatCompactCurrency = (amount) =>
+  new Intl.NumberFormat("en-IN", {
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0));
+
+const getInitials = (name = "") =>
+  name
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+const getContributionName = (record) =>
+  `${record?.user?.firstName || ""} ${record?.user?.lastName || ""}`.trim() ||
+  "Member";
+
+const getEntryDate = (date) => {
+  const value = String(date || "").trim();
+  const separator = value.includes("/") ? "/" : "-";
+  const parts = value.split(separator);
+
+  if (parts.length === 3) {
+    const [first, second, third] = parts;
+    if (first.length === 4) {
+      return {
+        year: Number(first),
+        month: Number(second),
+      };
+    }
+
+    return {
+      year: Number(third.length === 2 ? `20${third}` : third),
+      month: Number(second),
+    };
+  }
+
+  const fallback = dayjs(date);
+  return {
+    year: fallback.isValid() ? fallback.year() : null,
+    month: fallback.isValid() ? fallback.month() + 1 : null,
+  };
+};
+
+const getFallbackYearlyOverview = (
+  credits = [],
+  debits = [],
+  selectedYear = dayjs().year(),
+) => {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const monthData = months.map((month, index) => ({
+    month: index + 1,
+    label: month,
+    credits: 0,
+    debits: 0,
+  }));
+
+  credits.forEach((entry) => {
+    const entryDate = getEntryDate(entry?.date || entry?.createdAt);
+    if (entryDate.year === Number(selectedYear) && entryDate.month) {
+      monthData[entryDate.month - 1].credits += Number(entry?.amount || 0);
+    }
+  });
+
+  debits.forEach((entry) => {
+    const entryDate = getEntryDate(entry?.date || entry?.createdAt);
+    if (entryDate.year === Number(selectedYear) && entryDate.month) {
+      monthData[entryDate.month - 1].debits += Number(entry?.amount || 0);
+    }
+  });
+
+  return monthData;
+};
+
+const buildChartPath = (points, key, width, height, maxValue) => {
+  if (!points.length) return "";
+
+  return points
+    .map((point, index) => {
+      const x =
+        points.length === 1 ? width : (index / (points.length - 1)) * width;
+      const y = height - (Number(point[key] || 0) / maxValue) * height;
+      return `${index === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
+    })
+    .join(" ");
+};
+
+const buildAreaPath = (linePath, width, height) => {
+  if (!linePath) return "";
+  return `${linePath} L ${width} ${height} L 0 ${height} Z`;
+};
+
+const formatChartTick = (value) => {
+  if (value >= 100000) return `${Math.round(value / 1000)}K`;
+  if (value >= 1000) return `${Math.round(value / 1000)}K`;
+  return String(Math.round(value));
+};
+
+const getRecentTransactions = (dashboard, credits, debits) => {
+  if (dashboard?.recentTransactions?.length)
+    return dashboard.recentTransactions;
+
+  const creditEntries = credits.map((entry) => ({
+    id: entry.id,
+    name: entry.creditBy,
+    amount: entry.amount,
+    type: "Credit Entry",
+    direction: "credit",
+    createdAt: entry.createdAt,
+    date: entry.date,
+  }));
+  const debitEntries = debits.map((entry) => ({
+    id: entry.id,
+    name: entry.debitBy,
+    amount: entry.amount,
+    type: "Debit Entry",
+    direction: "debit",
+    createdAt: entry.createdAt,
+    date: entry.date,
+  }));
+
+  return [...creditEntries, ...debitEntries].sort(
+    (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+  );
+};
+
+function AccountOverviewChart({ data, selectedYear, years, onYearChange }) {
+  const [hoveredPoint, setHoveredPoint] = React.useState(null);
+  const chartWidth = 620;
+  const chartHeight = 300;
+  const padding = { top: 12, right: 12, bottom: 34, left: 44 };
+  const plotWidth = chartWidth - padding.left - padding.right;
+  const plotHeight = chartHeight - padding.top - padding.bottom;
+  const maxValue =
+    Math.max(
+      1,
+      ...data.map((point) => Number(point.credits || 0)),
+      ...data.map((point) => Number(point.debits || 0)),
+    ) * 1.15;
+  const getPoint = (point, index, key) => {
+    const x =
+      padding.left +
+      (data.length === 1 ? plotWidth : (index / (data.length - 1)) * plotWidth);
+    const y =
+      padding.top +
+      plotHeight -
+      (Number(point[key] || 0) / maxValue) * plotHeight;
+
+    return { x, y };
+  };
+  const buildPath = (key) =>
+    data
+      .map((point, index) => {
+        const { x, y } = getPoint(point, index, key);
+        return `${index === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
+      })
+      .join(" ");
+  const creditPath = buildPath("credits");
+  const debitPath = buildPath("debits");
+  const debitLastPoint = getPoint(
+    data[data.length - 1] || {},
+    data.length - 1,
+    "debits",
+  );
+  const debitFirstPoint = getPoint(data[0] || {}, 0, "debits");
+  const debitAreaPath = `${debitPath} L ${debitLastPoint.x.toFixed(2)} ${
+    padding.top + plotHeight
+  } L ${debitFirstPoint.x.toFixed(2)} ${padding.top + plotHeight} Z`;
+  const labels = data;
+  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((ratio) => ({
+    value: maxValue * ratio,
+    y: padding.top + plotHeight - ratio * plotHeight,
+  }));
+  const tooltipWidth = 128;
+  const tooltipHeight = 42;
+  const tooltipX = hoveredPoint
+    ? Math.min(
+        chartWidth - tooltipWidth - 8,
+        Math.max(8, hoveredPoint.x - tooltipWidth / 2),
+      )
+    : 0;
+  const tooltipY = hoveredPoint
+    ? hoveredPoint.y - tooltipHeight - 14 < 8
+      ? hoveredPoint.y + 14
+      : hoveredPoint.y - tooltipHeight - 14
+    : 0;
+
+  return (
+    <div className="ad-panel ad-overview">
+      <div className="ad-panel-header">
+        <h3>Account Overview</h3>
+        <select
+          aria-label="Account overview year"
+          value={selectedYear}
+          onChange={(event) => onYearChange(event.target.value)}
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="ad-chart-legend">
+        <span className="ad-legend-credit">Credits</span>
+        <span className="ad-legend-debit">Debits</span>
+      </div>
+      <div className="ad-chart-wrap">
+        <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img">
+          <defs>
+            <linearGradient id="debitFill" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#fb7185" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#fb7185" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {yTicks.map((tick) => (
+            <g key={tick.value}>
+              <text x="4" y={tick.y + 4} className="ad-chart-y-label">
+                {formatChartTick(tick.value)}
+              </text>
+              <line
+                x1={padding.left}
+                x2={padding.left + plotWidth}
+                y1={tick.y}
+                y2={tick.y}
+                className="ad-chart-grid"
+              />
+            </g>
+          ))}
+          <path d={debitAreaPath} fill="url(#debitFill)" />
+          <path d={creditPath} className="ad-chart-line ad-chart-credit" />
+          <path d={debitPath} className="ad-chart-line ad-chart-debit" />
+          {data.map((point, index) => {
+            const creditPoint = getPoint(point, index, "credits");
+            const debitPoint = getPoint(point, index, "debits");
+            return (
+              <g key={`${point.label}-${index}`}>
+                <g
+                  className="ad-chart-point"
+                  tabIndex="0"
+                  onBlur={() => setHoveredPoint(null)}
+                  onFocus={() =>
+                    setHoveredPoint({
+                      ...creditPoint,
+                      amount: point.credits,
+                      label: point.label,
+                      type: "Credits",
+                    })
+                  }
+                  onMouseEnter={() =>
+                    setHoveredPoint({
+                      ...creditPoint,
+                      amount: point.credits,
+                      label: point.label,
+                      type: "Credits",
+                    })
+                  }
+                  onMouseLeave={() => setHoveredPoint(null)}
+                >
+                  <title>{`Credits ${point.label}: ${formatCurrency(
+                    point.credits,
+                  )}`}</title>
+                  <circle
+                    cx={creditPoint.x}
+                    cy={creditPoint.y}
+                    r="8"
+                    className="ad-chart-hit-area"
+                  />
+                  <circle
+                    cx={creditPoint.x}
+                    cy={creditPoint.y}
+                    r="4"
+                    className="ad-chart-dot ad-chart-dot-credit"
+                  />
+                </g>
+                <g
+                  className="ad-chart-point"
+                  tabIndex="0"
+                  onBlur={() => setHoveredPoint(null)}
+                  onFocus={() =>
+                    setHoveredPoint({
+                      ...debitPoint,
+                      amount: point.debits,
+                      label: point.label,
+                      type: "Debits",
+                    })
+                  }
+                  onMouseEnter={() =>
+                    setHoveredPoint({
+                      ...debitPoint,
+                      amount: point.debits,
+                      label: point.label,
+                      type: "Debits",
+                    })
+                  }
+                  onMouseLeave={() => setHoveredPoint(null)}
+                >
+                  <title>{`Debits ${point.label}: ${formatCurrency(
+                    point.debits,
+                  )}`}</title>
+                  <circle
+                    cx={debitPoint.x}
+                    cy={debitPoint.y}
+                    r="8"
+                    className="ad-chart-hit-area"
+                  />
+                  <circle
+                    cx={debitPoint.x}
+                    cy={debitPoint.y}
+                    r="4"
+                    className="ad-chart-dot ad-chart-dot-debit"
+                  />
+                </g>
+                <text
+                  x={creditPoint.x}
+                  y={chartHeight - 8}
+                  className="ad-chart-x-label"
+                >
+                  {point.label}
+                </text>
+              </g>
+            );
+          })}
+          {hoveredPoint && (
+            <g className="ad-chart-tooltip" pointerEvents="none">
+              <rect
+                x={tooltipX}
+                y={tooltipY}
+                width={tooltipWidth}
+                height={tooltipHeight}
+                rx="6"
+              />
+              <text
+                x={tooltipX + tooltipWidth / 2}
+                y={tooltipY + 17}
+                className="ad-chart-tooltip-label"
+              >
+                {hoveredPoint.type} - {hoveredPoint.label}
+              </text>
+              <text
+                x={tooltipX + tooltipWidth / 2}
+                y={tooltipY + 33}
+                className="ad-chart-tooltip-value"
+              >
+                {formatCurrency(hoveredPoint.amount)}
+              </text>
+            </g>
+          )}
+        </svg>
+      </div>
+    </div>
+  );
+}
 function Accounts() {
   const [open, setOpen] = React.useState(false);
   const [debitModal, setdebitModal] = React.useState(false);
   const [loanAppModal, setloanAppModal] = React.useState(false);
   const [installmentModel, setinstallmentModel] = React.useState(false);
   const [monthlyModel, setMonthlyModel] = React.useState(false);
+  const [savingsModal, setSavingsModal] = React.useState(false);
+  const [savingsTransactionType, setSavingsTransactionType] =
+    React.useState("credit");
   const [directPay, setdirectPayModal] = React.useState(false);
   const [directPayLoanInfo, setdirectPayLoanInfo] = React.useState();
+  const [overviewYear, setOverviewYear] = React.useState(dayjs().year());
+  const [overviewYears, setOverviewYears] = React.useState([dayjs().year()]);
+  const [overviewData, setOverviewData] = React.useState([]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -145,6 +536,17 @@ function Accounts() {
   const handleInstallmentClose = () => setinstallmentModel(false);
   const handleMonthlyOpen = () => setMonthlyModel(true);
   const handleMonthlyClose = () => setMonthlyModel(false);
+  const handleSavingsOpen = (transactionType) => {
+    setSavingsTransactionType(transactionType);
+    setSavingsForm({ transactionType });
+    setSelectedUser("");
+    setSavingsModal(true);
+  };
+  const handleSavingsClose = () => {
+    setSavingsModal(false);
+    setSavingsForm();
+    setSelectedUser("");
+  };
   const [selectedDate, setSelectedDate] = React.useState(dayjs());
   const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState("");
@@ -162,6 +564,7 @@ function Accounts() {
 
   const [loanForm, setLoanForm] = React.useState();
   const [installmentForm, setInstallmentForm] = React.useState();
+  const [savingsForm, setSavingsForm] = React.useState();
   const [yourContribution, setYourContribution] = useState([]);
 
   // const [selectedMonth, setSelectedMonth] = useState("");
@@ -223,6 +626,11 @@ function Accounts() {
       setMonthlyform((prevState) => ({
         ...prevState,
         [name]: value,
+      }));
+    } else if (form === "savings") {
+      setSavingsForm((prevState) => ({
+        ...prevState,
+        userId: value,
       }));
     }
   };
@@ -353,6 +761,11 @@ function Accounts() {
         ...prev,
         date: newValue.format("DD-MM-YYYY"),
       }));
+    } else if (form === "savings") {
+      setSavingsForm((prev) => ({
+        ...prev,
+        date: newValue.format("DD-MM-YYYY"),
+      }));
     }
   };
 
@@ -371,6 +784,16 @@ function Accounts() {
     const value = e.target.value;
 
     setDebit((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const onSavingsChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setSavingsForm((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -497,6 +920,47 @@ function Accounts() {
         });
       });
   };
+
+  const handleSavingsEntrySubmit = async () => {
+    const payload = {
+      ...savingsForm,
+      transactionType: savingsTransactionType,
+      date: savingsForm?.date || selectedDate.format("DD-MM-YYYY"),
+      userId: savingsForm?.userId || selectedUser,
+    };
+
+    if (!payload.userId || !payload.amount) {
+      setSnack({
+        open: true,
+        message: "Please select user and enter amount.",
+        severity: "warning",
+      });
+      return;
+    }
+
+    setLoading(true);
+    await createSavingsLedgerEntry(payload)
+      .then(() => {
+        setLoading(false);
+        setSnack({
+          open: true,
+          message: "Personal savings entry added successfully!",
+          severity: "success",
+        });
+        handleSavingsClose();
+        dashboardReport();
+      })
+      .catch((err) => {
+        console.log(err, "err");
+        setLoading(false);
+        setSnack({
+          open: true,
+          message: err?.response?.data?.message || "something went wrong",
+          severity: "error",
+        });
+      });
+  };
+
   const handleLoanEntrySubmit = async () => {
     setLoading(true);
     // console.log(loanForm, "loanForm");
@@ -650,6 +1114,15 @@ function Accounts() {
   };
 
   const exportDataDownload = (data, fileName) => {
+    if (!data?.length) {
+      setSnack({
+        open: true,
+        message: "No data available to download.",
+        severity: "warning",
+      });
+      return;
+    }
+
     const res = generateExcelFileBuffer(data, fileName);
     const blob = new Blob([res], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -665,6 +1138,29 @@ function Accounts() {
       message: "File downloaded successfully!",
       severity: "success",
     });
+  };
+
+  const downloadTopContributors = (contributors) => {
+    const rows = contributors.map((record, index) => ({
+      Rank: index + 1,
+      Name: getContributionName(record),
+      Amount: Number(record.totalAmount || 0),
+    }));
+
+    exportDataDownload(rows, "top-contributors.xlsx");
+  };
+
+  const downloadRecentTransactions = (transactions) => {
+    const rows = transactions.map((transaction, index) => ({
+      SrNo: index + 1,
+      Date: transaction.date || transaction.createdAt || "",
+      Name: transaction.name || "Transaction",
+      Type: transaction.type || "",
+      Direction: transaction.direction || "credit",
+      Amount: Number(transaction.amount || 0),
+    }));
+
+    exportDataDownload(rows, "recent-transactions.xlsx");
   };
 
   const handleExcelUpload = (files) => {
@@ -704,6 +1200,21 @@ function Accounts() {
 
   const getAllWithdrawReq = async () => {
     dispatch(getWithdrawRequests());
+  };
+
+  const getYearlyOverview = async (year) => {
+    try {
+      const res = await axiosInstance.get(
+        `/loan/dashboard/yearly-overview?year=${year}`,
+      );
+      setOverviewData(res.data?.data || []);
+      setOverviewYear(res.data?.year || Number(year));
+      setOverviewYears(
+        res.data?.years?.length ? res.data.years : [Number(year)],
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const approveWithDrawRequest = async (id) => {
@@ -796,6 +1307,141 @@ function Accounts() {
     }
   }, [userId, contribution]);
 
+  useEffect(() => {
+    if (dashReport?.yearlyOverview) {
+      setOverviewData(dashReport.yearlyOverview.data || []);
+      setOverviewYear(dashReport.yearlyOverview.year || dayjs().year());
+      setOverviewYears(
+        dashReport.yearlyOverview.years?.length
+          ? dashReport.yearlyOverview.years
+          : [dashReport.yearlyOverview.year || dayjs().year()],
+      );
+    }
+  }, [dashReport]);
+
+  const hasDashboardTrend =
+    overviewData?.some(
+      (point) =>
+        Number(point.credits || 0) > 0 || Number(point.debits || 0) > 0,
+    ) || false;
+  const dashboardTrend = hasDashboardTrend
+    ? overviewData
+    : getFallbackYearlyOverview(creditsData, debitsData, overviewYear);
+  const dashboardContributors =
+    dashReport?.topContributors?.length > 0
+      ? dashReport.topContributors
+      : contribution;
+  const recentTransactions = getRecentTransactions(
+    dashReport,
+    creditsData,
+    debitsData,
+  );
+  const monthlySummary = dashReport?.monthlySummary || {};
+  const userContributionTotal = yourContribution[0]?.totalAmount || 0;
+  const summaryCards = [
+    {
+      title: "Available Balance",
+      value: dashReport?.totalBalance,
+      note: "Available to use",
+      tone: "green",
+      icon: <AccountBalanceWalletIcon />,
+    },
+    {
+      title: "Total Credits",
+      value: dashReport?.overAllCredits,
+      note: "Overall credits",
+      tone: "amber",
+      icon: <ArrowOutwardIcon />,
+    },
+    {
+      title: "Total Debits",
+      value: dashReport?.overAllDebits,
+      note: "Overall debits",
+      tone: "rose",
+      icon: <CloseIcon />,
+    },
+    {
+      title: "Total Loanouts",
+      value: dashReport?.totalLoanuts,
+      note: "Total loan given",
+      tone: "violet",
+      icon: <SavingsIcon />,
+    },
+  ];
+  const savingsCards = [
+    {
+      title: "Personal Savings Balance",
+      value: dashReport?.personalSavingBalance,
+      note: "Total Balance",
+      tone: "green",
+      icon: <SavingsIcon />,
+    },
+    {
+      title: "Personal Savings Deposits",
+      value: dashReport?.personalSavingDeposits,
+      note: "Total Deposits",
+      tone: "blue",
+      icon: <AccountBalanceWalletIcon />,
+    },
+    {
+      title: "Personal Savings Debits",
+      value: dashReport?.personalSavingDebits,
+      note: "Total Debits",
+      tone: "orange",
+      icon: <CreditCardIcon />,
+    },
+  ];
+  const actionCards = [
+    {
+      title: "Loan Application",
+      label: "Apply Now",
+      tone: "blue",
+      icon: <DescriptionIcon />,
+      onClick: handleLoanAppOpen,
+      visible: true,
+    },
+    {
+      title: "Credit Entry",
+      label: "Add Credit",
+      tone: "green",
+      icon: <InputIcon />,
+      onClick: handleOpen,
+      visible: adminRoles.includes(role),
+    },
+    {
+      title: "Debit Entry",
+      label: "Add Debit",
+      tone: "orange",
+      icon: <CreditCardIcon />,
+      onClick: handleDebitOpen,
+      visible: adminRoles.includes(role),
+    },
+    {
+      title: "Savings Credit",
+      label: "Add Deposit",
+      tone: "green",
+      icon: <SavingsIcon />,
+      onClick: () => handleSavingsOpen("credit"),
+      visible: adminRoles.includes(role),
+    },
+    {
+      title: "Savings Debit",
+      label: "Add Debit",
+      tone: "rose",
+      icon: <CreditCardIcon />,
+      onClick: () => handleSavingsOpen("debit"),
+      visible: adminRoles.includes(role),
+    },
+    {
+      title: "View Reports",
+      label: "View Details",
+      tone: "violet",
+      icon: <DescriptionIcon />,
+      onClick: () => setValue(1),
+      visible: true,
+    },
+  ].filter((item) => item.visible);
+
   return (
     <div id="accounts">
       <Box sx={{ width: "100%" }}>
@@ -816,98 +1462,178 @@ function Accounts() {
             <Tab label="Debits" {...a11yProps(3)} />
             <Tab label="Monthly" {...a11yProps(4)} />
             <Tab label="Installments" {...a11yProps(5)} />
-            <Tab label="Active Loan" {...a11yProps(6)} />0
+            <Tab label="Active Loan" {...a11yProps(6)} />
             {role !== "user" && <Tab label="Widrawals" {...a11yProps(7)} />}
-            <Tab label="Old DashBoard" {...a11yProps(8)} />
           </Tabs>
         </Box>
         {/* DashBoard */}
         <CustomTabPanel value={value} index={0}>
-          <div className="account-main-content">
-            {/* Accounts */}
-            <div className="accounts-dashboard">
-              <h2>Accounts</h2>
-              <div className="accounts-card  balance ">
-                {dashReport?.totalBalance || 0} <span>Available Balance</span>
-              </div>
-              <div className="accounts-card credits">
-                {dashReport?.overAllCredits || 0} <span>Total Credits</span>
-              </div>
-              <div className="accounts-card debits">
-                {dashReport?.overAllDebits || 0} <span>Total Debits</span>
-              </div>
-              <div className="accounts-card loanouts">
-                {dashReport?.totalLoanuts || 0} <span>Total Loanouts</span>
-              </div>
+          <div className="account-dashboard-v2">
+            <div className="ad-summary-grid">
+              {summaryCards.map((card) => (
+                <div className="ad-summary-card" key={card.title}>
+                  <div className={`ad-icon ad-${card.tone}`}>{card.icon}</div>
+                  <div>
+                    <p>{card.title}</p>
+                    <strong>{formatCurrency(card.value)}</strong>
+                    <span>{card.note}</span>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            {/* Actions */}
+            <div className="ad-dashboard-grid">
+              <AccountOverviewChart
+                data={dashboardTrend}
+                selectedYear={overviewYear}
+                years={overviewYears}
+                onYearChange={getYearlyOverview}
+              />
 
-            <div className="accounts-actions">
-              <h2>Actions</h2>
-              <div className={`accounts-buttons-${role}`}>
-                <button
-                  className="account-btn loan-btn"
-                  onClick={handleLoanAppOpen}
-                >
-                  Loan Application
-                </button>
-                <button
-                  className="account-btn monthly-btn"
-                  // onClick={handleMonthlyOpen}
-                >
-                  {/* Monthly */}
-                  <span className="urcontribution">
-                    {" "}
-                    {yourContribution[0]?.totalAmount || "Monthly"}
-                  </span>
-                </button>
-                {adminRoles.includes(role) && (
-                  <>
+              <div className="ad-panel ad-actions">
+                <div className="ad-panel-header">
+                  <h3>Quick Actions</h3>
+                </div>
+                <div className="ad-action-grid">
+                  {actionCards.map((action) => (
                     <button
-                      className="account-btn debit-btn"
-                      onClick={handleDebitOpen}
+                      className={`ad-action-card ad-action-${action.tone}`}
+                      key={action.title}
+                      type="button"
+                      onClick={action.onClick}
                     >
-                      Debit Entry
-                    </button>
-                    <button
-                      className="account-btn  credit-btn"
-                      onClick={handleOpen}
-                    >
-                      Credit Entry
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className="history">
-              <h2>Contribution</h2>
-              <div className="account-card-box">
-                {contribution.length > 0 &&
-                  contribution.map((record, index) => (
-                    <div
-                      key={index}
-                      className={`history-item fade-in ${
-                        index === 0 ? "top-payer" : "top-payer"
-                      }`}
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <span className="payer-name">
-                        {record.user.firstName + " " + record.user.lastName}
-                        {index === 0
-                          ? "🥇"
-                          : index === 1
-                            ? "🥈"
-                            : index === 2
-                              ? "🥉"
-                              : ""}
+                      <span className={`ad-action-icon ad-${action.tone}`}>
+                        {action.icon}
                       </span>
-                      <span className="payer-amount">
-                        ₹{record.totalAmount}
-                      </span>
-                    </div>
+                      <strong>{action.title}</strong>
+                      <small>
+                        {action.label} <CallMadeIcon />
+                      </small>
+                    </button>
                   ))}
+                </div>
+              </div>
+
+              <div className="ad-panel ad-list-panel ad-contributors">
+                <div className="ad-panel-header">
+                  <h3>Top Contributors</h3>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      downloadTopContributors(dashboardContributors)
+                    }
+                  >
+                    View All
+                  </button>
+                </div>
+                <div className="ad-ranked-list">
+                  {dashboardContributors.map((record, index) => {
+                    const name = getContributionName(record);
+                    return (
+                      <div className="ad-ranked-row" key={`${name}-${index}`}>
+                        <span>{index + 1}</span>
+                        <strong>{name}</strong>
+                        <b>{formatCurrency(record.totalAmount)}</b>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="ad-savings-grid">
+                {savingsCards.map((card) => (
+                  <div className="ad-saving-card" key={card.title}>
+                    <div className={`ad-icon ad-${card.tone}`}>{card.icon}</div>
+                    <p>{card.title}</p>
+                    <strong>{formatCurrency(card.value)}</strong>
+                    <span>{card.note}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="ad-panel ad-list-panel ad-recent">
+                <div className="ad-panel-header">
+                  <h3>Recent Transactions</h3>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      downloadRecentTransactions(recentTransactions)
+                    }
+                  >
+                    View All
+                  </button>
+                </div>
+                <div className="ad-transaction-list">
+                  {recentTransactions.map((transaction, index) => {
+                    const isCredit = transaction.direction !== "debit";
+                    return (
+                      <div
+                        className="ad-transaction-row"
+                        key={transaction.id || `${transaction.name}-${index}`}
+                      >
+                        <span
+                          className={`ad-avatar ${isCredit ? "credit" : "debit"}`}
+                        >
+                          {getInitials(transaction.name)}
+                        </span>
+                        <div>
+                          <strong>{transaction.name || "Transaction"}</strong>
+                          <small>{transaction.type}</small>
+                        </div>
+                        <b className={isCredit ? "positive" : "negative"}>
+                          {isCredit ? "" : "-"}
+                          {formatCurrency(transaction.amount)}
+                        </b>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="ad-panel ad-monthly-summary">
+                <div className="ad-panel-header">
+                  <h3>Monthly Summary</h3>
+                </div>
+                <div className="ad-monthly-values">
+                  <div>
+                    <span>Total Credits</span>
+                    <strong>
+                      {formatCurrency(monthlySummary.totalCredits)}
+                    </strong>
+                    <small>
+                      {monthlySummary.month || dayjs().format("MMM")}
+                    </small>
+                  </div>
+                  <div>
+                    <span>Total Debits</span>
+                    <strong>
+                      {formatCurrency(monthlySummary.totalDebits)}
+                    </strong>
+                    <small>{monthlySummary.year || dayjs().year()}</small>
+                  </div>
+                  <div>
+                    <span>Net Balance</span>
+                    <strong>{formatCurrency(monthlySummary.netBalance)}</strong>
+                    <small
+                      className={
+                        Number(monthlySummary.netBalance || 0) >= 0
+                          ? "positive"
+                          : "negative"
+                      }
+                    >
+                      {formatCompactCurrency(userContributionTotal)} personal
+                    </small>
+                  </div>
+                  <div>
+                    <span>Active Loanouts</span>
+                    <strong>
+                      {formatCurrency(monthlySummary.totalLoanouts)}
+                    </strong>
+                    <button type="button" onClick={() => setValue(5)}>
+                      View Details
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1622,6 +2348,81 @@ function Accounts() {
           >
             Submit
             {/* {loading ? <i>Sending</i> : "Submit"} */}
+          </Button>
+        </Box>
+      </Modal>{" "}
+      {/* Personal Savings Modal */}
+      <Modal
+        open={savingsModal}
+        onClose={handleSavingsClose}
+        aria-labelledby="personal-savings-title"
+        aria-describedby="personal-savings-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="personal-savings-title"
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              fontSize: "26px",
+              color: "blueviolet",
+              fontWeight: "800",
+            }}
+          >
+            {savingsTransactionType === "credit"
+              ? "Personal Savings Credit"
+              : "Personal Savings Debit"}
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select Date"
+              value={selectedDate}
+              id="savings-date"
+              onChange={(newValue) => {
+                handleDateChange(newValue, "savings");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  name="date"
+                  id="savings-date"
+                  {...params}
+                  fullWidth
+                  sx={{ marginTop: "30px" }}
+                />
+              )}
+            />
+          </LocalizationProvider>
+          <Box sx={{ marginTop: "10px", marginBottom: "20px" }}>
+            <UserSelect
+              selectedUser={selectedUser}
+              handleUserChange={(event) => handleUserChange(event, "savings")}
+            />
+          </Box>
+          <TextField
+            fullWidth
+            label="Amount"
+            id="savings-amount"
+            name="amount"
+            type="number"
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            onChange={onSavingsChange}
+          />
+          <TextField
+            fullWidth
+            label="Description"
+            id="savings-desc"
+            name="desc"
+            onChange={onSavingsChange}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
+          />
+
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ marginBottom: "30px" }}
+            onClick={handleSavingsEntrySubmit}
+          >
+            {loading ? "Saving" : "Submit"}
           </Button>
         </Box>
       </Modal>{" "}

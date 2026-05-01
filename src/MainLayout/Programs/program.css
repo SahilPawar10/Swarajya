@@ -191,7 +191,7 @@
   color: #504e70;
 }
 
-svg {
+#programs .circle_box svg {
   /* width: 300px;
   height: 300px; */
   width: 343px;
@@ -201,14 +201,14 @@ svg {
   overflow: initial;
 }
 
-circle {
+#programs .circle_box circle {
   stroke-width: 20px;
   fill: none;
 }
-circle:nth-child(1) {
+#programs .circle_box circle:nth-child(1) {
   stroke: #fff;
 }
-circle:nth-child(2) {
+#programs .circle_box circle:nth-child(2) {
   stroke: #f00;
   position: relative;
   z-index: 1;
