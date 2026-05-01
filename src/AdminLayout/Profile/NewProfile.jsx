@@ -9,7 +9,10 @@ import {
 } from "../../slices/acccount.slice";
 import UserAccounts from "../Accounts/UserAccounts";
 import WithdrawModal from "../Accounts/WithdrawModal ";
-import { createSavingsLedgerEntry } from "../../api/apiService";
+import {
+  createSavingsLedgerEntry,
+  downloadUserAccountStatement,
+} from "../../api/apiService";
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-IN", {
@@ -167,6 +170,25 @@ function NewProfilePage() {
     dispatch(getUserSavingsData(activeUserId));
   };
 
+  const handleDownloadStatement = async () => {
+    if (!activeUserId) return;
+
+    const res = await downloadUserAccountStatement(activeUserId);
+    const blob = new Blob([res.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const profileName = profileData?.[0]
+      ? `${profileData[0].firstName}_${profileData[0].lastName}`
+      : "account";
+
+    link.href = url;
+    link.download = `${profileName}_account_statement.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div id="newprofile">
       <div className="profile-container">
@@ -197,6 +219,13 @@ function NewProfilePage() {
                   disabled={!activeUserId}
                 >
                   Withdraw
+                </button>
+                <button
+                  onClick={handleDownloadStatement}
+                  className="edit-btn statement-btn"
+                  disabled={!activeUserId}
+                >
+                  Statement
                 </button>
                 {["admin", "operator"].includes(parsedUserRole) && (
                   <>

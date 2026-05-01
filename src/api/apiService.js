@@ -373,6 +373,12 @@ export const approveWithDrawReq = (data) => {
   });
 };
 
+export const downloadUserAccountStatement = (id) => {
+  return Axios.get(`/loan/download-account-statement?id=${id}`, {
+    responseType: "blob",
+  });
+};
+
 // Project Tracker APIs
 export const createProject = (data) => {
   return new Promise((resolve, reject) => {
