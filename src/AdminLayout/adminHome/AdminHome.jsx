@@ -2,23 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import LayoutAdmin from "../Layout2/LayoutAdmin";
+import "../Visitors/visitor.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { getTeamData } from "../../api/apiService";
-import { get } from "react-scroll/modules/mixins/scroller";
 import { getUsersData } from "../../slices/acccount.slice";
 
 function AdminHome() {
   // const [team, setTeam] = useState([]);
 
   const [modalImage, setModalImage] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
   const dispatch = useDispatch();
 
   const team = useSelector((state) => state.accounts.team);
-
-  const handleImageClick = (src) => {
-    setModalImage(src);
-  };
 
   const closeModal = () => {
     setModalImage(null);
@@ -30,14 +27,45 @@ function AdminHome() {
     }
   }, [dispatch]);
 
+  const searchValue = appliedSearch || searchTerm;
+  const filteredTeam = team.filter((member) => {
+    const haystack = [
+      member.firstName,
+      member.lastName,
+      member.number,
+      member.email,
+      member.gender,
+      member.address,
+      member.currentShare,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return haystack.includes(searchValue.trim().toLowerCase());
+  });
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    setAppliedSearch(searchTerm);
+  };
+
   return (
     <div id="adminHome">
-      <div className="search-bar">
-        <input type="text" placeholder="Search Here" />
-        <button>
+      <form className="search-bar" onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Search members by name, email, number..."
+          value={searchTerm}
+          onChange={(event) => {
+            setSearchTerm(event.target.value);
+            setAppliedSearch("");
+          }}
+        />
+        <button type="submit">
           <span>Search</span>
         </button>
-      </div>
+      </form>
       <div className="visitor-table">
         <table>
           <thead>
@@ -55,8 +83,8 @@ function AdminHome() {
             </tr>
           </thead>
           <tbody>
-            {team.map((team, index) => (
-              <tr id={index}>
+            {filteredTeam.map((team, index) => (
+              <tr key={team.id || team._id || index}>
                 <td>{index + 1}</td>
                 <td>{team.firstName + " " + team.lastName} </td>
                 <td>{team.number}</td>
@@ -94,6 +122,11 @@ function AdminHome() {
                 </td>
               </tr>
             ))}
+            {filteredTeam.length === 0 && (
+              <tr>
+                <td colSpan="10">No members found.</td>
+              </tr>
+            )}
             {/* <tr>
               <td>1</td>
               <td>Sahil Pawar</td>

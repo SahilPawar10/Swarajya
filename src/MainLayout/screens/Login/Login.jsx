@@ -38,7 +38,7 @@ function Login() {
         localStorage.setItem("swarajya-user", JSON.stringify(res.data.user));
         localStorage.setItem("userRole", JSON.stringify(res.data.user.role));
         localStorage.setItem("userId", JSON.stringify(res.data.user.id));
-        navigate("/admin");
+        navigate("/accounts");
       })
       .catch((err) => {
         console.log(err.response);

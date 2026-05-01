@@ -210,6 +210,15 @@ export const createDebitEntry = (data) => {
   });
 };
 
+export const createSavingsLedgerEntry = (data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/loan/savings-ledger`;
+    Axios.post(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
 export const createInstallmentEntry = (data) => {
   return new Promise((resolve, reject) => {
     const url = `/loan/installment`;

@@ -1,5 +1,575 @@
 Dashboard.css
 
+.account-dashboard-v2 {
+  background: #f6f8fb;
+  color: #172033;
+  min-height: calc(85vh - 70px);
+  padding: 4px;
+}
+
+.ad-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.ad-summary-card,
+.ad-panel,
+.ad-saving-card {
+  background: #ffffff;
+  border: 1px solid #e9eef6;
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(33, 45, 74, 0.08);
+}
+
+.ad-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 112px;
+  padding: 18px;
+}
+
+.ad-summary-card p,
+.ad-saving-card p,
+.ad-monthly-values span {
+  color: #667085;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.ad-summary-card strong,
+.ad-saving-card strong,
+.ad-monthly-values strong {
+  display: block;
+  color: #101828;
+  font-size: 24px;
+  line-height: 1.2;
+  margin: 5px 0;
+}
+
+.ad-summary-card span,
+.ad-saving-card span,
+.ad-monthly-values small {
+  color: #667085;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ad-icon,
+.ad-action-icon {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 56px;
+  justify-content: center;
+  width: 56px;
+}
+
+.ad-icon svg,
+.ad-action-icon svg {
+  font-size: 26px;
+}
+
+.ad-green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.ad-amber {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.ad-rose {
+  background: #ffe4e6;
+  color: #f43f5e;
+}
+
+.ad-violet {
+  background: #f3e8ff;
+  color: #8b5cf6;
+}
+
+.ad-blue {
+  background: #dbeafe;
+  color: #3b82f6;
+}
+
+.ad-orange {
+  background: #ffedd5;
+  color: #f97316;
+}
+
+.ad-dashboard-grid {
+  display: grid;
+  grid-template-areas:
+    "overview actions contributors"
+    "savings savings recent"
+    "monthly monthly recent";
+  grid-template-columns: minmax(360px, 1.35fr) minmax(280px, 0.8fr) minmax(280px, 0.9fr);
+  gap: 16px;
+}
+
+.ad-panel {
+  padding: 18px;
+}
+
+.ad-panel-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.ad-panel-header h3 {
+  color: #172033;
+  font-size: 16px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.ad-panel-header button,
+.ad-panel-header select,
+.ad-monthly-values button {
+  background: transparent;
+  border: 0;
+  color: #2563eb;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ad-panel-header select {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #475467;
+  padding: 8px 10px;
+}
+
+.ad-overview {
+  grid-area: overview;
+  min-height: 350px;
+}
+
+.ad-actions {
+  grid-area: actions;
+}
+
+.ad-actions .ad-action-grid {
+  gap: 10px;
+}
+
+.ad-actions .ad-action-card {
+  min-height: 100px;
+  padding: 12px;
+}
+
+.ad-actions .ad-action-icon {
+  height: 40px;
+  width: 40px;
+}
+
+.ad-actions .ad-action-icon svg {
+  font-size: 20px;
+}
+
+.ad-actions .ad-action-card strong {
+  font-size: 13px;
+  margin: 8px 0 5px;
+  max-width: none;
+}
+
+.ad-actions .ad-action-card small {
+  font-size: 11px;
+}
+
+.ad-chart-legend {
+  display: flex;
+  gap: 20px;
+  margin: 8px 0 10px;
+}
+
+.ad-chart-legend span {
+  color: #667085;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ad-chart-legend span::before {
+  border-radius: 999px;
+  content: "";
+  display: inline-block;
+  height: 9px;
+  margin-right: 7px;
+  width: 9px;
+}
+
+.ad-legend-credit::before {
+  background: #22c55e;
+}
+
+.ad-legend-debit::before {
+  background: #fb7185;
+}
+
+.ad-chart-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 285px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ad-chart-wrap svg {
+  display: block;
+  flex: 1 1 auto;
+  height: auto;
+  overflow: hidden;
+  transform: none;
+  width: 100%;
+}
+
+.ad-chart-grid {
+  stroke: #eef2f7;
+  stroke-width: 1;
+}
+
+.ad-chart-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.ad-chart-credit {
+  stroke: #22c55e;
+}
+
+.ad-chart-debit {
+  stroke: #fb7185;
+}
+
+.ad-chart-y-label,
+.ad-chart-x-label {
+  fill: #667085;
+  font-size: 12px;
+  font-weight: 700;
+  text-anchor: middle;
+  transform: none;
+  writing-mode: horizontal-tb;
+}
+
+.ad-chart-y-label {
+  text-anchor: start;
+}
+
+.ad-chart-dot {
+  stroke: #ffffff;
+  stroke-width: 3px;
+}
+
+.ad-chart-point {
+  cursor: pointer;
+}
+
+.ad-chart-point:focus {
+  outline: none;
+}
+
+.ad-chart-point:focus .ad-chart-dot,
+.ad-chart-point:hover .ad-chart-dot {
+  stroke-width: 4px;
+}
+
+.ad-chart-hit-area {
+  fill: transparent;
+  stroke: none;
+}
+
+.ad-chart-dot-credit {
+  fill: #22c55e;
+}
+
+.ad-chart-dot-debit {
+  fill: #fb7185;
+}
+
+.ad-chart-tooltip rect {
+  fill: #172033;
+  filter: drop-shadow(0 8px 16px rgba(23, 32, 51, 0.18));
+}
+
+.ad-chart-tooltip text {
+  text-anchor: middle;
+  writing-mode: horizontal-tb;
+}
+
+.ad-chart-tooltip-label {
+  fill: #cbd5e1;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ad-chart-tooltip-value {
+  fill: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ad-chart-labels {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+}
+
+.ad-chart-labels span {
+  color: #667085;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ad-action-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ad-action-card {
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  min-height: 132px;
+  padding: 16px;
+  text-align: left;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ad-action-card:hover {
+  box-shadow: 0 12px 24px rgba(33, 45, 74, 0.12);
+  transform: translateY(-2px);
+}
+
+.ad-action-blue {
+  background: #eff6ff;
+}
+
+.ad-action-green {
+  background: #ecfdf5;
+}
+
+.ad-action-orange {
+  background: #fff7ed;
+}
+
+.ad-action-violet {
+  background: #faf5ff;
+}
+
+.ad-action-rose {
+  background: #fff1f2;
+}
+
+.ad-action-card strong {
+  color: #101828;
+  display: block;
+  font-size: 14px;
+  line-height: 1.2;
+  margin: 14px 0 8px;
+  max-width: 120px;
+}
+
+.ad-action-card small {
+  align-items: center;
+  color: #2563eb;
+  display: flex;
+  font-size: 12px;
+  font-weight: 800;
+  gap: 6px;
+}
+
+.ad-action-card small svg {
+  font-size: 15px;
+  margin-left: auto;
+}
+
+.ad-list-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 350px;
+  overflow: hidden;
+}
+
+.ad-contributors {
+  align-self: stretch;
+  grid-area: contributors;
+}
+
+.ad-ranked-list,
+.ad-transaction-list {
+  display: grid;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-gutter: stable;
+}
+
+.ad-ranked-list {
+  flex: 1 1 auto;
+  max-height: none;
+}
+
+.ad-transaction-list {
+  max-height: 344px;
+}
+
+.ad-ranked-list::-webkit-scrollbar,
+.ad-transaction-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ad-ranked-list::-webkit-scrollbar-thumb,
+.ad-transaction-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+.ad-ranked-row,
+.ad-transaction-row {
+  align-items: center;
+  display: grid;
+  gap: 10px;
+}
+
+.ad-ranked-row {
+  grid-template-columns: 34px minmax(0, 1fr) minmax(76px, auto);
+}
+
+.ad-ranked-row span {
+  align-items: center;
+  background: #eff6ff;
+  border-radius: 999px;
+  color: #3b82f6;
+  display: flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 26px;
+  justify-content: center;
+  width: 26px;
+}
+
+.ad-ranked-row strong,
+.ad-transaction-row strong {
+  color: #172033;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ad-ranked-row b {
+  color: #16a34a;
+  font-size: 13px;
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.ad-savings-grid {
+  display: grid;
+  grid-area: savings;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ad-saving-card {
+  border-radius: 0;
+  min-height: 132px;
+  padding: 18px;
+}
+
+.ad-saving-card:first-child {
+  border-bottom-left-radius: 8px;
+  border-top-left-radius: 8px;
+}
+
+.ad-saving-card:last-child {
+  border-bottom-right-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.ad-saving-card .ad-icon {
+  height: 42px;
+  margin-bottom: 10px;
+  width: 42px;
+}
+
+.ad-saving-card .ad-icon svg {
+  font-size: 22px;
+}
+
+.ad-saving-card strong {
+  font-size: 22px;
+}
+
+.ad-recent {
+  grid-area: recent;
+}
+
+.ad-transaction-row {
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+}
+
+.ad-avatar {
+  align-items: center;
+  border-radius: 999px;
+  display: flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.ad-avatar.credit {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.ad-avatar.debit {
+  background: #ffe4e6;
+  color: #e11d48;
+}
+
+.ad-transaction-row small {
+  color: #667085;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ad-transaction-row b {
+  font-size: 13px;
+}
+
+.ad-monthly-summary {
+  grid-area: monthly;
+}
+
+.ad-monthly-values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.ad-monthly-values strong {
+  font-size: 22px;
+}
+
 /* Layout */
 .account-dashboard {
   font-family: Arial, sans-serif;
@@ -713,5 +1283,182 @@ Dashboard.css
   .css-heg063-MuiTabs-flexContainer {
     overflow-x: auto;
     flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 768px) {
+  #accounts {
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: 0 10px;
+    width: 100%;
+  }
+
+  #accounts .MuiBox-root {
+    max-width: 100%;
+  }
+
+  #accounts .MuiTabs-scroller {
+    overflow-x: auto !important;
+  }
+
+  .account-dashboard-v2 {
+    padding: 0;
+  }
+
+  .ad-summary-grid,
+  .ad-dashboard-grid,
+  .ad-savings-grid,
+  .ad-monthly-values {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-dashboard-grid {
+    grid-template-areas:
+      "overview"
+      "actions"
+      "contributors"
+      "savings"
+      "recent"
+      "monthly";
+    gap: 12px;
+  }
+
+  .ad-overview,
+  .ad-list-panel,
+  .ad-recent,
+  .ad-monthly-summary,
+  .ad-savings-grid {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .ad-summary-grid {
+    gap: 12px;
+  }
+
+  .ad-summary-card {
+    min-height: 92px;
+    padding: 14px;
+  }
+
+  .ad-icon,
+  .ad-action-icon {
+    height: 46px;
+    width: 46px;
+  }
+
+  .ad-icon svg,
+  .ad-action-icon svg {
+    font-size: 22px;
+  }
+
+  .ad-panel {
+    padding: 14px;
+  }
+
+  .ad-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-action-card {
+    min-height: 112px;
+    padding: 14px;
+  }
+
+  .ad-saving-card,
+  .ad-saving-card:first-child,
+  .ad-saving-card:last-child {
+    border-radius: 8px;
+  }
+
+  .ad-chart-wrap {
+    height: 220px;
+  }
+
+  .ad-chart-labels span {
+    font-size: 11px;
+  }
+
+  .ad-ranked-list,
+  .ad-transaction-list {
+    max-height: 260px;
+  }
+
+  .ad-ranked-row {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+  }
+
+  .ad-transaction-row {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+  }
+
+  .ad-summary-card strong,
+  .ad-monthly-values strong {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1270px) {
+  #accounts {
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: 0 12px;
+    width: 100%;
+  }
+
+  .ad-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ad-dashboard-grid {
+    grid-template-areas:
+      "overview overview"
+      "actions contributors"
+      "savings savings"
+      "recent recent"
+      "monthly monthly";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ad-savings-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ad-monthly-values {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  #accounts {
+    padding: 0 8px;
+  }
+
+  .ad-summary-card {
+    align-items: flex-start;
+  }
+
+  .ad-summary-card strong,
+  .ad-saving-card strong,
+  .ad-monthly-values strong {
+    font-size: 18px;
+    overflow-wrap: anywhere;
+  }
+
+  .ad-action-grid,
+  .ad-savings-grid,
+  .ad-monthly-values {
+    gap: 10px;
+  }
+
+  .ad-monthly-values {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ad-chart-labels span:nth-child(even) {
+    display: none;
   }
 }

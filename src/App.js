@@ -2,7 +2,7 @@ import { RoundaboutLeftSharp } from "@mui/icons-material";
 import Home from "./MainLayout/Home/Home";
 import Mission from "./MainLayout/Abouts_us/OurMission/Mission";
 import Program from "./MainLayout/Programs/Program";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import About from "./MainLayout/Abouts_us/About_Us/About";
 import Team from "./MainLayout/Abouts_us/Our_Team/Team";
 import Belief from "./MainLayout/Abouts_us/Our_Belief/Belief";
@@ -49,7 +49,8 @@ function App() {
         <Route path="/recent-work" element={<RecentWorkPage />} />
         <Route path="/sign-in" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminHome />} />
+        <Route path="/admin" element={<Navigate to="/accounts" replace />} />
+        <Route path="/members" element={<AdminHome />} />
         <Route path="/visitors" element={<Visitors />} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/profile" element={<Profile />} />
