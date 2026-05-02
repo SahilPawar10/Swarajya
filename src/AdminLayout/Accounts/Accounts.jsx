@@ -146,6 +146,13 @@ const formatCompactCurrency = (amount) =>
     maximumFractionDigits: 0,
   }).format(Number(amount || 0));
 
+const formatFundingPercent = (part, total) => {
+  const totalAmount = Number(total || 0);
+  if (!totalAmount) return "0%";
+
+  return `${Math.round((Number(part || 0) / totalAmount) * 100)}%`;
+};
+
 const getInitials = (name = "") =>
   name
     .split(" ")
@@ -158,6 +165,107 @@ const getInitials = (name = "") =>
 const getContributionName = (record) =>
   `${record?.user?.firstName || ""} ${record?.user?.lastName || ""}`.trim() ||
   "Member";
+
+const loanRulesReport = [
+  {
+    title: "Loan Funding Rules",
+    items: [
+      "When a loan is given, money is first taken from the group available balance.",
+      "If group balance is not enough, the remaining loan amount is taken from users' personal savings.",
+      "Personal savings contribution is divided by users' currentShare and limited by each user's available savings.",
+      "Any personal savings used for a loan becomes locked until that loan is paid.",
+      "Users cannot withdraw locked savings.",
+      "When the loan is paid, interest is distributed based on the loan funding source.",
+    ],
+  },
+  {
+    title: "Case 1: Full Loan From Group",
+    items: [
+      "Loan: 10000. Group balance: 15000.",
+      "Group gives 10000 and personal savings gives 0.",
+      "If interest earned is 1000, the full 1000 goes through the old group interest sharing logic.",
+      "Users get interest as per the previous eligible-user/share logic.",
+    ],
+  },
+  {
+    title: "Case 2: Full Loan From Personal Savings",
+    items: [
+      "Loan: 10000. Group balance: 0.",
+      "User A savings 5000, share 1. User B savings 7000, share 1.",
+      "Group gives 0. Personal savings needed is 10000.",
+      "User A gives 5000 and User B gives 5000. Both amounts stay locked until repayment.",
+      "If interest earned is 1000, savings users get 70% (700) and group gets 30% (300).",
+      "User A funded 5000 of 10000 and gets 350. User B funded 5000 of 10000 and gets 350.",
+      "The group interest of 300 stays with group available balance through loan repayment.",
+    ],
+  },
+  {
+    title: "Case 3: Mixed Group + Personal Savings",
+    items: [
+      "Loan: 10000. Group balance: 3000.",
+      "User A savings 5000, share 1. User B savings 7000, share 1.",
+      "Group gives 3000. Personal savings needed is 7000.",
+      "User A gives 3500 and User B gives 3500. Both amounts stay locked until repayment.",
+      "If interest earned is 1000, group portion is 300 and personal savings portion is 700.",
+      "Group interest of 300 is distributed using the previous group interest sharing logic.",
+      "User A funded 3500 of 7000 and gets 350. User B funded 3500 of 7000 and gets 350.",
+    ],
+  },
+  {
+    title: "Case 4: Mixed 50-50",
+    items: [
+      "Loan: 10000. Group balance: 5000.",
+      "User A savings 5000, share 1. User B savings 7000, share 1.",
+      "Group gives 5000. Personal savings needed is 5000.",
+      "User A gives 2500 and User B gives 2500.",
+      "If interest earned is 1000, group portion is 500 and personal savings portion is 500.",
+      "Group interest of 500 is distributed using the previous group interest sharing logic.",
+      "User A gets 250 and User B gets 250.",
+    ],
+  },
+  {
+    title: "Case 5: Personal Savings Divided By Different Shares",
+    items: [
+      "Loan: 10000. Group balance: 3000. Personal savings needed: 7000.",
+      "User A savings 10000, share 2. User B savings 10000, share 1.",
+      "User A gives 4666.67 and User B gives 2333.33.",
+      "If interest earned is 1000, group interest is 300 and personal savings interest is 700.",
+      "Group interest uses the old group sharing logic.",
+      "User A gets about 466.67 and User B gets about 233.33.",
+    ],
+  },
+  {
+    title: "Case 6: User Has Less Savings Than Share Amount",
+    items: [
+      "Loan: 10000. Group balance: 0.",
+      "User A savings 3000, share 2. User B savings 10000, share 1.",
+      "By share, User A should give 6666.67, but only has 3000.",
+      "User A gives 3000 and the remaining amount is taken from User B.",
+      "User B gives 7000.",
+      "If interest earned is 1000, savings users get 70% (700) and group gets 30% (300).",
+      "User A funded 3000 of 10000 and gets 210. User B funded 7000 of 10000 and gets 490.",
+    ],
+  },
+  {
+    title: "Withdrawal Rule",
+    items: [
+      "If User A has personal savings of 5000 and 3500 is used for a loan, total savings balance is 5000.",
+      "Locked amount is 3500 and available withdrawal is 1500.",
+      "Until the loan is paid, User A can withdraw only 1500.",
+      "After the loan is paid, the locked amount becomes free.",
+      "The user can withdraw again based on the updated available balance.",
+    ],
+  },
+];
+
+const getLoanRulesRows = () =>
+  loanRulesReport.flatMap((section) =>
+    section.items.map((rule, index) => ({
+      Section: section.title,
+      SrNo: index + 1,
+      Rule: rule,
+    }))
+  );
 
 const getEntryDate = (date) => {
   const value = String(date || "").trim();
@@ -728,7 +836,7 @@ function Accounts() {
         console.log(err, "err");
         setSnack({
           open: true,
-          message: "something went wrong",
+          message: err?.response?.data?.message || "something went wrong",
           severity: "error",
         });
       });
@@ -997,7 +1105,7 @@ function Accounts() {
         // setMessage(err.response.data.message);
         setSnack({
           open: true,
-          message: "something went wrong",
+          message: err?.response?.data?.message || "something went wrong",
           severity: "error",
         });
         handleLoanApptClose();
@@ -1161,6 +1269,10 @@ function Accounts() {
     }));
 
     exportDataDownload(rows, "recent-transactions.xlsx");
+  };
+
+  const downloadLoanRulesReport = () => {
+    exportDataDownload(getLoanRulesRows(), "loan-and-installment-rules.xlsx");
   };
 
   const handleExcelUpload = (files) => {
@@ -1437,7 +1549,7 @@ function Accounts() {
       label: "View Details",
       tone: "violet",
       icon: <DescriptionIcon />,
-      onClick: () => setValue(1),
+      onClick: () => setValue(6),
       visible: true,
     },
   ].filter((item) => item.visible);
@@ -1463,7 +1575,8 @@ function Accounts() {
             <Tab label="Monthly" {...a11yProps(4)} />
             <Tab label="Installments" {...a11yProps(5)} />
             <Tab label="Active Loan" {...a11yProps(6)} />
-            {role !== "user" && <Tab label="Widrawals" {...a11yProps(7)} />}
+            <Tab label="Reports" {...a11yProps(7)} />
+            {role !== "user" && <Tab label="Widrawals" {...a11yProps(8)} />}
           </Tabs>
         </Box>
         {/* DashBoard */}
@@ -2006,6 +2119,8 @@ function Accounts() {
                       <th>Loan Amount</th>
                       <th>Min Paybale</th>
                       <th>EMI</th>
+                      <th>Group Fund</th>
+                      <th>Savings Fund</th>
                       <th>Total Paybale</th>
                       <th>Total Paid</th>
                       <th>remains</th>
@@ -2027,6 +2142,21 @@ function Accounts() {
                         </td>
                         <td>{c?.minRequiredPay || "-"}</td>
                         <td>{c?.emi || "-"}</td>
+                        <td>
+                          {formatCurrency(c?.groupFundAmount)}
+                          <small className="funding-percent">
+                            {formatFundingPercent(c?.groupFundAmount, c?.loanAmount)}
+                          </small>
+                        </td>
+                        <td>
+                          {formatCurrency(c?.personalSavingsFundAmount)}
+                          <small className="funding-percent">
+                            {formatFundingPercent(
+                              c?.personalSavingsFundAmount,
+                              c?.loanAmount
+                            )}
+                          </small>
+                        </td>
                         <td>{c?.totalPaybale}</td>
                         <td className="bold-score">{c?.totalPaid || "-"}</td>
                         <td>{c?.totalRemaining || "-"}</td>
@@ -2056,8 +2186,44 @@ function Accounts() {
             </div>
           )}
         </CustomTabPanel>
-        {/* Approval Tab */}
+        {/* Rules Report */}
         <CustomTabPanel value={value} index={6}>
+          <div className="rules-report">
+            <div className="rules-report-header">
+              <div>
+                <span>Reports</span>
+                <h2>Loan and Installment Rules</h2>
+                <p>
+                  These rules explain how loans are funded, how savings are
+                  locked, how installment repayment affects locked savings, and
+                  how interest is distributed after repayment.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="btn-loan approve"
+                onClick={downloadLoanRulesReport}
+              >
+                Download Rules
+              </button>
+            </div>
+
+            <div className="rules-report-grid">
+              {loanRulesReport.map((section) => (
+                <section className="rules-report-card" key={section.title}>
+                  <h3>{section.title}</h3>
+                  <ol>
+                    {section.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ol>
+                </section>
+              ))}
+            </div>
+          </div>
+        </CustomTabPanel>
+        {/* Approval Tab */}
+        <CustomTabPanel value={value} index={7}>
           <div className="account-credits">
             <div className="account-credits-table-container">
               <table className="client-table">
@@ -2106,7 +2272,7 @@ function Accounts() {
           </div>
         </CustomTabPanel>
         {/* old Dashboard */}
-        <CustomTabPanel value={value} index={7}>
+        <CustomTabPanel value={value} index={8}>
           <div className="about-container">
             <p>
               We believe in being transparent about our financials. As a

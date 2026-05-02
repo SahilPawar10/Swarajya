@@ -66,10 +66,19 @@ function NewProfilePage() {
       {
         title: "Loans",
         rows:
-          accountsData.data.loans?.map((item) => ({
-            label: item.date,
-            value: formatCurrency(item.loanAmount),
-          })) || [],
+          accountsData.data.loans?.map((item) => {
+            const hasPersonalSavingsFund =
+              Number(item.personalSavingsFundAmount || 0) > 0;
+
+            return {
+              label: item.date,
+              value: hasPersonalSavingsFund
+                ? `${formatCurrency(item.loanAmount)} | Group ${formatCurrency(
+                    item.groupFundAmount
+                  )} | Savings ${formatCurrency(item.personalSavingsFundAmount)}`
+                : formatCurrency(item.loanAmount),
+            };
+          }) || [],
       },
       {
         title: "Installments",
@@ -157,17 +166,21 @@ function NewProfilePage() {
   const handleSavingsSubmit = async () => {
     if (!activeUserId || !savingsForm.amount) return;
 
-    await createSavingsLedgerEntry({
-      userId: activeUserId,
-      amount: savingsForm.amount,
-      transactionType: savingsTransactionType,
-      desc: savingsForm.desc,
-      date: savingsForm.date || getToday(),
-    });
+    try {
+      await createSavingsLedgerEntry({
+        userId: activeUserId,
+        amount: savingsForm.amount,
+        transactionType: savingsTransactionType,
+        desc: savingsForm.desc,
+        date: savingsForm.date || getToday(),
+      });
 
-    closeSavingsModal();
-    dispatch(getUserAccountsDetails(activeUserId));
-    dispatch(getUserSavingsData(activeUserId));
+      closeSavingsModal();
+      dispatch(getUserAccountsDetails(activeUserId));
+      dispatch(getUserSavingsData(activeUserId));
+    } catch (err) {
+      alert(err?.response?.data?.message || "Unable to save savings entry");
+    }
   };
 
   const handleDownloadStatement = async () => {
@@ -277,6 +290,18 @@ function NewProfilePage() {
               <Info
                 label="Personal Savings Balance"
                 value={formatCurrency(savingsSummary.balance)}
+              />
+              <Info
+                label="Locked In Active Loans"
+                value={formatCurrency(savingsSummary.lockedAmount)}
+              />
+              <Info
+                label="Available To Withdraw"
+                value={formatCurrency(
+                  typeof savingsSummary.availableBalance === "number"
+                    ? savingsSummary.availableBalance
+                    : savingsSummary.balance
+                )}
               />
               <Info
                 label="Savings Deposits"
