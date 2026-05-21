@@ -17,10 +17,10 @@ Dashboard.css
 .ad-summary-card,
 .ad-panel,
 .ad-saving-card {
-  background: #ffffff;
-  border: 1px solid #e9eef6;
   border-radius: 8px;
-  box-shadow: 0 10px 28px rgba(33, 45, 74, 0.08);
+  min-height: 104px;
+  min-width: 0;
+  padding: 12px 14px;
 }
 
 .ad-summary-card {
@@ -108,8 +108,7 @@ Dashboard.css
   display: grid;
   grid-template-areas:
     "overview actions contributors"
-    "savings savings recent"
-    "monthly monthly recent";
+    "combined combined recent";
   grid-template-columns: minmax(360px, 1.35fr) minmax(280px, 0.8fr) minmax(280px, 0.9fr);
   gap: 16px;
 }
@@ -571,40 +570,99 @@ Dashboard.css
 
 .ad-savings-grid {
   display: grid;
+  gap: 10px;
   grid-area: savings;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .ad-saving-card {
-  border-radius: 0;
-  min-height: 132px;
-  padding: 18px;
-}
-
-.ad-saving-card:first-child {
-  border-bottom-left-radius: 8px;
-  border-top-left-radius: 8px;
-}
-
-.ad-saving-card:last-child {
-  border-bottom-right-radius: 8px;
-  border-top-right-radius: 8px;
+  border-radius: 8px;
+  min-height: 104px;
+  min-width: 0;
+  padding: 12px 14px;
 }
 
 .ad-saving-card .ad-icon {
-  height: 42px;
-  margin-bottom: 10px;
-  width: 42px;
+  height: 34px;
+  margin-bottom: 8px;
+  width: 34px;
 }
 
 .ad-saving-card .ad-icon svg {
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .ad-saving-card strong {
-  font-size: 22px;
+  font-size: 18px;
+  overflow-wrap: anywhere;
 }
 
+
+.ad-combined-summary {
+  align-self: start;
+  grid-area: combined;
+  padding: 14px;
+}
+
+.ad-summary-columns {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.ad-summary-section {
+  min-width: 0;
+}
+
+.ad-summary-section h4 {
+  color: #475467;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.ad-compact-values {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ad-mini-stat {
+  background: #ffffff;
+  border: 1px solid #e9eef6;
+  border-left: 4px solid #cbd5e1;
+  border-radius: 8px;
+  min-height: 82px;
+  min-width: 0;
+  padding: 12px 12px;
+}
+
+.ad-compact-values span,
+.ad-compact-values small {
+  color: #667085;
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.ad-compact-values strong {
+  color: #101828;
+  display: block;
+  font-size: 20px;
+  line-height: 1.15;
+  margin: 6px 0 2px;
+  overflow-wrap: anywhere;
+}
+
+.ad-mini-green { border-left-color: #16a34a; }
+.ad-mini-blue { border-left-color: #3b82f6; }
+.ad-mini-amber { border-left-color: #f59e0b; }
+.ad-mini-orange { border-left-color: #f97316; }
+.ad-mini-rose { border-left-color: #f43f5e; }
+.ad-mini-violet { border-left-color: #8b5cf6; }
 .ad-recent {
   grid-area: recent;
 }
@@ -1240,151 +1298,6 @@ Dashboard.css
 
 /* Mobile */
 @media (max-width: 768px) {
-  .user-account .accounts-container {
-    flex-direction: column; /* 👈 KEY FIX */
-    overflow-x: hidden; /* no horizontal scroll */
-    overflow-y: auto;
-  }
-  .user-account .account-card {
-    min-width: 220px;
-    max-height: 280px; /* 👈 allow internal scroll */
-
-    height: 280px;
-  }
-}
-
-@media (min-width: 320px) and (max-width: 480px) {
-  #accounts {
-    width: 390px;
-  }
-  .account-main-content {
-    display: grid;
-    /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
-    /* gap: 20px; */
-    /* align-items: start; */
-  }
-  .accounts-buttons-admin {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-  .accounts-buttons-operator {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-  .account-credits-table-container {
-    padding: 0;
-  }
-  .tab-buttons-monthly {
-    display: flex;
-    /* justify-content: space-between; */
-    overflow-y: auto;
-    margin-right: 2px;
-    margin-left: 2px;
-  }
-  .button-group-loan {
-    display: flex;
-    gap: 8px;
-    margin-left: 10px;
-  }
-  .css-heg063-MuiTabs-flexContainer {
-    overflow: auto;
-  }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  #accounts {
-    width: 400px; /* Use full width for better fluid layout */
-    padding: 0 10px;
-  }
-
-  .account-main-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 16px;
-    align-items: start;
-  }
-
-  .accounts-buttons-admin,
-  .accounts-buttons-operator {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two buttons per row */
-    gap: 10px;
-  }
-
-  .account-credits-table-container {
-    padding: 10px;
-    overflow-x: auto; /* Enable horizontal scroll if table overflows */
-  }
-
-  .tab-buttons-monthly {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px;
-  }
-
-  .button-group-loan {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-left: 15px;
-  }
-
-  .css-heg063-MuiTabs-flexContainer {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1270px) {
-  #accounts {
-    width: 600px; /* Use full width for better fluid layout */
-    padding: 0 10px;
-    overflow: auto;
-  }
-
-  .account-main-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 16px;
-    align-items: start;
-  }
-
-  .accounts-buttons-admin,
-  .accounts-buttons-operator {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two buttons per row */
-    gap: 10px;
-  }
-
-  .account-credits-table-container {
-    /* padding: 10px; */
-    overflow-x: auto; /* Enable horizontal scroll if table overflows */
-  }
-
-  .tab-buttons-monthly {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px;
-  }
-
-  .button-group-loan {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-left: 15px;
-  }
-
-  .css-heg063-MuiTabs-flexContainer {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-  }
-}
-
-@media (max-width: 768px) {
   #accounts {
     box-sizing: border-box;
     max-width: 100%;
@@ -1401,46 +1314,29 @@ Dashboard.css
     overflow-x: auto !important;
   }
 
-  .account-dashboard-v2 {
-    padding: 0;
-  }
-
+  .account-dashboard-v2,
   .rules-report {
     padding: 0;
-  }
-
-  .rules-report-header {
-    flex-direction: column;
-    padding: 16px;
-  }
-
-  .rules-report-header .btn-loan {
-    width: 100%;
-  }
-
-  .rules-report-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .rules-report-card {
-    padding: 16px;
   }
 
   .ad-summary-grid,
   .ad-dashboard-grid,
   .ad-savings-grid,
-  .ad-monthly-values {
-    grid-template-columns: 1fr;
-  }
+  .ad-monthly-values,
+  .ad-summary-columns,
+  .ad-compact-values {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 
   .ad-dashboard-grid {
     grid-template-areas:
       "overview"
       "actions"
       "contributors"
-      "savings"
-      "recent"
-      "monthly";
+      "combined"
+      "recent";
     gap: 12px;
   }
 
@@ -1448,29 +1344,15 @@ Dashboard.css
   .ad-list-panel,
   .ad-recent,
   .ad-monthly-summary,
-  .ad-savings-grid {
+  .ad-savings-grid,
+  .ad-combined-summary {
     grid-column: auto;
     grid-row: auto;
-  }
-
-  .ad-summary-grid {
-    gap: 12px;
   }
 
   .ad-summary-card {
     min-height: 92px;
     padding: 14px;
-  }
-
-  .ad-icon,
-  .ad-action-icon {
-    height: 46px;
-    width: 46px;
-  }
-
-  .ad-icon svg,
-  .ad-action-icon svg {
-    font-size: 22px;
   }
 
   .ad-panel {
@@ -1481,23 +1363,8 @@ Dashboard.css
     grid-template-columns: 1fr;
   }
 
-  .ad-action-card {
-    min-height: 112px;
-    padding: 14px;
-  }
-
-  .ad-saving-card,
-  .ad-saving-card:first-child,
-  .ad-saving-card:last-child {
-    border-radius: 8px;
-  }
-
   .ad-chart-wrap {
     height: 220px;
-  }
-
-  .ad-chart-labels span {
-    font-size: 11px;
   }
 
   .ad-ranked-list,
@@ -1505,20 +1372,12 @@ Dashboard.css
     max-height: 260px;
   }
 
-  .ad-ranked-row {
-    grid-template-columns: 30px minmax(0, 1fr) auto;
-  }
-
-  .ad-transaction-row {
-    grid-template-columns: 34px minmax(0, 1fr) auto;
-  }
-
   .ad-summary-card strong,
+  .ad-compact-values strong,
   .ad-monthly-values strong {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
-
 @media (min-width: 769px) and (max-width: 1270px) {
   #accounts {
     box-sizing: border-box;
@@ -1536,9 +1395,8 @@ Dashboard.css
     grid-template-areas:
       "overview overview"
       "actions contributors"
-      "savings savings"
-      "recent recent"
-      "monthly monthly";
+      "combined combined"
+      "recent recent";
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1546,9 +1404,11 @@ Dashboard.css
     grid-template-columns: 1fr;
   }
 
-  .ad-savings-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  .ad-summary-columns {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
 
   .ad-monthly-values {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1593,3 +1453,15 @@ Dashboard.css
     font-size: 13px;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
