@@ -113,6 +113,18 @@ function NewProfilePage() {
           })) || [],
       },
       {
+        title: "Locked Savings",
+        showWhenEmpty: true,
+        emptyMessage: "No savings locked in active loans",
+        rows:
+          accountsData.data.savings?.lockedLoans?.map((item) => ({
+            label: `${item?.date || "-"} ${item?.borrowerName || "Loan"}`,
+            value: `${formatCurrency(item?.lockedAmount)} locked in ${formatCurrency(
+              item?.loanAmount,
+            )}`,
+          })) || [],
+      },
+      {
         title: "Savings Debits",
         rows:
           accountsData.data.savings?.debits?.map((item) => ({
@@ -381,3 +393,4 @@ function Info({ label, value }) {
 }
 
 export default LayoutAdmin(NewProfilePage, "NewProfile");
+

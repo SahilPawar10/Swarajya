@@ -141,10 +141,6 @@ const formatCurrency = (amount) =>
     maximumFractionDigits: 0,
   }).format(Number(amount || 0));
 
-const formatCompactCurrency = (amount) =>
-  new Intl.NumberFormat("en-IN", {
-    maximumFractionDigits: 0,
-  }).format(Number(amount || 0));
 
 const formatFundingPercent = (part, total) => {
   const totalAmount = Number(total || 0);
@@ -673,7 +669,6 @@ function Accounts() {
   const [loanForm, setLoanForm] = React.useState();
   const [installmentForm, setInstallmentForm] = React.useState();
   const [savingsForm, setSavingsForm] = React.useState();
-  const [yourContribution, setYourContribution] = useState([]);
 
   // const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
@@ -1413,13 +1408,6 @@ function Accounts() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (userId && contribution?.length > 0) {
-      const filtered = contribution.filter((item) => item.user._id === userId);
-      setYourContribution(filtered);
-    }
-  }, [userId, contribution]);
-
-  useEffect(() => {
     if (dashReport?.yearlyOverview) {
       setOverviewData(dashReport.yearlyOverview.data || []);
       setOverviewYear(dashReport.yearlyOverview.year || dayjs().year());
@@ -1448,57 +1436,78 @@ function Accounts() {
     creditsData,
     debitsData,
   );
-  const monthlySummary = dashReport?.monthlySummary || {};
-  const userContributionTotal = yourContribution[0]?.totalAmount || 0;
+  const totalLoanouts = dashReport?.totalLoanouts ?? dashReport?.totalLoanuts ?? 0;
+  const currentActiveLoanouts = dashReport?.currentActiveLoanouts ?? 0;
+  const upcomingLoanMoney = dashReport?.upcomingLoanMoney ?? dashReport?.upcomingLoanAmount ?? 0;
+  const personalSavingsBalance =
+    dashReport?.personalSavingBalance ?? dashReport?.personalSavingsBalance ?? 0;
+  const personalSavingsAvailableBalance =
+    dashReport?.personalSavingAvailableBalance ??
+    dashReport?.currentPersonalSavingBalance ??
+    personalSavingsBalance;
+  const personalSavingsLockedAmount =
+    dashReport?.personalSavingLockedAmount ?? dashReport?.personalSavingsLockedAmount ?? 0;
+  const personalSavingsDeposits =
+    dashReport?.personalSavingDeposits ?? dashReport?.personalSavingsDeposits ?? 0;
+  const personalSavingsDebits =
+    dashReport?.personalSavingDebits ?? dashReport?.personalSavingsDebits ?? 0;
+
   const summaryCards = [
     {
-      title: "Available Balance",
-      value: dashReport?.totalBalance,
-      note: "Available to use",
+      title: "Current Active Balance",
+      value: dashReport?.currentBalance ?? dashReport?.totalBalance,
+      note: "Group + available savings",
       tone: "green",
       icon: <AccountBalanceWalletIcon />,
     },
     {
-      title: "Total Credits",
-      value: dashReport?.overAllCredits,
-      note: "Overall credits",
+      title: "Group Balance",
+      value: dashReport?.groupBalance,
+      note: "Available group fund",
       tone: "amber",
       icon: <ArrowOutwardIcon />,
     },
     {
-      title: "Total Debits",
-      value: dashReport?.overAllDebits,
-      note: "Overall debits",
-      tone: "rose",
-      icon: <CloseIcon />,
+      title: "Savings Balance",
+      value: personalSavingsAvailableBalance,
+      note: "Available personal savings",
+      tone: "blue",
+      icon: <SavingsIcon />,
     },
     {
-      title: "Total Loanouts",
-      value: dashReport?.totalLoanuts,
-      note: "Total loan given",
+      title: "Upcoming Loan Money",
+      value: upcomingLoanMoney,
+      note: "Total remaining payable",
       tone: "violet",
       icon: <SavingsIcon />,
     },
   ];
   const savingsCards = [
     {
-      title: "Personal Savings Balance",
-      value: dashReport?.personalSavingBalance,
-      note: "Total Balance",
+      title: "Personal Savings",
+      value: personalSavingsBalance,
+      note: "Gross balance",
       tone: "green",
       icon: <SavingsIcon />,
     },
     {
-      title: "Personal Savings Deposits",
-      value: dashReport?.personalSavingDeposits,
-      note: "Total Deposits",
+      title: "Personal Deposits",
+      value: personalSavingsDeposits,
+      note: "Total deposits",
       tone: "blue",
       icon: <AccountBalanceWalletIcon />,
     },
     {
-      title: "Personal Savings Debits",
-      value: dashReport?.personalSavingDebits,
-      note: "Total Debits",
+      title: "Savings Locked",
+      value: personalSavingsLockedAmount,
+      note: "Used in active loans",
+      tone: "amber",
+      icon: <CloseIcon />,
+    },
+    {
+      title: "Personal Debits",
+      value: personalSavingsDebits,
+      note: "Total debits",
       tone: "orange",
       icon: <CreditCardIcon />,
     },
@@ -1652,16 +1661,50 @@ function Accounts() {
                   })}
                 </div>
               </div>
+              <div className="ad-panel ad-combined-summary">
+                <div className="ad-panel-header">
+                  <h3>Account Summary</h3>
+                  <button type="button" onClick={() => setValue(5)}>
+                    View Loans
+                  </button>
+                </div>
 
-              <div className="ad-savings-grid">
-                {savingsCards.map((card) => (
-                  <div className="ad-saving-card" key={card.title}>
-                    <div className={`ad-icon ad-${card.tone}`}>{card.icon}</div>
-                    <p>{card.title}</p>
-                    <strong>{formatCurrency(card.value)}</strong>
-                    <span>{card.note}</span>
+                <div className="ad-summary-columns">
+                  <div className="ad-summary-section">
+                    <h4>Overall</h4>
+                    <div className="ad-compact-values">
+                      <div className="ad-mini-stat ad-mini-green">
+                        <span>Total Credits</span>
+                        <strong>{formatCurrency(dashReport?.overAllCredits)}</strong>
+                      </div>
+                      <div className="ad-mini-stat ad-mini-rose">
+                        <span>Total Debits</span>
+                        <strong>{formatCurrency(dashReport?.overAllDebits)}</strong>
+                      </div>
+                      <div className="ad-mini-stat ad-mini-violet">
+                        <span>Total Loanouts</span>
+                        <strong>{formatCurrency(totalLoanouts)}</strong>
+                      </div>
+                      <div className="ad-mini-stat ad-mini-blue">
+                        <span>Active Loanouts</span>
+                        <strong>{formatCurrency(currentActiveLoanouts)}</strong>
+                      </div>
+                    </div>
                   </div>
-                ))}
+
+                  <div className="ad-summary-section">
+                    <h4>Personal Account</h4>
+                    <div className="ad-compact-values ad-personal-values">
+                      {savingsCards.map((card) => (
+                        <div className={`ad-mini-stat ad-mini-${card.tone}`} key={card.title}>
+                          <span>{card.title}</span>
+                          <strong>{formatCurrency(card.value)}</strong>
+                          <small>{card.note}</small>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="ad-panel ad-list-panel ad-recent">
@@ -1700,52 +1743,6 @@ function Accounts() {
                       </div>
                     );
                   })}
-                </div>
-              </div>
-
-              <div className="ad-panel ad-monthly-summary">
-                <div className="ad-panel-header">
-                  <h3>Monthly Summary</h3>
-                </div>
-                <div className="ad-monthly-values">
-                  <div>
-                    <span>Total Credits</span>
-                    <strong>
-                      {formatCurrency(monthlySummary.totalCredits)}
-                    </strong>
-                    <small>
-                      {monthlySummary.month || dayjs().format("MMM")}
-                    </small>
-                  </div>
-                  <div>
-                    <span>Total Debits</span>
-                    <strong>
-                      {formatCurrency(monthlySummary.totalDebits)}
-                    </strong>
-                    <small>{monthlySummary.year || dayjs().year()}</small>
-                  </div>
-                  <div>
-                    <span>Net Balance</span>
-                    <strong>{formatCurrency(monthlySummary.netBalance)}</strong>
-                    <small
-                      className={
-                        Number(monthlySummary.netBalance || 0) >= 0
-                          ? "positive"
-                          : "negative"
-                      }
-                    >
-                      {formatCompactCurrency(userContributionTotal)} personal
-                    </small>
-                  </div>
-                  <div>
-                    <span>Active Loanouts</span>
-                    <strong>
-                      {formatCurrency(monthlySummary.totalLoanouts)}
-                    </strong>
-                    <button type="button" onClick={() => setValue(5)}>
-                      View Details
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -2338,7 +2335,7 @@ function Accounts() {
                     <a href="#">Expense 2023</a>
                   </div>
                 </div>
-              </div>
+            </div>
             </div>
           </div>
         </CustomTabPanel>
@@ -3049,3 +3046,24 @@ function Accounts() {
 }
 
 export default LayoutAdmin(Accounts, "account");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
