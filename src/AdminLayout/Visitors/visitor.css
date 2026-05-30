@@ -35,6 +35,38 @@
   background-color: #f1f1f1;
 }
 
+.visitor-message {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid #b7d7ff;
+  border-radius: 4px;
+  background-color: #eef6ff;
+  color: #174a7c;
+  font-size: 14px;
+}
+
+.visitor-status {
+  display: inline-block;
+  min-width: 80px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #fff4d6;
+  color: #845300;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.visitor-status.approved {
+  background-color: #e8f5ec;
+  color: #1f7a3b;
+}
+
+.visitor-status.rejected {
+  background-color: #fde7e9;
+  color: #ad1f2b;
+}
+
 /* Action Buttons */
 .visitor-table button {
   margin-right: 5px;
@@ -44,13 +76,20 @@
   cursor: pointer;
 }
 
-.visitor-table button:first-child {
+.visitor-table button:first-child,
+.visitor-table .visitor-approve-button {
   background-color: #28a745;
   color: white;
 }
 
-.visitor-table button:first-child:hover {
+.visitor-table button:first-child:hover,
+.visitor-table .visitor-approve-button:hover {
   background-color: #218838;
+}
+
+.visitor-table button:disabled {
+  background-color: #8ba892;
+  cursor: not-allowed;
 }
 
 .visitor-table button:last-child {
@@ -60,6 +99,22 @@
 
 .visitor-table button:last-child:hover {
   background-color: #c82333;
+}
+
+.visitor-table .visitor-approve-button,
+.visitor-table .visitor-approve-button:last-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.visitor-table .visitor-approve-button:hover,
+.visitor-table .visitor-approve-button:last-child:hover {
+  background-color: #218838;
+}
+
+.visitor-table .visitor-approve-button:disabled,
+.visitor-table .visitor-approve-button:disabled:hover {
+  background-color: #8ba892;
 }
 
 .visitor-table img {

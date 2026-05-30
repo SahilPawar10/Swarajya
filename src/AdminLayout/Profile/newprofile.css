@@ -74,9 +74,10 @@
 .header-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
   justify-content: flex-end;
+  min-width: 0;
 }
 
 .user-select {
@@ -87,6 +88,7 @@
 }
 .card-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 14px;
@@ -96,6 +98,30 @@
 .card-header h3 {
   margin: 0;
   font-size: 16px;
+}
+
+.profile-action-group {
+  align-items: center;
+  border-left: 1px solid #e5e7eb;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-left: 10px;
+}
+
+.profile-action-group:first-of-type {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.profile-message {
+  background: #eef6ff;
+  border: 1px solid #b7d7ff;
+  border-radius: 6px;
+  color: #174a7c;
+  flex-basis: 100%;
+  font-size: 14px;
+  padding: 9px 12px;
 }
 
 /* Edit Button */
@@ -126,6 +152,10 @@
 
 .edit-btn.statement-btn {
   background: #2563eb;
+}
+
+.edit-btn.reset-password-btn {
+  background: #7c3aed;
 }
 
 .edit-btn:disabled {
@@ -256,6 +286,11 @@
     justify-content: flex-start;
     width: 100%;
   }
+
+  .profile-action-group {
+    border-left: 0;
+    padding-left: 0;
+  }
 }
 
 @media (max-width: 600px) {
@@ -282,7 +317,7 @@
 
   .header-actions {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 8px;
   }
 
@@ -295,6 +330,17 @@
   .edit-btn {
     padding: 8px 10px;
     width: 100%;
+  }
+
+  .profile-action-group {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .admin-actions {
+    grid-template-columns: 1fr;
   }
 
   #newprofile .user-account .accounts-container {

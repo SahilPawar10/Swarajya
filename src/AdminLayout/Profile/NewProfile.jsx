@@ -12,6 +12,7 @@ import WithdrawModal from "../Accounts/WithdrawModal ";
 import {
   createSavingsLedgerEntry,
   downloadUserAccountStatement,
+  resetUserPassword,
 } from "../../api/apiService";
 
 const formatCurrency = (amount) =>
@@ -32,9 +33,16 @@ const getToday = () => {
 function NewProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savingsModal, setSavingsModal] = useState(false);
-  const [savingsTransactionType, setSavingsTransactionType] = useState("credit");
+  const [savingsTransactionType, setSavingsTransactionType] =
+    useState("credit");
   const [savingsForm, setSavingsForm] = useState({});
   const [selectedUserId, setSelectedUserId] = useState("");
+  const [resetPasswordModal, setResetPasswordModal] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+  const [profileMessage, setProfileMessage] = useState("");
 
   const dispatch = useDispatch();
 
@@ -74,7 +82,7 @@ function NewProfilePage() {
               label: item.date,
               value: hasPersonalSavingsFund
                 ? `${formatCurrency(item.loanAmount)} | Group ${formatCurrency(
-                    item.groupFundAmount
+                    item.groupFundAmount,
                   )} | Savings ${formatCurrency(item.personalSavingsFundAmount)}`
                 : formatCurrency(item.loanAmount),
             };
@@ -167,6 +175,11 @@ function NewProfilePage() {
     setSavingsForm({});
   };
 
+  const closeResetPasswordModal = () => {
+    setResetPasswordModal(false);
+    setPasswordForm({ password: "", confirmPassword: "" });
+  };
+
   const handleSavingsFormChange = (event) => {
     const { name, value } = event.target;
     setSavingsForm((prev) => ({
@@ -192,6 +205,46 @@ function NewProfilePage() {
       dispatch(getUserSavingsData(activeUserId));
     } catch (err) {
       alert(err?.response?.data?.message || "Unable to save savings entry");
+    }
+  };
+
+  const handlePasswordChange = (event) => {
+    const { name, value } = event.target;
+    setPasswordForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleResetPasswordSubmit = async () => {
+    if (!activeUserId) return;
+
+    if (passwordForm.password !== passwordForm.confirmPassword) {
+      setProfileMessage("Password and confirm password do not match");
+      return;
+    }
+
+    if (
+      passwordForm.password.length < 6 ||
+      !/\d/.test(passwordForm.password) ||
+      !/[a-zA-Z]/.test(passwordForm.password)
+    ) {
+      setProfileMessage(
+        "Password must be at least 6 characters and include 1 letter and 1 number",
+      );
+      return;
+    }
+
+    try {
+      await resetUserPassword(activeUserId, {
+        password: passwordForm.password,
+      });
+      closeResetPasswordModal();
+      setProfileMessage("Password reset successfully.");
+    } catch (err) {
+      setProfileMessage(
+        err?.response?.data?.message || "Unable to reset password",
+      );
     }
   };
 
@@ -238,22 +291,25 @@ function NewProfilePage() {
                   </select>
                 )}
 
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="edit-btn"
-                  disabled={!activeUserId}
-                >
-                  Withdraw
-                </button>
-                <button
-                  onClick={handleDownloadStatement}
-                  className="edit-btn statement-btn"
-                  disabled={!activeUserId}
-                >
-                  Statement
-                </button>
+                <div className="profile-action-group">
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="edit-btn"
+                    disabled={!activeUserId}
+                  >
+                    Withdraw
+                  </button>
+                  <button
+                    onClick={handleDownloadStatement}
+                    className="edit-btn statement-btn"
+                    disabled={!activeUserId}
+                  >
+                    Statement
+                  </button>
+                </div>
+
                 {["admin", "operator"].includes(parsedUserRole) && (
-                  <>
+                  <div className="profile-action-group admin-actions">
                     <button
                       onClick={() => openSavingsModal("credit")}
                       className="edit-btn savings-credit"
@@ -268,9 +324,20 @@ function NewProfilePage() {
                     >
                       Savings Debit
                     </button>
-                  </>
+                    <button
+                      onClick={() => setResetPasswordModal(true)}
+                      className="edit-btn reset-password-btn"
+                      disabled={!activeUserId}
+                    >
+                      Reset Password
+                    </button>
+                  </div>
                 )}
               </div>
+
+              {profileMessage && (
+                <div className="profile-message">{profileMessage}</div>
+              )}
 
               <WithdrawModal
                 isOpen={isModalOpen}
@@ -289,8 +356,14 @@ function NewProfilePage() {
                 label="Eligibility"
                 value={`${profileData[0].iseligible === true ? "YES" : "NO"}`}
               />
-              <Info label="Active Since" value={`${profileData[0].activeSince}`} />
-              <Info label="Current Share" value={`${profileData[0].currentShare}`} />
+              <Info
+                label="Active Since"
+                value={`${profileData[0].activeSince}`}
+              />
+              <Info
+                label="Current Share"
+                value={`${profileData[0].currentShare}`}
+              />
               <Info
                 label="OverAll Invested"
                 value={`${profileData[0]?.savingsData?.overallInvested || "-"}`}
@@ -312,7 +385,7 @@ function NewProfilePage() {
                 value={formatCurrency(
                   typeof savingsSummary.availableBalance === "number"
                     ? savingsSummary.availableBalance
-                    : savingsSummary.balance
+                    : savingsSummary.balance,
                 )}
               />
               <Info
@@ -369,11 +442,54 @@ function NewProfilePage() {
               />
             </label>
             <div className="profile-modal-actions">
-              <button className="edit-btn secondary" onClick={closeSavingsModal}>
+              <button
+                className="edit-btn secondary"
+                onClick={closeSavingsModal}
+              >
                 Cancel
               </button>
               <button className="edit-btn" onClick={handleSavingsSubmit}>
                 Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {resetPasswordModal && (
+        <div className="profile-modal-backdrop">
+          <div className="profile-modal">
+            <h3>Reset User Password</h3>
+            <label>
+              New Password
+              <input
+                name="password"
+                type="password"
+                value={passwordForm.password}
+                onChange={handlePasswordChange}
+              />
+            </label>
+            <label>
+              Confirm Password
+              <input
+                name="confirmPassword"
+                type="password"
+                value={passwordForm.confirmPassword}
+                onChange={handlePasswordChange}
+              />
+            </label>
+            <div className="profile-modal-actions">
+              <button
+                className="edit-btn secondary"
+                onClick={closeResetPasswordModal}
+              >
+                Cancel
+              </button>
+              <button
+                className="edit-btn reset-password-btn"
+                onClick={handleResetPasswordSubmit}
+              >
+                Reset Password
               </button>
             </div>
           </div>
@@ -393,4 +509,3 @@ function Info({ label, value }) {
 }
 
 export default LayoutAdmin(NewProfilePage, "NewProfile");
-

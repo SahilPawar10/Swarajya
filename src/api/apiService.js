@@ -57,6 +57,15 @@ export const getVisitor = () => {
   });
 };
 
+export const approveVisitorRequest = (visitorId) => {
+  return new Promise((resolve, reject) => {
+    const url = `/visitor/${visitorId}/approve`;
+    Axios.patch(url)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
 export const getTeamData = () => {
   return new Promise((resolve, reject) => {
     const url = `/users`;
@@ -79,6 +88,15 @@ export const updateUser = (id, data) => {
   return new Promise((resolve, reject) => {
     const url = `/users/${id}`;
     Axios.put(url, data)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
+export const resetUserPassword = (id, data) => {
+  return new Promise((resolve, reject) => {
+    const url = `/users/${id}/reset-password`;
+    Axios.patch(url, data)
       .then((res) => resolve(res))
       .catch((err) => reject(err));
   });
@@ -497,6 +515,6 @@ export const downloadProjectReport = (projectId) => {
 export const downloadComponentReport = (projectId, componentId) => {
   return Axios.get(
     `/projects/${projectId}/report?scope=component&componentId=${componentId}`,
-    { responseType: "blob" }
+    { responseType: "blob" },
   );
 };
