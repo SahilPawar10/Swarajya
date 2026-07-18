@@ -1987,6 +1987,25 @@ function Accounts() {
                   )}
                 </div>
               </div>
+              {/* Summary bar for monthly data */}
+              {!loading && filterdMonthlyData.length > 0 && (
+                <div style={{
+                  display: "flex",
+                  gap: "20px",
+                  padding: "15px",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "8px",
+                  marginBottom: "15px",
+                  alignItems: "center",
+                }}>
+                  <span style={{ fontWeight: "bold", fontSize: "14px" }}>
+                    Total Entries: <strong style={{ color: "#fd7e14", fontSize: "16px" }}>{filterdMonthlyData.length}</strong>
+                  </span>
+                  <span style={{ fontWeight: "bold", fontSize: "14px" }}>
+                    Total Amount: <strong style={{ color: "#fd7e14", fontSize: "16px" }}>₹{filterdMonthlyData.reduce((sum, item) => sum + Number(item.amount || 0), 0).toLocaleString()}</strong>
+                  </span>
+                </div>
+              )}
               <div className="account-credits-table-container">
                 <table className="client-table">
                   <thead>
@@ -2368,15 +2387,15 @@ function Accounts() {
               onChange={(newValue) => {
                 handleDateChange(newValue, "credit");
               }}
-              renderInput={(params) => (
-                <TextField
-                  name="date"
-                  id="credit-date"
-                  {...params}
-                  fullWidth
-                  sx={{ marginTop: "30px" }}
-                />
-              )}
+              format="DD-MM-YYYY"
+              slotProps={{
+                textField: {
+                  name: "date",
+                  id: "credit-date",
+                  fullWidth: true,
+                  sx: { marginTop: "30px" },
+                },
+              }}
             />
           </LocalizationProvider>
           <TextField
@@ -2455,15 +2474,15 @@ function Accounts() {
               onChange={(newValue) => {
                 handleDateChange(newValue, "debit");
               }}
-              renderInput={(params) => (
-                <TextField
-                  name="date"
-                  id="debit-date"
-                  {...params}
-                  fullWidth
-                  sx={{ marginTop: "30px" }}
-                />
-              )}
+              format="DD-MM-YYYY"
+              slotProps={{
+                textField: {
+                  name: "date",
+                  id: "debit-date",
+                  fullWidth: true,
+                  sx: { marginTop: "30px" },
+                },
+              }}
             />
           </LocalizationProvider>
           <TextField
@@ -2544,15 +2563,15 @@ function Accounts() {
               onChange={(newValue) => {
                 handleDateChange(newValue, "savings");
               }}
-              renderInput={(params) => (
-                <TextField
-                  name="date"
-                  id="savings-date"
-                  {...params}
-                  fullWidth
-                  sx={{ marginTop: "30px" }}
-                />
-              )}
+              format="DD-MM-YYYY"
+              slotProps={{
+                textField: {
+                  name: "date",
+                  id: "savings-date",
+                  fullWidth: true,
+                  sx: { marginTop: "30px" },
+                },
+              }}
             />
           </LocalizationProvider>
           <Box sx={{ marginTop: "10px", marginBottom: "20px" }}>
@@ -2626,7 +2645,8 @@ function Accounts() {
                   label="Select Date"
                   value={selectedDate}
                   onChange={(newValue) => handleDateChange(newValue, "loan")}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
+                  format="DD-MM-YYYY"
+                  slotProps={{ textField: { fullWidth: true } }}
                 />
               </LocalizationProvider>
             </Grid>
@@ -2787,15 +2807,15 @@ function Accounts() {
                 // Called even when selecting the same date again
                 handleDateChange(newValue, "monthly");
               }}
-              renderInput={(params) => (
-                <TextField
-                  name="date"
-                  id="installment-date"
-                  {...params}
-                  fullWidth
-                  sx={{ marginTop: "30px" }}
-                />
-              )}
+              format="DD-MM-YYYY"
+              slotProps={{
+                textField: {
+                  name: "date",
+                  id: "installment-date",
+                  fullWidth: true,
+                  sx: { marginTop: "30px" },
+                },
+              }}
             />
           </LocalizationProvider>
           <TextField
@@ -2883,15 +2903,15 @@ function Accounts() {
               onChange={(newValue) => {
                 handleDateChange(newValue, "monthly");
               }}
-              renderInput={(params) => (
-                <TextField
-                  name="date"
-                  id="monthly-date"
-                  {...params}
-                  fullWidth
-                  sx={{ marginTop: "30px" }}
-                />
-              )}
+              format="DD-MM-YYYY"
+              slotProps={{
+                textField: {
+                  name: "date",
+                  id: "monthly-date",
+                  fullWidth: true,
+                  sx: { marginTop: "30px" },
+                },
+              }}
             />
           </LocalizationProvider>
           <TextField

@@ -9,6 +9,7 @@ import CollectionsIcon from "@mui/icons-material/Collections";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 function Sidebar({ menu = "menu" }) {
   const [sidebar, setsideBar] = useState(false);
@@ -164,6 +165,21 @@ function Sidebar({ menu = "menu" }) {
               Project Tracker
             </Link>
           </li>
+          <li id="vargani">
+            <span>
+              <EmojiEventsIcon
+                sx={{
+                  transform: "rotate(0deg)",
+                  fontSize: "1.4rem",
+                  color: "#fd7e14",
+                  paddingTop: "0.3rem",
+                }}
+              />
+            </span>
+            <Link to="/vargani" className="side-menu">
+              Vargani
+            </Link>
+          </li>
         </ul>
       ) : (
         <h5 id={menu}></h5>
@@ -275,6 +291,21 @@ function Sidebar({ menu = "menu" }) {
             </span>
             <Link to="/project-tracker" className="side-menu">
               Project Tracker
+            </Link>
+          </li>
+          <li id="vargani">
+            <span>
+              <EmojiEventsIcon
+                sx={{
+                  transform: "rotate(0deg)",
+                  fontSize: "1.4rem",
+                  color: "#fd7e14",
+                  paddingTop: "0.3rem",
+                }}
+              />
+            </span>
+            <Link to="/vargani" className="side-menu">
+              Vargani
             </Link>
           </li>
         </ul>

@@ -518,3 +518,39 @@ export const downloadComponentReport = (projectId, componentId) => {
     { responseType: "blob" },
   );
 };
+
+// ── Vargani APIs ──────────────────────────────────────────────────────────────
+
+export const getVarganiEntries = (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return Axios.get(`/vargani${query ? `?${query}` : ""}`);
+};
+
+export const getVarganiNames = () => Axios.get("/vargani/names");
+
+export const getVarganiHistory = (name) =>
+  Axios.get(`/vargani/history?name=${encodeURIComponent(name)}`);
+
+export const getVarganiSummary = (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return Axios.get(`/vargani/summary${query ? `?${query}` : ""}`);
+};
+
+export const createVarganiEntry = (data) => Axios.post("/vargani", data);
+
+export const deleteVarganiEntry = (id) => Axios.delete(`/vargani/${id}`);
+
+export const importVarganiFile = (formData) =>
+  Axios.post("/vargani/import", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+export const downloadVarganiSample = () =>
+  Axios.get("/vargani/export-sample", { responseType: "blob" });
+
+export const downloadVarganiData = (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return Axios.get(`/vargani/export${query ? `?${query}` : ""}`, {
+    responseType: "blob",
+  });
+};
