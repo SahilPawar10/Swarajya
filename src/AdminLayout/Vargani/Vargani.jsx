@@ -36,7 +36,10 @@ import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import SearchIcon from "@mui/icons-material/Search";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import InputAdornment from "@mui/material/InputAdornment";
 
 const FESTIVAL_LABELS = {
   ganesh_utsav: "Ganesh Utsav",
@@ -64,8 +67,11 @@ function Vargani() {
   // ── Entries tab state ──────────────────────────────────────────────────────
   const [entries, setEntries] = useState([]);
   const [loadingEntries, setLoadingEntries] = useState(false);
-  const [filterYear, setFilterYear] = useState("");
-  const [filterType, setFilterType] = useState("");
+  const [filterYear, setFilterYear] = useState(CURRENT_YEAR);
+  const [filterType, setFilterType] = useState("ganesh_utsav");
+  const [searchName, setSearchName] = useState("");
+  const [sortField, setSortField] = useState(null);
+  const [sortDir, setSortDir] = useState("asc");
 
   // ── Add modal state ────────────────────────────────────────────────────────
   const [openModal, setOpenModal] = useState(false);
@@ -110,6 +116,55 @@ function Vargani() {
   useEffect(() => {
     fetchEntries();
   }, [fetchEntries]);
+
+  // ── Sorting ────────────────────────────────────────────────────────────────
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+  };
+
+  // Search filters the already-loaded entries client-side so typing doesn't
+  // re-trigger a network fetch (which was replacing the table with a spinner
+  // on every keystroke).
+  const sortedEntries = React.useMemo(() => {
+    const needle = searchName.trim().toLowerCase();
+    const filtered = needle
+      ? entries.filter((e) => (e.name || "").toLowerCase().includes(needle))
+      : entries;
+    if (!sortField) return filtered;
+    const list = [...filtered];
+    list.sort((a, b) => {
+      let va = a[sortField];
+      let vb = b[sortField];
+      if (sortField === "date") {
+        va = dayjs(va, "DD-MM-YYYY").valueOf();
+        vb = dayjs(vb, "DD-MM-YYYY").valueOf();
+      } else if (sortField === "amount" || sortField === "year") {
+        va = Number(va);
+        vb = Number(vb);
+      } else {
+        va = String(va || "").toLowerCase();
+        vb = String(vb || "").toLowerCase();
+      }
+      if (va < vb) return sortDir === "asc" ? -1 : 1;
+      if (va > vb) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+    return list;
+  }, [entries, searchName, sortField, sortDir]);
+
+  const renderSortIcon = (field) => {
+    if (sortField !== field) return null;
+    return sortDir === "asc" ? (
+      <ArrowUpwardIcon sx={{ fontSize: "0.9rem", ml: 0.3, verticalAlign: "middle" }} />
+    ) : (
+      <ArrowDownwardIcon sx={{ fontSize: "0.9rem", ml: 0.3, verticalAlign: "middle" }} />
+    );
+  };
 
   // ── Fetch names for dropdown ───────────────────────────────────────────────
   useEffect(() => {
@@ -205,10 +260,7 @@ function Vargani() {
       .catch(() => showSnack("Download failed", "error"));
   };
 
-  const handleExportData = () => {
-    const params = {};
-    if (filterYear) params.year = filterYear;
-    if (filterType) params.varganiType = filterType;
+  const downloadWorkbook = (params, filename) => {
     downloadVarganiData(params)
       .then((res) => {
         const blob = new Blob([res.data], {
@@ -216,7 +268,7 @@ function Vargani() {
         });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = "vargani_data.xlsx";
+        link.download = filename;
         link.click();
         link.remove();
         URL.revokeObjectURL(link.href);
@@ -224,10 +276,25 @@ function Vargani() {
       .catch(() => showSnack("Export failed", "error"));
   };
 
+  const handleExportData = () => {
+    if (!filterYear || !filterType) {
+      showSnack("Select a year and festival to export, or use Export All", "warning");
+      return;
+    }
+    downloadWorkbook(
+      { year: filterYear, varganiType: filterType },
+      `vargani_${filterYear}_${filterType}.xlsx`
+    );
+  };
+
+  const handleExportAll = () => {
+    downloadWorkbook({}, "vargani_data_all.xlsx");
+  };
+
   // ── History ────────────────────────────────────────────────────────────────
-  const handleFetchHistory = () => {
+  useEffect(() => {
     if (!historyName) {
-      showSnack("Please select a name", "warning");
+      setHistoryData(null);
       return;
     }
     setLoadingHistory(true);
@@ -235,7 +302,7 @@ function Vargani() {
       .then((res) => setHistoryData(res.data))
       .catch(() => showSnack("Failed to load history", "error"))
       .finally(() => setLoadingHistory(false));
-  };
+  }, [historyName]);
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
@@ -297,6 +364,21 @@ function Vargani() {
                   <MenuItem value="shivjayanti">Shivjayanti</MenuItem>
                 </Select>
               </FormControl>
+
+              <TextField
+                size="small"
+                placeholder="Search by name"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                sx={{ minWidth: 200 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon sx={{ fontSize: "1.1rem", color: "#98a2b3" }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </div>
 
             <div className="vargani-actions">
@@ -319,6 +401,13 @@ function Vargani() {
               </Button>
               <Button
                 variant="text"
+                onClick={handleExportAll}
+                sx={{ color: "#667085" }}
+              >
+                Export All
+              </Button>
+              <Button
+                variant="text"
                 onClick={handleExportSample}
                 sx={{ color: "#667085" }}
               >
@@ -328,15 +417,15 @@ function Vargani() {
           </div>
 
           {/* Summary badges */}
-          {!loadingEntries && entries.length > 0 && (
+          {!loadingEntries && sortedEntries.length > 0 && (
             <div className="vargani-summary-bar">
               <span className="vg-badge">
-                Total entries: <strong>{entries.length}</strong>
+                Total entries: <strong>{sortedEntries.length}</strong>
               </span>
               <span className="vg-badge">
                 Total amount:{" "}
                 <strong>
-                  ₹{entries.reduce((s, e) => s + Number(e.amount || 0), 0).toLocaleString()}
+                  ₹{sortedEntries.reduce((s, e) => s + Number(e.amount || 0), 0).toLocaleString()}
                 </strong>
               </span>
             </div>
@@ -348,24 +437,34 @@ function Vargani() {
               <div className="vg-center">
                 <CircularProgress sx={{ color: "#fd7e14" }} />
               </div>
-            ) : entries.length === 0 ? (
+            ) : sortedEntries.length === 0 ? (
               <div className="vg-center vg-empty">No entries found</div>
             ) : (
               <table className="vg-table">
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                    <th>Year</th>
-                    <th>Festival</th>
+                    <th className="vg-sortable" onClick={() => handleSort("name")}>
+                      Name{renderSortIcon("name")}
+                    </th>
+                    <th className="vg-sortable" onClick={() => handleSort("amount")}>
+                      Amount{renderSortIcon("amount")}
+                    </th>
+                    <th className="vg-sortable" onClick={() => handleSort("date")}>
+                      Date{renderSortIcon("date")}
+                    </th>
+                    <th className="vg-sortable" onClick={() => handleSort("year")}>
+                      Year{renderSortIcon("year")}
+                    </th>
+                    <th className="vg-sortable" onClick={() => handleSort("varganiType")}>
+                      Festival{renderSortIcon("varganiType")}
+                    </th>
                     <th>Remark</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {entries.map((entry, i) => (
+                  {sortedEntries.map((entry, i) => (
                     <tr key={entry.id || entry._id}>
                       <td>{i + 1}</td>
                       <td className="vg-bold">{entry.name}</td>
@@ -409,27 +508,15 @@ function Vargani() {
             <Autocomplete
               options={names}
               value={historyName}
-              onChange={(_, v) => {
-                setHistoryName(v);
-                setHistoryData(null);
-              }}
+              onChange={(_, v) => setHistoryName(v)}
               renderInput={(params) => (
                 <TextField {...params} label="Select member name" size="small" sx={{ width: 280 }} />
               )}
               freeSolo
               onInputChange={(_, v) => {
-                if (!v) { setHistoryName(null); setHistoryData(null); }
+                if (!v) setHistoryName(null);
               }}
             />
-            <Button
-              variant="contained"
-              startIcon={<PersonSearchIcon />}
-              onClick={handleFetchHistory}
-              disabled={loadingHistory || !historyName}
-              sx={{ background: "#fd7e14", "&:hover": { background: "#e06900" } }}
-            >
-              View History
-            </Button>
           </div>
 
           {loadingHistory && (

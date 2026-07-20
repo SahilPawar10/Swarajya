@@ -4,6 +4,14 @@
   min-height: calc(100vh - 70px);
 }
 
+/* .sidebar-header uses a % height in the shared admin layout, which grows
+   with total page content height on long pages (e.g. large entry tables).
+   Pin it to a fixed height when Vargani is the active page, without
+   touching the shared layout used by other admin pages. */
+.admin-page:has(.vargani-page) .sidebar-header {
+  height: 60px;
+}
+
 /* Header */
 .vargani-header {
   margin-bottom: 16px;
@@ -100,6 +108,16 @@
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
+}
+
+.vg-sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.vg-sortable:hover {
+  color: #fd7e14;
 }
 
 .vg-table td {
