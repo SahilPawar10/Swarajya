@@ -254,6 +254,36 @@ const loanRulesReport = [
   },
 ];
 
+const parseLoanDateValue = (date) => {
+  const value = String(date || "").trim();
+  if (!value) return 0;
+  const separator = value.includes("/") ? "/" : "-";
+  const parts = value.split(separator);
+
+  if (parts.length === 3) {
+    const [first, second, third] = parts;
+    if (first.length === 4) {
+      return new Date(Number(first), Number(second) - 1, Number(third)).getTime();
+    }
+    const year = Number(third.length === 2 ? `20${third}` : third);
+    return new Date(year, Number(second) - 1, Number(first)).getTime();
+  }
+
+  const fallback = dayjs(value);
+  return fallback.isValid() ? fallback.valueOf() : 0;
+};
+
+const getLoanStatusStyle = (status, reason) => {
+  const normalized = String(status || "").toLowerCase();
+  if (normalized === "paid") return { tone: "paid", label: "Paid" };
+  if (["overdue", "defaulted", "rejected"].includes(normalized))
+    return { tone: "overdue", label: status };
+  if (reason) return { tone: "overdue", label: status || "Active" };
+  if (["pending", "review"].includes(normalized))
+    return { tone: "pending", label: status };
+  return { tone: "active", label: status || "Active" };
+};
+
 const getLoanRulesRows = () =>
   loanRulesReport.flatMap((section) =>
     section.items.map((rule, index) => ({
@@ -1368,6 +1398,90 @@ function Accounts() {
     return matchMonth && matchYear && matchUser;
   });
 
+  const [loanStatusFilter, setLoanStatusFilter] = React.useState("all");
+  const [loanNameFilter, setLoanNameFilter] = React.useState("");
+  const [installmentStatusFilter, setInstallmentStatusFilter] = React.useState("all");
+  const [installmentNameFilter, setInstallmentNameFilter] = React.useState("");
+  const [debitSearchFilter, setDebitSearchFilter] = React.useState("");
+
+  const sortedActiveLoans = React.useMemo(
+    () =>
+      [...activeLoansData].sort(
+        (a, b) => parseLoanDateValue(b?.date) - parseLoanDateValue(a?.date),
+      ),
+    [activeLoansData],
+  );
+
+  const filteredActiveLoans = React.useMemo(
+    () =>
+      sortedActiveLoans.filter((loan) => {
+        const matchesStatus =
+          loanStatusFilter === "all"
+            ? true
+            : loanStatusFilter === "paid"
+              ? loan?.status === "paid"
+              : loan?.status !== "paid";
+        const matchesName = loanNameFilter
+          ? (loan?.memberName || "")
+              .toLowerCase()
+              .includes(loanNameFilter.toLowerCase())
+          : true;
+        return matchesStatus && matchesName;
+      }),
+    [sortedActiveLoans, loanStatusFilter, loanNameFilter],
+  );
+
+  const filteredDebitData = React.useMemo(() => {
+    const search = debitSearchFilter.trim().toLowerCase();
+    if (!search) return debitsData;
+    return debitsData?.filter(
+      (item) =>
+        item?.debitBy?.toLowerCase().includes(search) ||
+        item?.desc?.toLowerCase().includes(search),
+    );
+  }, [debitsData, debitSearchFilter]);
+
+  const sortedInstallments = React.useMemo(
+    () =>
+      [...installmentData].sort(
+        (a, b) => parseLoanDateValue(b?.date) - parseLoanDateValue(a?.date),
+      ),
+    [installmentData],
+  );
+
+  const filteredInstallments = React.useMemo(
+    () =>
+      sortedInstallments.filter((installment) => {
+        const isPaid = Number(installment?.remaining || 0) <= 0;
+        const matchesStatus =
+          installmentStatusFilter === "all"
+            ? true
+            : installmentStatusFilter === "paid"
+              ? isPaid
+              : !isPaid;
+        const matchesName = installmentNameFilter
+          ? (installment?.name || "")
+              .toLowerCase()
+              .includes(installmentNameFilter.toLowerCase())
+          : true;
+        return matchesStatus && matchesName;
+      }),
+    [sortedInstallments, installmentStatusFilter, installmentNameFilter],
+  );
+
+  const loanListTotals = React.useMemo(
+    () =>
+      filteredActiveLoans.reduce(
+        (totals, loan) => ({
+          totalLoanAmount: totals.totalLoanAmount + Number(loan?.loanAmount || 0),
+          upcomingLoanAmount:
+            totals.upcomingLoanAmount + Number(loan?.totalRemaining || 0),
+        }),
+        { totalLoanAmount: 0, upcomingLoanAmount: 0 },
+      ),
+    [filteredActiveLoans],
+  );
+
   const filteredCreditData = React.useMemo(() => {
     if (filterType === "monthly") {
       return creditsData.filter((item) =>
@@ -1836,7 +1950,7 @@ function Accounts() {
                     <button
                       class="btn-loan reject"
                       onClick={() => {
-                        exportDataDownload(debitsData, "debitEntry.xlsx");
+                        exportDataDownload(filteredDebitData, "debitEntry.xlsx");
                       }}
                     >
                       Export{" "}
@@ -1844,6 +1958,14 @@ function Accounts() {
                   </div>
                 </div>
               )}
+              <div className="loan-filters-row">
+                <input
+                  type="text"
+                  placeholder="Search by debited by / description"
+                  value={debitSearchFilter}
+                  onChange={(e) => setDebitSearchFilter(e.target.value)}
+                />
+              </div>
               <div className="account-credits-table-container">
                 <table className="client-table">
                   <thead>
@@ -1859,7 +1981,7 @@ function Accounts() {
                     </tr>
                   </thead>
                   <tbody>
-                    {debitsData?.map((c, i) => (
+                    {filteredDebitData?.map((c, i) => (
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td className="blue-link">{c.date}</td>
@@ -2067,40 +2189,79 @@ function Accounts() {
                 </div>
               )}
 
-              <div className="account-credits-table-container">
-                <table className="client-table">
-                  <thead>
-                    <tr>
-                      <th>SR.NO</th>
-                      {/* <th>Loan ID</th> */}
-                      <th>Name</th>
-                      <th>Date</th>
-                      <th>Loan Amount</th>
-                      <th>Duration</th>
-                      <th>Total Payble</th>
-                      <th>Paid Amount</th>
-                      <th>Remaining</th>
-                      <th>Remark</th>
-                      {/* <th>Telephone</th>
-                    <th>Created</th> */}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {installmentData.map((c, i) => (
-                      <tr key={i}>
-                        <td>{i + 1}</td>
-                        <td>{c?.name || "-"}</td>
-                        <td>{c.date}</td>
-                        <td>{c?.loanId?.loanAmount || "-"}</td>
-                        <td>{c?.loanId?.duration || "-"}</td>
-                        <td>{c?.loanId?.totalPaybale || "-"}</td>
-                        <td>{c?.paidAmount || "-"}</td>
-                        <td>{c?.remaining || "-"}</td>
-                        <td>{c?.remark}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="loan-filters-row">
+                <select
+                  value={installmentStatusFilter}
+                  onChange={(e) => setInstallmentStatusFilter(e.target.value)}
+                >
+                  <option value="all">All Statuses</option>
+                  <option value="paid">Paid</option>
+                  <option value="unpaid">Unpaid</option>
+                </select>
+                <input
+                  type="text"
+                  placeholder="Search by name"
+                  value={installmentNameFilter}
+                  onChange={(e) => setInstallmentNameFilter(e.target.value)}
+                />
+              </div>
+
+              <div className="loan-list-container">
+                <div className="loan-list installment-list">
+                  <div className="installment-row installment-list-header">
+                    <span className="loan-col-sr">Sr No</span>
+                    <span>Borrower</span>
+                    <span>Loan</span>
+                    <span>This Payment</span>
+                    <span>Remaining</span>
+                    <span>Remark</span>
+                  </div>
+                  {filteredInstallments.map((c, i) => {
+                    const remaining = Number(c?.remaining || 0);
+                    const isPaid = remaining <= 0;
+
+                    return (
+                      <div className="installment-row" key={c?.id || i}>
+                        <div className="loan-col-sr">{i + 1}</div>
+
+                        <div className="loan-borrower">
+                          <span className="loan-avatar">
+                            {getInitials(c?.name)}
+                          </span>
+                          <div className="loan-borrower-info">
+                            <strong>{c?.name || "-"}</strong>
+                            <small>{c?.date}</small>
+                          </div>
+                        </div>
+
+                        <div className="installment-loan-col">
+                          <strong>{formatCurrency(c?.loanId?.loanAmount)}</strong>
+                          <small>{c?.loanId?.duration || "-"} days</small>
+                        </div>
+
+                        <div className="installment-payment-col">
+                          <strong>{formatCurrency(c?.paidAmount)}</strong>
+                          <small>of {formatCurrency(c?.loanId?.totalPaybale)}</small>
+                        </div>
+
+                        <div className="installment-remaining-col">
+                          <strong>{formatCurrency(remaining)}</strong>
+                          <span
+                            className={`loan-status-pill loan-status-${
+                              isPaid ? "paid" : "pending"
+                            }`}
+                          >
+                            {isPaid ? "Paid" : "Unpaid"}
+                          </span>
+                        </div>
+
+                        <div className="installment-remark-col">
+                          {c?.remark || "-"}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
@@ -2125,79 +2286,167 @@ function Accounts() {
                 </div>
               )}
 
-              <div className="account-credits-table-container">
-                <table className="client-table">
-                  <thead>
-                    <tr>
-                      <th>Id</th>
-                      <th>Name</th>
-                      <th>Date</th>
-                      <th>Loan Amount</th>
-                      <th>Min Paybale</th>
-                      <th>EMI</th>
-                      <th>Group Fund</th>
-                      <th>Savings Fund</th>
-                      <th>Total Paybale</th>
-                      <th>Total Paid</th>
-                      <th>remains</th>
-                      <th>Days</th>
-                      <th>%</th>
-                      <th>status</th>
-                      <th>reason</th>
-                      <th>Options</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activeLoansData.map((c, i) => (
-                      <tr key={i}>
-                        <td>{i + 1}</td>
-                        <td>{c?.memberName}</td>
-                        <td>{c?.date}</td>
-                        <td>
-                          <span>{c?.loanAmount}</span>
-                        </td>
-                        <td>{c?.minRequiredPay || "-"}</td>
-                        <td>{c?.emi || "-"}</td>
-                        <td>
-                          {formatCurrency(c?.groupFundAmount)}
-                          <small className="funding-percent">
-                            {formatFundingPercent(c?.groupFundAmount, c?.loanAmount)}
-                          </small>
-                        </td>
-                        <td>
-                          {formatCurrency(c?.personalSavingsFundAmount)}
-                          <small className="funding-percent">
-                            {formatFundingPercent(
-                              c?.personalSavingsFundAmount,
-                              c?.loanAmount
-                            )}
-                          </small>
-                        </td>
-                        <td>{c?.totalPaybale}</td>
-                        <td className="bold-score">{c?.totalPaid || "-"}</td>
-                        <td>{c?.totalRemaining || "-"}</td>
-                        <td>{c?.duration}</td>
-                        <td>{c?.percentage}</td>
-                        <td>{c?.status}</td>
-                        <td>{c?.reason}</td>
-                        {c?.status !== "paid" && Number(c?.emi) ? (
-                          <td>
-                            <button
-                              class="btn-loan approve"
-                              onClick={() => {
-                                handleDirectPayOpen(c.id);
+              <div className="loan-summary-row">
+                <div className="loan-summary-card">
+                  <span>Total Loan Amount</span>
+                  <strong>{formatCurrency(loanListTotals.totalLoanAmount)}</strong>
+                </div>
+                <div className="loan-summary-card">
+                  <span>Upcoming Loan Amount</span>
+                  <strong>{formatCurrency(loanListTotals.upcomingLoanAmount)}</strong>
+                </div>
+              </div>
+
+              <div className="loan-filters-row">
+                <select
+                  value={loanStatusFilter}
+                  onChange={(e) => setLoanStatusFilter(e.target.value)}
+                >
+                  <option value="all">All Statuses</option>
+                  <option value="paid">Paid</option>
+                  <option value="unpaid">Unpaid</option>
+                </select>
+                <input
+                  type="text"
+                  placeholder="Search by name"
+                  value={loanNameFilter}
+                  onChange={(e) => setLoanNameFilter(e.target.value)}
+                />
+              </div>
+
+              <div className="loan-list-container">
+                <div className="loan-list">
+                  <div className="loan-list-header">
+                    <span className="loan-col-sr">Sr No</span>
+                    <span>Borrower</span>
+                    <span>Loan Amount</span>
+                    <span>Funding Source</span>
+                    <span>Repayment</span>
+                    <span>Details</span>
+                    <span className="loan-col-action">Action</span>
+                  </div>
+                  {filteredActiveLoans.map((c, i) => {
+                    const statusStyle = getLoanStatusStyle(c?.status, c?.reason);
+                    const totalPayable = Number(c?.totalPaybale || 0);
+                    const totalPaid = Number(c?.totalPaid || 0);
+                    const progressPct = totalPayable
+                      ? Math.min(100, Math.round((totalPaid / totalPayable) * 100))
+                      : 0;
+                    const showAction = c?.status !== "paid" && Number(c?.emi);
+
+                    return (
+                      <div className="loan-row" key={c?.id || i}>
+                        <div className="loan-col-sr">{i + 1}</div>
+                        <div className="loan-borrower">
+                          <span className="loan-avatar">
+                            {getInitials(c?.memberName)}
+                          </span>
+                          <div className="loan-borrower-info">
+                            <strong>{c?.memberName}</strong>
+                            <small>{c?.date}</small>
+                          </div>
+                        </div>
+
+                        <div className="loan-amount-col">
+                          <strong>{formatCurrency(c?.loanAmount)}</strong>
+                          <span
+                            className={`loan-status-pill loan-status-${statusStyle.tone}`}
+                          >
+                            {statusStyle.label}
+                          </span>
+                        </div>
+
+                        <div className="loan-funding-col">
+                          <div className="loan-fund-bar">
+                            <span
+                              className="loan-fund-group"
+                              style={{
+                                width: formatFundingPercent(
+                                  c?.groupFundAmount,
+                                  c?.loanAmount,
+                                ),
                               }}
+                            />
+                            <span
+                              className="loan-fund-savings"
+                              style={{
+                                width: formatFundingPercent(
+                                  c?.personalSavingsFundAmount,
+                                  c?.loanAmount,
+                                ),
+                              }}
+                            />
+                          </div>
+                          <div className="loan-fund-legend">
+                            <span>
+                              <i className="loan-dot loan-dot-group" />
+                              Group {formatCurrency(c?.groupFundAmount)}
+                            </span>
+                            <span>
+                              <i className="loan-dot loan-dot-savings" />
+                              Savings {formatCurrency(c?.personalSavingsFundAmount)}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="loan-progress-col">
+                          <div className="loan-progress-head">
+                            <span>
+                              {formatCurrency(totalPaid)}{" "}
+                              <em>/ {formatCurrency(totalPayable)}</em>
+                            </span>
+                            <b
+                              className={
+                                progressPct >= 100 ? "loan-progress-full" : ""
+                              }
+                            >
+                              {progressPct}%
+                            </b>
+                          </div>
+                          <div className="loan-progress-bar">
+                            <span
+                              className={
+                                progressPct >= 100 ? "loan-progress-full" : ""
+                              }
+                              style={{ width: `${progressPct}%` }}
+                            />
+                          </div>
+                          {c?.reason && (
+                            <small className="loan-reason">{c.reason}</small>
+                          )}
+                        </div>
+
+                        <div className="loan-details-col">
+                          <div>
+                            EMI <b>{c?.emi ? formatCurrency(c.emi) : "-"}</b>
+                          </div>
+                          <div>
+                            Min Payable{" "}
+                            <b>
+                              {c?.minRequiredPay
+                                ? formatCurrency(c.minRequiredPay)
+                                : "-"}
+                            </b>
+                          </div>
+                          <div>{c?.duration || 0} days</div>
+                        </div>
+
+                        <div className="loan-action-col">
+                          {showAction ? (
+                            <button
+                              className="btn-loan approve"
+                              onClick={() => handleDirectPayOpen(c.id)}
                             >
                               Direct Pay
                             </button>
-                          </td>
-                        ) : (
-                          <td>-</td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
