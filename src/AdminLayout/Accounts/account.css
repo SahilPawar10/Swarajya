@@ -1833,3 +1833,29 @@ Dashboard.css
 
 
 
+
+
+.loan-summary-card:nth-child(3) {
+  border-left-color: #10b981;
+}
+
+
+.loan-progress-meta {
+  color: #667085;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 4px 12px;
+  margin-top: 6px;
+}
+
+.loan-progress-meta b {
+  color: #101828;
+}
+
+@media (max-width: 640px) {
+  .loan-summary-row {
+    flex-wrap: wrap;
+  }
+}

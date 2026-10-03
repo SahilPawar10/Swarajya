@@ -1400,16 +1400,50 @@ function Accounts() {
 
   const [loanStatusFilter, setLoanStatusFilter] = React.useState("all");
   const [loanNameFilter, setLoanNameFilter] = React.useState("");
+  const [loanYearFilter, setLoanYearFilter] = React.useState("all");
   const [installmentStatusFilter, setInstallmentStatusFilter] = React.useState("all");
   const [installmentNameFilter, setInstallmentNameFilter] = React.useState("");
   const [debitSearchFilter, setDebitSearchFilter] = React.useState("");
 
   const sortedActiveLoans = React.useMemo(
     () =>
-      [...activeLoansData].sort(
-        (a, b) => parseLoanDateValue(b?.date) - parseLoanDateValue(a?.date),
-      ),
+      [...activeLoansData]
+        .map((loan) => ({
+          ...loan,
+          year:
+            loan?.year ??
+            (parseLoanDateValue(loan?.date)
+              ? new Date(parseLoanDateValue(loan?.date)).getFullYear()
+              : null),
+        }))
+        .sort(
+          (a, b) => parseLoanDateValue(b?.date) - parseLoanDateValue(a?.date),
+        ),
     [activeLoansData],
+  );
+
+  const loanYears = React.useMemo(() => {
+    const years = new Set();
+    sortedActiveLoans.forEach((loan) => {
+      if (loan.year) years.add(String(loan.year));
+      Object.keys(loan?.interestByYear || {}).forEach((y) => years.add(y));
+    });
+    return [...years].sort((a, b) => b - a);
+  }, [sortedActiveLoans]);
+
+  // Interest is booked by payment date, so it is filtered by payment year, not loan year.
+  const totalInterestEarned = React.useMemo(
+    () =>
+      sortedActiveLoans.reduce((sum, loan) => {
+        const byYear = loan?.interestByYear || {};
+        return (
+          sum +
+          (loanYearFilter === "all"
+            ? Object.values(byYear).reduce((a, b) => a + Number(b || 0), 0)
+            : Number(byYear[loanYearFilter] || 0))
+        );
+      }, 0),
+    [sortedActiveLoans, loanYearFilter],
   );
 
   const filteredActiveLoans = React.useMemo(
@@ -1426,9 +1460,11 @@ function Accounts() {
               .toLowerCase()
               .includes(loanNameFilter.toLowerCase())
           : true;
-        return matchesStatus && matchesName;
+        const matchesYear =
+          loanYearFilter === "all" || String(loan?.year) === loanYearFilter;
+        return matchesStatus && matchesName && matchesYear;
       }),
-    [sortedActiveLoans, loanStatusFilter, loanNameFilter],
+    [sortedActiveLoans, loanStatusFilter, loanNameFilter, loanYearFilter],
   );
 
   const filteredDebitData = React.useMemo(() => {
@@ -2281,7 +2317,50 @@ function Accounts() {
                     >
                       Update LoanStatus
                     </button>
-                    <button class="btn-loan reject">Export </button>
+                    <button
+                      class="btn-loan reject"
+                      onClick={() =>
+                        exportDataDownload(
+                          // export ignores the year filter; status/name still apply
+                          sortedActiveLoans
+                            .filter(
+                              (loan) =>
+                                (loanStatusFilter === "all"
+                                  ? true
+                                  : loanStatusFilter === "paid"
+                                    ? loan?.status === "paid"
+                                    : loan?.status !== "paid") &&
+                                (loan?.memberName || "")
+                                  .toLowerCase()
+                                  .includes(loanNameFilter.toLowerCase()),
+                            )
+                            .map((c, i) => ({
+                            SrNo: i + 1,
+                            Name: c?.memberName,
+                            Date: c?.date,
+                            Status: c?.status,
+                            LoanAmount: Number(c?.loanAmount || 0),
+                            GroupFund: Number(c?.groupFundAmount || 0),
+                            SavingsFund: Number(c?.personalSavingsFundAmount || 0),
+                            TotalPayable: Number(c?.totalPaybale || 0),
+                            TotalPaid: Number(c?.totalPaid || 0),
+                            Remaining: Number(c?.totalRemaining || 0),
+                            InterestEarned:
+                              c?.status === "paid"
+                                ? Object.values(c?.interestByYear || {}).reduce(
+                                    (a, b) => a + Number(b || 0),
+                                    0,
+                                  )
+                                : 0,
+                            EMI: Number(c?.emi || 0),
+                            DurationDays: c?.duration || 0,
+                          })),
+                          "active-loans.xlsx",
+                        )
+                      }
+                    >
+                      Export{" "}
+                    </button>
                   </div>
                 </div>
               )}
@@ -2295,6 +2374,13 @@ function Accounts() {
                   <span>Upcoming Loan Amount</span>
                   <strong>{formatCurrency(loanListTotals.upcomingLoanAmount)}</strong>
                 </div>
+                <div className="loan-summary-card">
+                  <span>
+                    Interest Earned
+                    {loanYearFilter !== "all" ? ` (${loanYearFilter})` : ""}
+                  </span>
+                  <strong>{formatCurrency(totalInterestEarned)}</strong>
+                </div>
               </div>
 
               <div className="loan-filters-row">
@@ -2305,6 +2391,17 @@ function Accounts() {
                   <option value="all">All Statuses</option>
                   <option value="paid">Paid</option>
                   <option value="unpaid">Unpaid</option>
+                </select>
+                <select
+                  value={loanYearFilter}
+                  onChange={(e) => setLoanYearFilter(e.target.value)}
+                >
+                  <option value="all">All Years</option>
+                  {loanYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
                 </select>
                 <input
                   type="text"
@@ -2410,6 +2507,17 @@ function Accounts() {
                               }
                               style={{ width: `${progressPct}%` }}
                             />
+                          </div>
+                          <div className="loan-progress-meta">
+                            <span>
+                              Remaining{" "}
+                              <b>{formatCurrency(c?.totalRemaining)}</b>
+                            </span>
+                            {c?.daysSinceStart != null && (
+                              <span>
+                                <b>{c.daysSinceStart}</b> days since start
+                              </span>
+                            )}
                           </div>
                           {c?.reason && (
                             <small className="loan-reason">{c.reason}</small>
