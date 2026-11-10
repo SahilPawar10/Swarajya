@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
-import { approveVisitorRequest, getVisitor } from "../../api/apiService";
+import { approveVisitorRequest, deleteVisitor, getVisitor, updateVisitor } from "../../api/apiService";
+import RecordActions, { RECORD_FIELDS } from "../Accounts/RecordActions";
 import "./visitor.css";
 
 function Visitors() {
@@ -119,6 +120,14 @@ function Visitors() {
                           ? "Approved"
                           : "Accept"}
                     </button>
+                    <RecordActions
+                      title="Edit visitor"
+                      record={visitor}
+                      fields={RECORD_FIELDS.visitor}
+                      save={(values) => updateVisitor(visitorId, values)}
+                      remove={() => deleteVisitor(visitorId)}
+                      onDone={fetchVisitors}
+                    />
                   </td>
                 </tr>
               );

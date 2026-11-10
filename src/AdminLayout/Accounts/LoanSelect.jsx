@@ -5,7 +5,7 @@ import { getLoanByMember } from "../../api/apiService";
 const ITEM_HEIGHT = 48;
 const MENU_HEIGHT = 6 * ITEM_HEIGHT;
 
-const MonthData = [
+export const MonthData = [
   "Jan",
   "Feb",
   "Mar",

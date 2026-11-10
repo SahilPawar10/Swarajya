@@ -20,3 +20,16 @@ export const generateExcelFileBuffer = (data, filename) => {
 
   return buffer;
 };
+
+export const formatCurrency = (amount) =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0));
+
+// A missing rate shows as "-" rather than a misleading 0%.
+export const formatPercent = (value) =>
+  value === null || value === undefined || value === "" || Number.isNaN(Number(value))
+    ? "-"
+    : `${Number(value)}%`;

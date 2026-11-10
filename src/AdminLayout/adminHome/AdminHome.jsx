@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import LayoutAdmin from "../Layout2/LayoutAdmin";
 import "../Visitors/visitor.css";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import RecordActions, { RECORD_FIELDS } from "../Accounts/RecordActions";
+import { deleteUser, updateUser } from "../../api/apiService";
 import { getUsersData } from "../../slices/acccount.slice";
 
 function AdminHome() {
@@ -118,7 +119,15 @@ function AdminHome() {
                   })}
                 </td>
                 <td>
-                  <MoreVertIcon sx={{ transform: "rotate(0deg)" }} />
+                  <RecordActions
+                    title="Edit member"
+                    record={team}
+                    fields={RECORD_FIELDS.member}
+                    save={(data) => updateUser(team.id || team._id, data)}
+                    remove={() => deleteUser(team.id || team._id)}
+                    deleteNote="Delete this member? Members with contributions, loans or earnings cannot be deleted."
+                    onDone={() => dispatch(getUsersData())}
+                  />
                 </td>
               </tr>
             ))}

@@ -7,6 +7,7 @@ import {
   getVarganiHistory,
   createVarganiEntry,
   deleteVarganiEntry,
+  updateVarganiEntry,
   importVarganiFile,
   downloadVarganiSample,
   downloadVarganiData,
@@ -34,7 +35,7 @@ import dayjs from "dayjs";
 
 import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import RecordActions from "../Accounts/RecordActions";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -45,6 +46,19 @@ const FESTIVAL_LABELS = {
   ganesh_utsav: "Ganesh Utsav",
   shivjayanti: "Shivjayanti",
 };
+
+const VARGANI_FIELDS = [
+  { name: "name", label: "Name" },
+  { name: "amount", label: "Amount", type: "number" },
+  { name: "date", label: "Date", type: "date" },
+  { name: "year", label: "Year", type: "number" },
+  {
+    name: "varganiType",
+    label: "Festival",
+    options: Object.entries(FESTIVAL_LABELS).map(([value, label]) => ({ value, label })),
+  },
+  { name: "remark", label: "Remark", optional: true },
+];
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: 10 }, (_, i) => CURRENT_YEAR - i);
@@ -214,17 +228,6 @@ function Vargani() {
         showSnack(msg, "error");
       })
       .finally(() => setSubmitting(false));
-  };
-
-  // ── Delete ─────────────────────────────────────────────────────────────────
-  const handleDelete = (id) => {
-    if (!window.confirm("Delete this entry?")) return;
-    deleteVarganiEntry(id)
-      .then(() => {
-        showSnack("Entry deleted");
-        fetchEntries();
-      })
-      .catch(() => showSnack("Failed to delete", "error"));
   };
 
   // ── Import ─────────────────────────────────────────────────────────────────
@@ -486,10 +489,13 @@ function Vargani() {
                       </td>
                       <td className="vg-muted">{entry.remark || "—"}</td>
                       <td>
-                        <DeleteOutlineIcon
-                          className="vg-delete-btn"
-                          onClick={() => handleDelete(entry.id || entry._id)}
-                          sx={{ fontSize: "1.1rem", cursor: "pointer", color: "#e53935" }}
+                        <RecordActions
+                          title="Edit vargani entry"
+                          record={entry}
+                          fields={VARGANI_FIELDS}
+                          save={(data) => updateVarganiEntry(entry.id || entry._id, data)}
+                          remove={() => deleteVarganiEntry(entry.id || entry._id)}
+                          onDone={fetchEntries}
                         />
                       </td>
                     </tr>

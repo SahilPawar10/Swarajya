@@ -14,8 +14,10 @@
 }
 
 .sidebar-header {
+  align-items: center;
   box-shadow: 9px 21px 32px -18px rgba(0, 0, 0, 0.2);
-  height: 7%;
+  display: flex;
+  height: 60px;
 }
 .admin-page {
   flex: 1 1 auto;

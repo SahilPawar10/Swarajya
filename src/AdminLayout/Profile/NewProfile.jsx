@@ -14,13 +14,18 @@ import {
   downloadUserAccountStatement,
   resetUserPassword,
 } from "../../api/apiService";
+import { SummaryCard } from "../Accounts/AdminOverview";
+import { formatCurrency, formatPercent } from "../../utils/common";
+import dayjs from "dayjs";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import SavingsIcon from "@mui/icons-material/Savings";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
-const formatCurrency = (amount) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(Number(amount || 0));
 
 const getToday = () => {
   const date = new Date();
@@ -56,6 +61,11 @@ function NewProfilePage() {
   const parsedUserRole = JSON.parse(userRole);
   const activeUserId = selectedUserId || parsedUserId;
   const savingsSummary = accountsData?.data?.savings || {};
+  const earningsSummary = accountsData?.data?.earningsSummary || {};
+  const overallInvested = (accountsData?.data?.monthly || []).reduce(
+    (total, item) => total + Number(item.amount || 0),
+    0,
+  );
 
   const accountSections = useMemo(() => {
     if (!accountsData || Object.keys(accountsData).length === 0) {
@@ -77,14 +87,17 @@ function NewProfilePage() {
           accountsData.data.loans?.map((item) => {
             const hasPersonalSavingsFund =
               Number(item.personalSavingsFundAmount || 0) > 0;
+            const terms = `${formatPercent(item.percentage)}${
+              item.emi ? ` | EMI ${formatCurrency(item.emi)}` : ""
+            }`;
 
             return {
               label: item.date,
               value: hasPersonalSavingsFund
-                ? `${formatCurrency(item.loanAmount)} | Group ${formatCurrency(
+                ? `${formatCurrency(item.loanAmount)} | ${terms} | Group ${formatCurrency(
                     item.groupFundAmount,
                   )} | Savings ${formatCurrency(item.personalSavingsFundAmount)}`
-                : formatCurrency(item.loanAmount),
+                : `${formatCurrency(item.loanAmount)} | ${terms}`,
             };
           }) || [],
       },
@@ -109,7 +122,9 @@ function NewProfilePage() {
         rows:
           accountsData.data.withdraws?.map((item) => ({
             label: item?.date,
-            value: formatCurrency(item?.amount),
+            value: `${formatCurrency(item?.amount)} | ${
+              item?.status === "success" ? "Paid" : item?.status || "-"
+            }`,
           })) || [],
       },
       {
@@ -122,7 +137,6 @@ function NewProfilePage() {
       },
       {
         title: "Locked Savings",
-        showWhenEmpty: true,
         emptyMessage: "No savings locked in active loans",
         rows:
           accountsData.data.savings?.lockedLoans?.map((item) => ({
@@ -153,7 +167,10 @@ function NewProfilePage() {
   }, [dispatch, activeUserId, parsedUserRole]);
 
   const handleWithdraw = (amount) => {
-    console.log("Withdraw amount:", amount);
+    setProfileMessage(
+      `Withdraw request for ${formatCurrency(amount)} sent for approval.`,
+    );
+    dispatch(getUserAccountsDetails(activeUserId));
   };
 
   const handleUserChange = (currUserId) => {
@@ -267,16 +284,57 @@ function NewProfilePage() {
     window.URL.revokeObjectURL(url);
   };
 
+  const profile = profileData?.[0];
+  const isStaff = ["admin", "operator"].includes(parsedUserRole);
+  const summaryCards = [
+    { title: "Overall Invested", value: formatCurrency(overallInvested), note: "Monthly contributions", tone: "blue", icon: <TrendingUpIcon /> },
+    { title: "Earned Interest", value: formatCurrency(earningsSummary.netBalance), note: "After withdrawals", tone: "green", icon: <PaymentsIcon /> },
+    { title: "Available To Withdraw", value: formatCurrency(earningsSummary.availableToWithdraw), note: "After pending requests", tone: "amber", icon: <AccountBalanceWalletIcon /> },
+    { title: "Personal Savings", value: formatCurrency(savingsSummary.balance), note: "Deposits minus debits", tone: "violet", icon: <SavingsIcon /> },
+    { title: "Locked In Loans", value: formatCurrency(savingsSummary.lockedAmount), note: "Savings funding active loans", tone: "rose", icon: <LockIcon /> },
+    {
+      title: "Available Savings",
+      value: formatCurrency(
+        typeof savingsSummary.availableBalance === "number"
+          ? savingsSummary.availableBalance
+          : savingsSummary.balance,
+      ),
+      note: "Not locked in loans",
+      tone: "green",
+      icon: <LockOpenIcon />,
+    },
+    { title: "Savings Deposits", value: formatCurrency(savingsSummary.totalDeposits), note: "Total deposited", tone: "blue", icon: <AddCircleOutlineIcon /> },
+    { title: "Savings Debits", value: formatCurrency(savingsSummary.totalDebits), note: "Total debited", tone: "orange", icon: <RemoveCircleOutlineIcon /> },
+  ];
+
   return (
     <div id="newprofile">
       <div className="profile-container">
-        {profileData && profileData.length > 0 ? (
-          <div className="card">
-            <div className="card-header">
-              <h3>Account Information</h3>
+        {profile ? (
+          <>
+            <section className="pa-hero ad-panel">
+              <div className="pa-identity">
+                <span className="pa-avatar">
+                  {`${profile.firstName?.[0] || ""}${profile.lastName?.[0] || ""}`}
+                </span>
+                <div className="pa-identity-text">
+                  <h2>
+                    {profile.firstName} {profile.lastName}
+                  </h2>
+                  <div className="pa-tags">
+                    <span className={`pa-tag ${profile.iseligible === true ? "pa-tag-yes" : "pa-tag-no"}`}>
+                      {profile.iseligible === true ? "Eligible" : "Not eligible"}
+                    </span>
+                    <span className="pa-tag">Share {profile.currentShare}%</span>
+                    <span className="pa-tag">
+                      Active since {dayjs(profile.activeSince).format("D MMM YYYY")}
+                    </span>
+                  </div>
+                </div>
+              </div>
 
               <div className="header-actions">
-                {["admin", "operator"].includes(parsedUserRole) && (
+                {isStaff && (
                   <select
                     className="user-select"
                     value={selectedUserId}
@@ -308,7 +366,7 @@ function NewProfilePage() {
                   </button>
                 </div>
 
-                {["admin", "operator"].includes(parsedUserRole) && (
+                {isStaff && (
                   <div className="profile-action-group admin-actions">
                     <button
                       onClick={() => openSavingsModal("credit")}
@@ -343,68 +401,24 @@ function NewProfilePage() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleWithdraw}
-                savingId={profileData[0]?.savingsData?._id}
+                userId={activeUserId}
+                available={earningsSummary.availableToWithdraw}
               />
-            </div>
+            </section>
 
-            <div className="grid">
-              <Info
-                label="Name"
-                value={`${profileData[0].firstName} ${profileData[0].lastName}`}
-              />
-              <Info
-                label="Eligibility"
-                value={`${profileData[0].iseligible === true ? "YES" : "NO"}`}
-              />
-              <Info
-                label="Active Since"
-                value={`${profileData[0].activeSince}`}
-              />
-              <Info
-                label="Current Share"
-                value={`${profileData[0].currentShare}`}
-              />
-              <Info
-                label="OverAll Invested"
-                value={`${profileData[0]?.savingsData?.overallInvested || "-"}`}
-              />
-              <Info
-                label="Earned Interest"
-                value={`${profileData[0]?.savingsData?.earnedInterest || "-"}`}
-              />
-              <Info
-                label="Personal Savings Balance"
-                value={formatCurrency(savingsSummary.balance)}
-              />
-              <Info
-                label="Locked In Active Loans"
-                value={formatCurrency(savingsSummary.lockedAmount)}
-              />
-              <Info
-                label="Available To Withdraw"
-                value={formatCurrency(
-                  typeof savingsSummary.availableBalance === "number"
-                    ? savingsSummary.availableBalance
-                    : savingsSummary.balance,
-                )}
-              />
-              <Info
-                label="Savings Deposits"
-                value={formatCurrency(savingsSummary.totalDeposits)}
-              />
-              <Info
-                label="Savings Debits"
-                value={formatCurrency(savingsSummary.totalDebits)}
-              />
+            <h3 className="pa-section-title">Account Summary</h3>
+            <div className="ad-summary-grid">
+              {summaryCards.map((card) => (
+                <SummaryCard key={card.title} {...card} />
+              ))}
             </div>
-          </div>
+          </>
         ) : (
-          "Loading"
+          <p className="pa-loading">Loading account...</p>
         )}
 
-        <div className="card">
-          <UserAccounts accountData={accountSections} />
-        </div>
+        <h3 className="pa-section-title">Account History</h3>
+        <UserAccounts accountData={accountSections} />
       </div>
 
       {savingsModal && (
@@ -495,15 +509,6 @@ function NewProfilePage() {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div className="info-item">
-      <span className="label">{label}</span>
-      <span className="value">{value}</span>
     </div>
   );
 }

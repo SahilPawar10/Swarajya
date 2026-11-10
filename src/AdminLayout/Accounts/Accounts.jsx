@@ -44,16 +44,27 @@ import {
   getDirectPayLoanInfo,
   getLoanRequest,
   importMonthlyFile,
+  rejectWithDrawReq,
   settleDirectAmount,
   updateLoanLoanStatus,
   updateLoanRequest,
 } from "../../api/apiService";
 import { TextField } from "@mui/material";
 import CustomizedSnackbars from "../../MainLayout/Components/ContactUS/CustomizedSnackbars";
+import RecordActions, { RECORD_FIELDS } from "./RecordActions";
 import UserSelect from "./UsersSelect";
-import { LoanSelect, MonthSelect } from "./LoanSelect";
+import { LoanSelect, MonthData, MonthSelect } from "./LoanSelect";
+import WithdrawalOverview, {
+  LoanCreditKpis,
+  SummaryCard,
+  useLoanOverview,
+} from "./AdminOverview";
 import InputFileUpload from "./InputFileUpload";
-import { generateExcelFileBuffer } from "../../utils/common";
+import {
+  formatCurrency,
+  formatPercent,
+  generateExcelFileBuffer,
+} from "../../utils/common";
 import { json } from "react-router-dom";
 import CircularWithValueLabel from "../../MainLayout/screens/Loading";
 import {
@@ -124,7 +135,8 @@ const filterdInstallmentData = (data) => {
       Name: row.name,
       LoanAmount: row.loanId?.loanAmount,
       TotalPaybale: row.loanId?.totalPaybale,
-      Duration: row.duration,
+      Duration: row.loanId?.duration,
+      Percentage: row.loanId?.percentage,
       PaidAmount: row.paidAmount,
       Remaining: row.remaining,
       Remark: row.remark,
@@ -134,13 +146,27 @@ const filterdInstallmentData = (data) => {
   return filteredData;
 };
 
-const formatCurrency = (amount) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(Number(amount || 0));
 
+
+// Instant loans run to the repayment date; long-term loans run whole 30-day months.
+const getLoanDays = (loanType, months, startDate, dueDate) => {
+  if (loanType === "long-term") {
+    const count = Number(months);
+    return Number.isInteger(count) && count > 0 ? count * 30 : null;
+  }
+  if (!dueDate?.isValid?.()) return null;
+  const days = dueDate.startOf("day").diff(startDate.startOf("day"), "day");
+  return days > 0 ? days : null;
+};
+
+// The loan call asks for a PDF blob, so a JSON error arrives as a blob too.
+const readBlobErrorMessage = async (err) => {
+  try {
+    return JSON.parse(await err.response.data.text()).message;
+  } catch {
+    return "something went wrong";
+  }
+};
 
 const formatFundingPercent = (part, total) => {
   const totalAmount = Number(total || 0);
@@ -418,7 +444,7 @@ const getRecentTransactions = (dashboard, credits, debits) => {
 function AccountOverviewChart({ data, selectedYear, years, onYearChange }) {
   const [hoveredPoint, setHoveredPoint] = React.useState(null);
   const chartWidth = 620;
-  const chartHeight = 300;
+  const chartHeight = 260;
   const padding = { top: 12, right: 12, bottom: 34, left: 44 };
   const plotWidth = chartWidth - padding.left - padding.right;
   const plotHeight = chartHeight - padding.top - padding.bottom;
@@ -693,10 +719,12 @@ function Accounts() {
   // const [users, setUsers] = React.useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedLoan, setSelectedLoan] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("Jan");
+  const [selectedMonth, setSelectedMonth] = useState(MonthData[dayjs().month()]);
   const [monthlyForm, setMonthlyform] = useState("");
 
   const [loanForm, setLoanForm] = React.useState();
+  const [loanDueDate, setLoanDueDate] = React.useState(null);
+  const [processingWithdrawId, setProcessingWithdrawId] = React.useState("");
   const [installmentForm, setInstallmentForm] = React.useState();
   const [savingsForm, setSavingsForm] = React.useState();
 
@@ -720,6 +748,8 @@ function Accounts() {
 
   const contribution = useSelector((state) => state.accounts.contribution);
   const dashReport = useSelector((state) => state.accounts.dashboard);
+  const isStaff = adminRoles.includes(role);
+  const loanOverview = useLoanOverview(isStaff, dashReport);
 
   const creditsData = useSelector((state) => state.accounts.credits);
   const debitsData = useSelector((state) => state.accounts.debits);
@@ -1095,13 +1125,40 @@ function Accounts() {
   };
 
   const handleLoanEntrySubmit = async () => {
-    setLoading(true);
-    // console.log(loanForm, "loanForm");
+    const loanDays = getLoanDays(
+      loanForm?.loanType,
+      loanForm?.duration,
+      selectedDate,
+      loanDueDate,
+    );
+    const member = loanForm?.member || selectedUser;
 
-    if (!loanForm?.date) {
-      loanForm.date = selectedDate.format("DD-MM-YYYY");
-    } else if (!loanForm?.member) loanForm.member = selectedUser;
-    await createLoanEntry(loanForm)
+    let validationError = "";
+    if (!loanForm?.loanType) validationError = "Please select the loan type.";
+    else if (!member) validationError = "Please select the member.";
+    else if (!loanDays) {
+      validationError =
+        loanForm.loanType === "long-term"
+          ? "Enter the number of months for this long-term loan."
+          : "Select a repayment date after the loan date.";
+    }
+    if (validationError) {
+      setSnack({ open: true, message: validationError, severity: "warning" });
+      return;
+    }
+
+    const { duration, ...loanDetails } = loanForm;
+    const payload = {
+      ...loanDetails,
+      member,
+      date: selectedDate.format("DD-MM-YYYY"),
+      ...(loanForm.loanType === "long-term"
+        ? { duration: Number(duration) }
+        : { dueDate: loanDueDate.format("DD-MM-YYYY") }),
+    };
+
+    setLoading(true);
+    await createLoanEntry(payload)
       .then((res) => {
         const url = window.URL.createObjectURL(
           new Blob([res.data], { type: "application/pdf" }),
@@ -1122,18 +1179,17 @@ function Accounts() {
         });
         handleLoanApptClose();
         setLoanForm();
+        setLoanDueDate(null);
         dashboardReport();
       })
-      .catch((err) => {
+      .catch(async (err) => {
         console.log(err, "err");
         setLoading(false);
-        // setMessage(err.response.data.message);
         setSnack({
           open: true,
-          message: err?.response?.data?.message || "something went wrong",
+          message: await readBlobErrorMessage(err),
           severity: "error",
         });
-        handleLoanApptClose();
       });
   };
 
@@ -1167,7 +1223,7 @@ function Accounts() {
       getAllInstallMentRcords();
     } else if (newValue === 5) {
       getLoanSummary();
-    } else if (newValue === 6) {
+    } else if (newValue === 7) {
       getAllWithdrawReq();
     }
     setValue(newValue);
@@ -1212,6 +1268,17 @@ function Accounts() {
 
   const dashboardReport = async () => {
     dispatch(fetchDashBoardReport());
+  };
+
+  // One edit can touch several tabs: a repayment also changes credits, the loan and the balances.
+  const refreshAccounts = () => {
+    getAllCredits();
+    getAllDebits();
+    getAllMonthly();
+    getAllInstallMentRcords();
+    getLoanSummary();
+    getAllWithdrawReq();
+    dashboardReport();
   };
 
   const approveLoanRequest = async (id) => {
@@ -1354,17 +1421,23 @@ function Accounts() {
     }
   };
 
-  const approveWithDrawRequest = async (id) => {
-    approveWithDrawReq({ withdrawId: id })
-      .then((res) => {
-        setSnack({
-          open: true,
-          message: "Request approved successfully!",
-          severity: "success",
-        });
-        getAllWithdrawReq();
-      })
-      .catch((err) => console.log(err));
+  const processWithdrawRequest = async (action, id, successMessage) => {
+    if (processingWithdrawId) return;
+    setProcessingWithdrawId(id);
+    try {
+      await action({ withdrawId: id });
+      setSnack({ open: true, message: successMessage, severity: "success" });
+      dashboardReport();
+    } catch (err) {
+      setSnack({
+        open: true,
+        message: err?.response?.data?.message || "something went wrong",
+        severity: "error",
+      });
+    } finally {
+      setProcessingWithdrawId("");
+      getAllWithdrawReq();
+    }
   };
 
   const directPayLoanData = async (id) => {
@@ -1626,11 +1699,18 @@ function Accounts() {
     },
     {
       title: "Upcoming Loan Money",
+      tab: 5,
       value: upcomingLoanMoney,
       note: "Total remaining payable",
       tone: "violet",
       icon: <SavingsIcon />,
     },
+  ];
+  const overallCards = [
+    { title: "Total Credits", value: dashReport?.overAllCredits, note: "All credit entries", tone: "green", tab: 1 },
+    { title: "Total Debits", value: dashReport?.overAllDebits, note: "All debit entries", tone: "rose", tab: 2 },
+    { title: "Total Loanouts", value: totalLoanouts, note: "All loans given", tone: "violet", tab: 5 },
+    { title: "Active Loanouts", value: currentActiveLoanouts, note: "Currently running", tone: "blue", tab: 5 },
   ];
   const savingsCards = [
     {
@@ -1727,6 +1807,8 @@ function Accounts() {
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
+            variant="scrollable"
+            scrollButtons="auto"
           >
             <Tab label="DashBoard" {...a11yProps(1)} />
             <Tab label="Credits" {...a11yProps(2)} />
@@ -1736,23 +1818,36 @@ function Accounts() {
             <Tab label="Active Loan" {...a11yProps(6)} />
             <Tab label="Reports" {...a11yProps(7)} />
             {role !== "user" && <Tab label="Widrawals" {...a11yProps(8)} />}
+            {adminRoles.includes(role) && (
+              <Tab label="Withdrawal Overview" value={9} {...a11yProps(9)} />
+            )}
           </Tabs>
         </Box>
         {/* DashBoard */}
         <CustomTabPanel value={value} index={0}>
           <div className="account-dashboard-v2">
+            <div className="ad-panel-header ao-kpi-head">
+              <h3>Account Balances</h3>
+            </div>
             <div className="ad-summary-grid">
               {summaryCards.map((card) => (
-                <div className="ad-summary-card" key={card.title}>
-                  <div className={`ad-icon ad-${card.tone}`}>{card.icon}</div>
-                  <div>
-                    <p>{card.title}</p>
-                    <strong>{formatCurrency(card.value)}</strong>
-                    <span>{card.note}</span>
-                  </div>
-                </div>
+                <SummaryCard
+                  key={card.title}
+                  title={card.title}
+                  value={formatCurrency(card.value)}
+                  note={card.note}
+                  tone={card.tone}
+                  icon={card.icon}
+                  onClick={card.tab ? () => handleChange(null, card.tab) : undefined}
+                />
               ))}
             </div>
+            {isStaff && (
+              <LoanCreditKpis
+                overview={loanOverview}
+                onOpenTab={(tab) => handleChange(null, tab)}
+              />
+            )}
 
             <div className="ad-dashboard-grid">
               <AccountOverviewChart
@@ -1802,11 +1897,16 @@ function Accounts() {
                   {dashboardContributors.map((record, index) => {
                     const name = getContributionName(record);
                     return (
-                      <div className="ad-ranked-row" key={`${name}-${index}`}>
+                      <button
+                        type="button"
+                        className="ad-ranked-row ad-row-button"
+                        key={`${name}-${index}`}
+                        onClick={() => handleChange(null, 3)}
+                      >
                         <span>{index + 1}</span>
                         <strong>{name}</strong>
                         <b>{formatCurrency(record.totalAmount)}</b>
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
@@ -1814,7 +1914,7 @@ function Accounts() {
               <div className="ad-panel ad-combined-summary">
                 <div className="ad-panel-header">
                   <h3>Account Summary</h3>
-                  <button type="button" onClick={() => setValue(5)}>
+                  <button type="button" onClick={() => handleChange(null, 5)}>
                     View Loans
                   </button>
                 </div>
@@ -1823,22 +1923,18 @@ function Accounts() {
                   <div className="ad-summary-section">
                     <h4>Overall</h4>
                     <div className="ad-compact-values">
-                      <div className="ad-mini-stat ad-mini-green">
-                        <span>Total Credits</span>
-                        <strong>{formatCurrency(dashReport?.overAllCredits)}</strong>
-                      </div>
-                      <div className="ad-mini-stat ad-mini-rose">
-                        <span>Total Debits</span>
-                        <strong>{formatCurrency(dashReport?.overAllDebits)}</strong>
-                      </div>
-                      <div className="ad-mini-stat ad-mini-violet">
-                        <span>Total Loanouts</span>
-                        <strong>{formatCurrency(totalLoanouts)}</strong>
-                      </div>
-                      <div className="ad-mini-stat ad-mini-blue">
-                        <span>Active Loanouts</span>
-                        <strong>{formatCurrency(currentActiveLoanouts)}</strong>
-                      </div>
+                      {overallCards.map((card) => (
+                        <button
+                          type="button"
+                          className={`ad-mini-stat ad-mini-${card.tone} ad-clickable`}
+                          key={card.title}
+                          onClick={() => handleChange(null, card.tab)}
+                        >
+                          <span>{card.title}</span>
+                          <strong>{formatCurrency(card.value)}</strong>
+                          <small>{card.note}</small>
+                        </button>
+                      ))}
                     </div>
                   </div>
 
@@ -1873,24 +1969,26 @@ function Accounts() {
                   {recentTransactions.map((transaction, index) => {
                     const isCredit = transaction.direction !== "debit";
                     return (
-                      <div
-                        className="ad-transaction-row"
+                      <button
+                        type="button"
+                        className="ad-transaction-row ad-row-button"
                         key={transaction.id || `${transaction.name}-${index}`}
+                        onClick={() => handleChange(null, isCredit ? 1 : 2)}
                       >
                         <span
                           className={`ad-avatar ${isCredit ? "credit" : "debit"}`}
                         >
                           {getInitials(transaction.name)}
                         </span>
-                        <div>
+                        <span>
                           <strong>{transaction.name || "Transaction"}</strong>
                           <small>{transaction.type}</small>
-                        </div>
+                        </span>
                         <b className={isCredit ? "positive" : "negative"}>
                           {isCredit ? "" : "-"}
                           {formatCurrency(transaction.amount)}
                         </b>
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
@@ -1947,6 +2045,7 @@ function Accounts() {
                         <th>Amount</th>
                         <th>Credits By</th>
                         <th>Description</th>
+                        {isStaff && <th>Action</th>}
                       </tr>
                     </thead>
                     <tbody>
@@ -1961,6 +2060,18 @@ function Accounts() {
                           </td>
                           <td className="bold-score">{c.creditBy || "-"}</td>
                           <td>{c?.desc || "-"}</td>
+                          {isStaff && (
+                            <td>
+                              <RecordActions
+                            title="Edit credit"
+                            record={c}
+                            type="credits"
+                            fields={RECORD_FIELDS.credits}
+                            lockedBy={c?.linkedTo}
+                            onDone={refreshAccounts}
+                          />
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
@@ -2011,6 +2122,7 @@ function Accounts() {
                       <th>Amount</th>
                       <th>Debits By</th>
                       <th>description</th>
+                      {isStaff && <th>Action</th>}
                       {/* <th>Email</th>
                       <th>Telephone</th>
                       <th>Created</th> */}
@@ -2029,6 +2141,18 @@ function Accounts() {
                         {/* <td>{c.type}</td> */}
                         <td className="bold-score">{c.debitBy || "-"}</td>
                         <td>{c?.desc || "-"}</td>
+                        {isStaff && (
+                          <td>
+                            <RecordActions
+                            title="Edit debit"
+                            record={c}
+                            type="debits"
+                            fields={RECORD_FIELDS.debits}
+                            lockedBy={c?.linkedTo}
+                            onDone={refreshAccounts}
+                          />
+                          </td>
+                        )}
                         {/* <td>{c.phone}</td>
                         <td>{c.created}</td> */}
                       </tr>
@@ -2174,6 +2298,7 @@ function Accounts() {
                       <th>Month</th>
                       <th>Year</th>
                       <th>Amount</th>
+                      {isStaff && <th>Action</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -2187,6 +2312,18 @@ function Accounts() {
                         <td>{c?.month}</td>
                         <td>{c?.year || "-"}</td>
                         <td>{c?.amount}</td>
+                        {isStaff && (
+                          <td>
+                            <RecordActions
+                              title="Edit monthly contribution"
+                              record={c}
+                              type="monthly"
+                              fields={RECORD_FIELDS.monthly}
+                              deleteNote="Delete this contribution? Its credit entry and the member's savings total will be reduced too."
+                              onDone={refreshAccounts}
+                            />
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -2244,20 +2381,21 @@ function Accounts() {
 
               <div className="loan-list-container">
                 <div className="loan-list installment-list">
-                  <div className="installment-row installment-list-header">
+                  <div className={`installment-row installment-list-header${isStaff ? " with-actions" : ""}`}>
                     <span className="loan-col-sr">Sr No</span>
                     <span>Borrower</span>
                     <span>Loan</span>
                     <span>This Payment</span>
                     <span>Remaining</span>
                     <span>Remark</span>
+                    {isStaff && <span>Action</span>}
                   </div>
                   {filteredInstallments.map((c, i) => {
                     const remaining = Number(c?.remaining || 0);
                     const isPaid = remaining <= 0;
 
                     return (
-                      <div className="installment-row" key={c?.id || i}>
+                      <div className={`installment-row${isStaff ? " with-actions" : ""}`} key={c?.id || i}>
                         <div className="loan-col-sr">{i + 1}</div>
 
                         <div className="loan-borrower">
@@ -2272,7 +2410,10 @@ function Accounts() {
 
                         <div className="installment-loan-col">
                           <strong>{formatCurrency(c?.loanId?.loanAmount)}</strong>
-                          <small>{c?.loanId?.duration || "-"} days</small>
+                          <small>
+                            {c?.loanId?.duration || "-"} days ·{" "}
+                            {formatPercent(c?.loanId?.percentage)}
+                          </small>
                         </div>
 
                         <div className="installment-payment-col">
@@ -2294,6 +2435,19 @@ function Accounts() {
                         <div className="installment-remark-col">
                           {c?.remark || "-"}
                         </div>
+
+                        {isStaff && (
+                          <div>
+                            <RecordActions
+                              title="Edit repayment"
+                              record={c}
+                              type="installment"
+                              fields={RECORD_FIELDS.installment}
+                              deleteNote="Delete this repayment? Its credit entry is removed, and if this closed the loan, the loan reopens and the shared interest is taken back."
+                              onDone={refreshAccounts}
+                            />
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -2354,6 +2508,8 @@ function Accounts() {
                                 : 0,
                             EMI: Number(c?.emi || 0),
                             DurationDays: c?.duration || 0,
+                            InterestPercent: formatPercent(c?.percentage),
+                            DueDate: c?.dueDate || "",
                           })),
                           "active-loans.xlsx",
                         )
@@ -2526,6 +2682,9 @@ function Accounts() {
 
                         <div className="loan-details-col">
                           <div>
+                            Interest <b>{formatPercent(c?.percentage)}</b>
+                          </div>
+                          <div>
                             EMI <b>{c?.emi ? formatCurrency(c.emi) : "-"}</b>
                           </div>
                           <div>
@@ -2536,7 +2695,10 @@ function Accounts() {
                                 : "-"}
                             </b>
                           </div>
-                          <div>{c?.duration || 0} days</div>
+                          <div>
+                            {c?.duration || 0} days
+                            {c?.dueDate ? ` | due ${c.dueDate}` : ""}
+                          </div>
                         </div>
 
                         <div className="loan-action-col">
@@ -2547,8 +2709,25 @@ function Accounts() {
                             >
                               Direct Pay
                             </button>
-                          ) : (
+                          ) : isStaff ? null : (
                             "-"
+                          )}
+                          {isStaff && (
+                            <RecordActions
+                              title="Edit loan"
+                              record={{
+                                ...c,
+                                duration: c?.loanType === "long-term" ? c?.duration / 30 : c?.duration,
+                              }}
+                              type="loan"
+                              fields={
+                                c?.totalPaid > 0
+                                  ? RECORD_FIELDS.loanReason
+                                  : RECORD_FIELDS.loan(c?.loanType === "long-term")
+                              }
+                              deleteNote="Delete this loan? Its debit entry is removed too, and the money returns to the group balance."
+                              onDone={refreshAccounts}
+                            />
                           )}
                         </div>
                       </div>
@@ -2606,6 +2785,7 @@ function Accounts() {
                     <th>Date</th>
                     <th>Name</th>
                     <th> Amount</th>
+                    <th>Action</th>
                     {/* <th>Total Payble</th>
                     <th>Percentage</th>
                     <th>reason</th>
@@ -2613,6 +2793,11 @@ function Accounts() {
                   </tr>
                 </thead>
                 <tbody>
+                  {withdrawReqData.length === 0 && (
+                    <tr>
+                      <td colSpan="5">No pending withdraw requests</td>
+                    </tr>
+                  )}
                   {withdrawReqData.map((c, i) => (
                     <tr key={i}>
                       <td>{i + 1}</td>
@@ -2628,13 +2813,37 @@ function Accounts() {
                         <div class="button-group-loan">
                           <button
                             class="btn-loan approve"
+                            disabled={Boolean(processingWithdrawId)}
                             onClick={() => {
-                              approveWithDrawRequest(c.id);
+                              processWithdrawRequest(
+                                approveWithDrawReq,
+                                c.id,
+                                "Withdrawal approved and paid.",
+                              );
                             }}
                           >
                             Approve
                           </button>
-                          <button class="btn-loan reject">Reject</button>
+                          <button
+                            class="btn-loan reject"
+                            disabled={Boolean(processingWithdrawId)}
+                            onClick={() => {
+                              processWithdrawRequest(
+                                rejectWithDrawReq,
+                                c.id,
+                                "Withdrawal request rejected.",
+                              );
+                            }}
+                          >
+                            Reject
+                          </button>
+                          <RecordActions
+                            title="Edit withdrawal request"
+                            record={c}
+                            type="withdraw"
+                            fields={RECORD_FIELDS.withdraw}
+                            onDone={refreshAccounts}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2643,6 +2852,9 @@ function Accounts() {
               </table>
             </div>
           </div>
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={9}>
+          <WithdrawalOverview />
         </CustomTabPanel>
         {/* old Dashboard */}
         <CustomTabPanel value={value} index={8}>
@@ -3095,13 +3307,45 @@ function Accounts() {
               />
             </Grid>
 
-            {/* Duration */}
+            {/* Repayment schedule: days are always calculated */}
+            <Grid item xs={12} sm={6}>
+              {loanForm?.loanType === "long-term" ? (
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="Duration (months)"
+                  name="duration"
+                  value={loanForm?.duration || ""}
+                  onChange={onLoanFormChange}
+                />
+              ) : (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Repayment Date"
+                    value={loanDueDate}
+                    minDate={selectedDate.add(1, "day")}
+                    onChange={setLoanDueDate}
+                    format="DD-MM-YYYY"
+                    slotProps={{ textField: { fullWidth: true } }}
+                  />
+                </LocalizationProvider>
+              )}
+            </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Duration"
-                name="duration"
-                onChange={onLoanFormChange}
+                label="Days (calculated)"
+                value={
+                  getLoanDays(
+                    loanForm?.loanType,
+                    loanForm?.duration,
+                    selectedDate,
+                    loanDueDate,
+                  ) ?? ""
+                }
+                InputProps={{ readOnly: true }}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
 
@@ -3345,9 +3589,9 @@ function Accounts() {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Loan Amount"
-                name="loanAmount"
-                value={directPayLoanInfo?.date}
+                label="Loan Date"
+                name="loanDate"
+                value={directPayLoanInfo?.date || ""}
                 // onChange={onLoanFormChange}
               />
             </Grid>
@@ -3356,10 +3600,20 @@ function Accounts() {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
+                label="Name"
+                name="directPayName"
+                value={directPayLoanInfo?.name || ""}
+                InputProps={{ readOnly: true }}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
                 label="Percentage"
-                name="percentage"
-                value={directPayLoanInfo?.name}
-                onChange={onLoanFormChange}
+                name="directPayPercentage"
+                value={formatPercent(directPayLoanInfo?.percentage)}
+                InputProps={{ readOnly: true }}
               />
             </Grid>
 

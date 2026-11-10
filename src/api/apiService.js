@@ -391,6 +391,10 @@ export const approveWithDrawReq = (data) => {
   });
 };
 
+export const rejectWithDrawReq = (data) => {
+  return Axios.post(`/loan/reject-withdraw-req`, data);
+};
+
 export const downloadUserAccountStatement = (id) => {
   return Axios.get(`/loan/download-account-statement?id=${id}`, {
     responseType: "blob",
@@ -554,3 +558,10 @@ export const downloadVarganiData = (params = {}) => {
     responseType: "blob",
   });
 };
+
+export const updateRecord = (type, id, data) => Axios.put(`/loan/records/${type}/${id}`, data);
+export const deleteRecord = (type, id) => Axios.delete(`/loan/records/${type}/${id}`);
+export const deleteUser = (id) => Axios.delete(`/users/${id}`);
+export const updateVisitor = (id, data) => Axios.put(`/visitor/${id}`, data);
+export const deleteVisitor = (id) => Axios.delete(`/visitor/${id}`);
+export const updateVarganiEntry = (id, data) => Axios.put(`/vargani/${id}`, data);

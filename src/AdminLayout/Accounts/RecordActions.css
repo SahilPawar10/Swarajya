@@ -1,0 +1,11 @@
+.record-actions {
+  align-items: center;
+  display: inline-flex;
+  gap: 2px;
+}
+
+.record-locked {
+  color: #98a2b3;
+  font-size: 12px;
+  white-space: nowrap;
+}
