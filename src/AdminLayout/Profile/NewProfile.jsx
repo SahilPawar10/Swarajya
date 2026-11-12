@@ -94,7 +94,7 @@ function NewProfilePage() {
             return {
               label: item.date,
               value: hasPersonalSavingsFund
-                ? `${formatCurrency(item.loanAmount)} | ${terms} | Group ${formatCurrency(
+                ? `${formatCurrency(item.loanAmount)} | ${terms}\nGroup ${formatCurrency(
                     item.groupFundAmount,
                   )} | Savings ${formatCurrency(item.personalSavingsFundAmount)}`
                 : `${formatCurrency(item.loanAmount)} | ${terms}`,
@@ -136,14 +136,22 @@ function NewProfilePage() {
           })) || [],
       },
       {
-        title: "Locked Savings",
-        emptyMessage: "No savings locked in active loans",
+        title: "Savings Used in Loans",
+        emptyMessage: "No savings used in loans",
         rows:
           accountsData.data.savings?.lockedLoans?.map((item) => ({
-            label: `${item?.date || "-"} ${item?.borrowerName || "Loan"}`,
-            value: `${formatCurrency(item?.lockedAmount)} locked in ${formatCurrency(
-              item?.loanAmount,
-            )}`,
+            label: `${item?.date || "-"}\n${item?.borrowerName || "Loan"}`,
+            value: `${formatCurrency(item?.lockedAmount)} ${
+              item?.isLocked ? "locked" : "used"
+            } of ${formatCurrency(item?.loanAmount)}${
+              item?.isLocked
+                ? ""
+                : `\nOn savings ${formatCurrency(item?.savingsInterest)} | On shares ${formatCurrency(
+                    item?.shareInterest,
+                  )}\nTotal interest ${formatCurrency(item?.earnedInterest)} | ${
+                    item?.status === "paid" ? "Paid" : item?.status
+                  }`
+            }`,
           })) || [],
       },
       {

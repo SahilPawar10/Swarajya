@@ -400,15 +400,16 @@
 #newprofile .account-table .date {
   color: #667085;
   padding-right: 10px;
-  white-space: nowrap;
+  white-space: pre;
 }
 
 #newprofile .account-table .amount {
   color: #101828;
   font-weight: 700;
   line-height: 1.35;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   text-align: right;
+  white-space: pre-line;
 }
 
 /* Responsive */
