@@ -420,6 +420,7 @@ const getRecentTransactions = (dashboard, credits, debits) => {
   const creditEntries = credits.map((entry) => ({
     id: entry.id,
     name: entry.creditBy,
+    desc: entry.desc || "",
     amount: entry.amount,
     type: "Credit Entry",
     direction: "credit",
@@ -429,6 +430,7 @@ const getRecentTransactions = (dashboard, credits, debits) => {
   const debitEntries = debits.map((entry) => ({
     id: entry.id,
     name: entry.debitBy,
+    desc: entry.desc || "",
     amount: entry.amount,
     type: "Debit Entry",
     direction: "debit",
@@ -1355,6 +1357,7 @@ function Accounts() {
       SrNo: index + 1,
       Date: transaction.date || transaction.createdAt || "",
       Name: transaction.name || "Transaction",
+      Description: transaction.desc || "",
       Type: transaction.type || "",
       Direction: transaction.direction || "credit",
       Amount: Number(transaction.amount || 0),
