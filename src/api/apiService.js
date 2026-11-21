@@ -565,3 +565,9 @@ export const deleteUser = (id) => Axios.delete(`/users/${id}`);
 export const updateVisitor = (id, data) => Axios.put(`/visitor/${id}`, data);
 export const deleteVisitor = (id) => Axios.delete(`/visitor/${id}`);
 export const updateVarganiEntry = (id, data) => Axios.put(`/vargani/${id}`, data);
+
+export const getSheetLinks = (params) => Axios.get("/sheet-links", { params });
+export const createSheetLink = (data) => Axios.post("/sheet-links", data);
+
+export const updateSheetLink = (id, data) => Axios.patch(`/sheet-links/${id}`, data);
+export const deleteSheetLink = (id) => Axios.delete(`/sheet-links/${id}`);

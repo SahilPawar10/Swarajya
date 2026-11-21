@@ -30,6 +30,8 @@ import Reset_Password from "./MainLayout/screens/Password_Reset/Reset_Password";
 import SendMai from "./MainLayout/Pages/SendMai";
 import MyContacts from "./chat/MyContacts";
 
+import SheetLinks from "./AdminLayout/SheetLinks/SheetLinks";
+
 function App() {
   return (
     <div className="App">
@@ -60,6 +62,7 @@ function App() {
         <Route path="/mycontacts" element={<MyContacts />} />
         <Route path="/project-tracker" element={<ProjectTracker />} />
         <Route path="/vargani" element={<Vargani />} />
+        <Route path="/sheet-links" element={<SheetLinks />} />
         <Route path="/forgot_password" element={<Forgot_Password />} />
         <Route path="/reset_password/:token" element={<Reset_Password />} />
       </Routes>

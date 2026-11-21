@@ -181,6 +181,10 @@ function Sidebar({ menu = "menu" }) {
               Project Tracker
             </Link>
           </li>
+          <li id="sheet-links">
+            <span><CollectionsIcon sx={{ fontSize: "1.4rem", color: "#fd7e14" }} /></span>
+            <Link to="/sheet-links" className="side-menu">Important Sheets</Link>
+          </li>
           <li id="vargani">
             <span>
               <EmojiEventsIcon
@@ -323,6 +327,10 @@ function Sidebar({ menu = "menu" }) {
             <Link to="/project-tracker" className="side-menu">
               Project Tracker
             </Link>
+          </li>
+          <li id="sheet-links">
+            <span><CollectionsIcon sx={{ fontSize: "1.4rem", color: "#fd7e14" }} /></span>
+            <Link to="/sheet-links" className="side-menu">Important Sheets</Link>
           </li>
           <li id="vargani">
             <span>
