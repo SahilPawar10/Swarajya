@@ -12,7 +12,7 @@ import { getUserWithoutPhoto } from "../../api/apiService";
 const ITEM_HEIGHT = 48;
 const MENU_HEIGHT = 6 * ITEM_HEIGHT; // Show 6 items before scrolling
 
-export default function UserSelect({ selectedUser, handleUserChange }) {
+export default function UserSelect({ selectedUser, handleUserChange, size = "medium" }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = React.useState("user");
@@ -47,7 +47,7 @@ export default function UserSelect({ selectedUser, handleUserChange }) {
   }, []);
 
   return (
-    <FormControl fullWidth sx={{ marginBottom: "20px" }}>
+    <FormControl fullWidth size={size} sx={{ marginBottom: "20px" }}>
       <InputLabel id="user-select-label">Select User</InputLabel>
       <Select
         labelId="user-select-label"

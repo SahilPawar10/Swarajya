@@ -53,6 +53,8 @@ import { TextField } from "@mui/material";
 import CustomizedSnackbars from "../../MainLayout/Components/ContactUS/CustomizedSnackbars";
 import RecordActions, { RECORD_FIELDS } from "./RecordActions";
 import UserSelect from "./UsersSelect";
+import LoanRepaymentPreview from "./LoanRepaymentPreview";
+import { getLoanDays, getDurationDueDate, getLoanPreview } from "./loanPreview";
 import { LoanSelect, MonthData, MonthSelect } from "./LoanSelect";
 import WithdrawalOverview, {
   LoanCreditKpis,
@@ -147,17 +149,6 @@ const filterdInstallmentData = (data) => {
 };
 
 
-
-// Instant loans run to the repayment date; long-term loans run whole 30-day months.
-const getLoanDays = (loanType, months, startDate, dueDate) => {
-  if (loanType === "long-term") {
-    const count = Number(months);
-    return Number.isInteger(count) && count > 0 ? count * 30 : null;
-  }
-  if (!dueDate?.isValid?.()) return null;
-  const days = dueDate.startOf("day").diff(startDate.startOf("day"), "day");
-  return days > 0 ? days : null;
-};
 
 // The loan call asks for a PDF blob, so a JSON error arrives as a blob too.
 const readBlobErrorMessage = async (err) => {
@@ -726,6 +717,12 @@ function Accounts() {
 
   const [loanForm, setLoanForm] = React.useState();
   const [loanDueDate, setLoanDueDate] = React.useState(null);
+  const [loanDurationUnit, setLoanDurationUnit] = React.useState("days");
+  const [loanDurationCount, setLoanDurationCount] = React.useState("");
+  const repaymentDate = loanDurationUnit === "date"
+    ? loanDueDate
+    : getDurationDueDate(selectedDate, loanDurationCount, loanDurationUnit);
+  const loanPreview = getLoanPreview(loanForm, selectedDate, repaymentDate);
   const [processingWithdrawId, setProcessingWithdrawId] = React.useState("");
   const [installmentForm, setInstallmentForm] = React.useState();
   const [savingsForm, setSavingsForm] = React.useState();
@@ -914,7 +911,7 @@ function Accounts() {
     } else if (form === "loan") {
       setLoanForm((prev) => ({
         ...prev,
-        date: newValue.format("DD-MM-YYYY"),
+        date: newValue?.isValid?.() ? newValue.format("DD-MM-YYYY") : "",
       }));
     } else if (form === "installment") {
       setInstallmentForm((prev) => ({
@@ -1131,19 +1128,23 @@ function Accounts() {
       loanForm?.loanType,
       loanForm?.duration,
       selectedDate,
-      loanDueDate,
+      repaymentDate,
     );
     const member = loanForm?.member || selectedUser;
 
     let validationError = "";
     if (!loanForm?.loanType) validationError = "Please select the loan type.";
     else if (!member) validationError = "Please select the member.";
+    else if (!selectedDate?.isValid?.()) validationError = "Please select a valid loan date.";
     else if (!loanDays) {
       validationError =
         loanForm.loanType === "long-term"
           ? "Enter the number of months for this long-term loan."
           : "Select a repayment date after the loan date.";
     }
+    if (!validationError && !loanPreview) validationError = "Enter a positive loan amount and a valid rate of 0% or more.";
+    if (!validationError && !loanForm?.name?.trim()) validationError = "Please enter the borrower name.";
+    if (!validationError && !loanForm?.reason?.trim()) validationError = "Please enter the loan reason.";
     if (validationError) {
       setSnack({ open: true, message: validationError, severity: "warning" });
       return;
@@ -1153,10 +1154,12 @@ function Accounts() {
     const payload = {
       ...loanDetails,
       member,
+      loanAmount: Number(loanForm.loanAmount),
+      percentage: Number(loanForm.percentage),
       date: selectedDate.format("DD-MM-YYYY"),
       ...(loanForm.loanType === "long-term"
         ? { duration: Number(duration) }
-        : { dueDate: loanDueDate.format("DD-MM-YYYY") }),
+        : { dueDate: repaymentDate.format("DD-MM-YYYY") }),
     };
 
     setLoading(true);
@@ -1182,6 +1185,8 @@ function Accounts() {
         handleLoanApptClose();
         setLoanForm();
         setLoanDueDate(null);
+        setLoanDurationCount("");
+        setLoanDurationUnit("days");
         dashboardReport();
       })
       .catch(async (err) => {
@@ -3184,24 +3189,29 @@ function Accounts() {
       <Modal
         open={loanAppModal}
         onClose={handleLoanApptClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby="loan-application-title"
       >
         <Box
           // sx={style}
           sx={{
             ...style,
-            width: "900px", // wider modal
-            maxWidth: "90%",
-            padding: "30px",
+            width: "760px",
+            maxWidth: "calc(100% - 24px)",
+            boxSizing: "border-box",
+            border: "none",
+            borderRadius: 2,
+            "& .MuiFormControl-root": { marginBottom: 0 },
+            maxHeight: "90vh",
+            overflowY: "auto",
+            padding: { xs: "16px", sm: "20px" },
           }}
         >
           <Typography
-            id="modal-modal-description"
+            id="loan-application-title"
             sx={{
-              mt: 1,
-              textAlign: "center",
-              fontSize: "30px",
+              mt: 0,
+              textAlign: "left",
+              fontSize: "21px",
               color: "blueviolet",
               fontWeight: "800",
             }}
@@ -3209,24 +3219,23 @@ function Accounts() {
             Loan Application
           </Typography>
 
-          <Grid container spacing={2} sx={{ mt: 2 }}>
+          <Grid container spacing={1.5} sx={{ mt: 0.5 }}>
             {/* Date Picker */}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Select Date"
                   value={selectedDate}
                   onChange={(newValue) => handleDateChange(newValue, "loan")}
                   format="DD-MM-YYYY"
-                  slotProps={{ textField: { fullWidth: true } }}
+                  slotProps={{ textField: { fullWidth: true, size: "small" } }}
                 />
               </LocalizationProvider>
             </Grid>
 
             {/* Loan Type */}
-            {/* Loan Type */}
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth size="small">
                 <InputLabel id="loan-type-label">Loan Type</InputLabel>
                 <Select
                   labelId="loan-type-label"
@@ -3242,59 +3251,34 @@ function Accounts() {
             </Grid>
 
             {/* Loan Amount */}
-            <Grid item xs={12} sm={6}>
-              <TextField
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField size="small"
                 fullWidth
                 label="Loan Amount"
+                type="number"
+                inputProps={{ min: 0.01, step: "0.01" }}
+                value={loanForm?.loanAmount ?? ""}
                 name="loanAmount"
                 onChange={onLoanFormChange}
               />
             </Grid>
 
-            {/* Percentage Note */}
-            <Grid item xs={12}>
-              <Box
-                sx={{
-                  backgroundColor: "#f5f7ff",
-                  border: "1px solid #d6ddff",
-                  borderRadius: "8px",
-                  padding: "12px 14px",
-                  fontSize: "13px",
-                  color: "#2b3a67",
-                }}
-              >
-                <Typography sx={{ fontWeight: 700, mb: 0.5 }}>
-                  Percentage slabs (Internal members)
-                </Typography>
-                <Typography sx={{ fontSize: "13px", lineHeight: 1.6 }}>
-                  Amount ≤ 5,000: 3%
-                  <br />
-                  Amount ≤ 10,000: 2.5%
-                  <br />
-                  Amount ≤ 25,000: 2%
-                  <br />
-                  Amount ≤ 50,000: 1%
-                </Typography>
-                <Typography sx={{ fontSize: "13px", lineHeight: 1.6, mt: 1 }}>
-                  Note: External members should be charged 5% or higher (as
-                  discussed).
-                </Typography>
-              </Box>
-            </Grid>
-
             {/* Percentage */}
-            <Grid item xs={12} sm={6}>
-              <TextField
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField size="small"
                 fullWidth
-                label="Percentage"
+                label="Interest rate (% per 30 days)"
+                type="number"
+                inputProps={{ min: 0, step: "any" }}
+                value={loanForm?.percentage ?? ""}
                 name="percentage"
                 onChange={onLoanFormChange}
               />
             </Grid>
 
             {/* Name */}
-            <Grid item xs={12} sm={6}>
-              <TextField
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField size="small"
                 fullWidth
                 label="Name"
                 name="name"
@@ -3303,58 +3287,60 @@ function Accounts() {
             </Grid>
 
             {/* User Select */}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <UserSelect
+                size="small"
                 selectedUser={selectedUser}
                 handleUserChange={(event) => handleUserChange(event, "loan")}
               />
             </Grid>
 
-            {/* Repayment schedule: days are always calculated */}
-            <Grid item xs={12} sm={6}>
-              {loanForm?.loanType === "long-term" ? (
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Duration (months)"
-                  name="duration"
-                  value={loanForm?.duration || ""}
-                  onChange={onLoanFormChange}
-                />
-              ) : (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Repayment Date"
-                    value={loanDueDate}
-                    minDate={selectedDate.add(1, "day")}
-                    onChange={setLoanDueDate}
-                    format="DD-MM-YYYY"
-                    slotProps={{ textField: { fullWidth: true } }}
-                  />
-                </LocalizationProvider>
-              )}
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Days (calculated)"
-                value={
-                  getLoanDays(
-                    loanForm?.loanType,
-                    loanForm?.duration,
-                    selectedDate,
-                    loanDueDate,
-                  ) ?? ""
-                }
-                InputProps={{ readOnly: true }}
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
+            {loanForm?.loanType === "long-term" ? (
+              <>
+                <Grid item xs={12} sm={6} md={4}>
+                  <TextField size="small" fullWidth type="number" label="Duration (months)" name="duration"
+                    value={loanForm?.duration ?? ""} onChange={onLoanFormChange}
+                    inputProps={{ min: 1, step: 1 }} />
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item xs={12} sm={6} md={4}>
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="loan-duration-unit-label">Repayment schedule</InputLabel>
+                    <Select labelId="loan-duration-unit-label" label="Repayment schedule"
+                      value={loanDurationUnit} onChange={(event) => {
+                        const unit = event.target.value;
+                        if (unit === "date") setLoanDueDate(repaymentDate);
+                        setLoanDurationUnit(unit);
+                      }}>
+                      <MenuItem value="days">Days</MenuItem>
+                      <MenuItem value="weeks">Weeks</MenuItem>
+                      <MenuItem value="months">Months (30 days each)</MenuItem>
+                      <MenuItem value="date">Choose repayment date</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {loanDurationUnit === "date" ? (
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker label="Repayment Date" value={loanDueDate}
+                        minDate={selectedDate?.isValid?.() ? selectedDate.add(1, "day") : undefined}
+                        onChange={setLoanDueDate} format="DD-MM-YYYY"
+                        slotProps={{ textField: { fullWidth: true, size: "small" } }} />
+                    </LocalizationProvider>
+                  ) : (
+                    <TextField size="small" fullWidth type="number" label={`Duration (${loanDurationUnit})`}
+                      value={loanDurationCount} onChange={(event) => setLoanDurationCount(event.target.value)}
+                      inputProps={{ min: 1, step: 1 }} />
+                  )}
+                </Grid>
+              </>
+            )}
 
             {/* Reason */}
-            <Grid item xs={12} sm={6}>
-              <TextField
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField size="small"
                 fullWidth
                 label="Reason"
                 name="reason"
@@ -3362,13 +3348,30 @@ function Accounts() {
               />
             </Grid>
 
+            <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary">
+                {(() => {
+                  const days = getLoanDays(loanForm?.loanType, loanForm?.duration, selectedDate, repaymentDate);
+                  return days ? `${days} days · Repayment: ${selectedDate.add(days, "day").format("DD-MM-YYYY")} · 1 month = 30 days` : "Select a duration or repayment date. One month = 30 days.";
+                })()}
+              </Typography>
+              <Box component="details" sx={{ mt: 0.5, fontSize: 12, color: "text.secondary", "& summary": { cursor: "pointer" } }}>
+                <summary>Interest rate guide</summary>
+                Internal: up to 5,000: 3% · 10,000: 2.5% · 25,000: 2% · 50,000: 1%. External: 5% or higher, as discussed.
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <LoanRepaymentPreview preview={loanPreview} />
+            </Grid>
+
             {/* Submit Button */}
             <Grid item xs={12}>
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ marginBottom: "30px" }}
+                sx={{ py: 1 }}
                 onClick={handleLoanEntrySubmit}
+                disabled={loading || !loanPreview}
               >
                 {loading ? "Sending" : "Submit"}
               </Button>
