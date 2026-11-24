@@ -500,3 +500,10 @@
     padding-left: 32px;
   }
 }
+
+.pa-account-tabs { display: flex; gap: 6px; padding: 5px; margin-bottom: 22px; background: #edf2ef; border-radius: 12px; width: fit-content; }
+.pa-account-tabs button { border: 0; border-radius: 9px; padding: 12px 22px; background: transparent; color: #45605b; font-weight: 600; cursor: pointer; }
+.pa-account-tabs button[aria-selected="true"] { background: #173c38; color: #fff; box-shadow: 0 2px 6px #173c3820; }
+.pa-account-tabs button:focus-visible { outline: 3px solid #d6a249; outline-offset: 2px; }
+.pa-expense-user { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; }
+@media (max-width: 600px) { .pa-account-tabs { width: 100%; } .pa-account-tabs button { flex: 1; padding: 12px; } }

@@ -1,3 +1,4 @@
+import ExpenseTracker from "./ExpenseTracker";
 import React, { useEffect, useMemo, useState } from "react";
 import "./newprofile.css";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
@@ -36,6 +37,7 @@ const getToday = () => {
 };
 
 function NewProfilePage() {
+  const [accountTab, setAccountTab] = useState("account");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savingsModal, setSavingsModal] = useState(false);
   const [savingsTransactionType, setSavingsTransactionType] =
@@ -318,6 +320,30 @@ function NewProfilePage() {
   return (
     <div id="newprofile">
       <div className="profile-container">
+        <div className="pa-account-tabs" role="tablist" aria-label="Personal account sections">
+          {[{ id: "account", label: "Account overview" }, { id: "expenses", label: "Expenses" }].map((tab, index) => (
+            <button key={tab.id} type="button" role="tab" id={`pa-tab-${tab.id}`} aria-controls={`pa-panel-${tab.id}`} aria-selected={accountTab === tab.id} tabIndex={accountTab === tab.id ? 0 : -1} onClick={() => setAccountTab(tab.id)} onKeyDown={(event) => {
+              if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+                event.preventDefault();
+                const next = event.key === "Home" ? "account" : event.key === "End" ? "expenses" : index === 0 ? "expenses" : "account";
+                setAccountTab(next);
+                document.getElementById(`pa-tab-${next}`)?.focus();
+              }
+            }}>{tab.label}</button>
+          ))}
+        </div>
+        <div role="tabpanel" id="pa-panel-expenses" aria-labelledby="pa-tab-expenses" hidden={accountTab !== "expenses"}>
+          {accountTab === "expenses" && <>
+            {parsedUserRole === "admin" && <label className="pa-expense-user">View expenses for
+              <select className="user-select" value={selectedUserId} onChange={(e) => handleUserChange(e.target.value)}>
+                <option value="">My expenses</option>
+                {usersData.map((user) => <option key={user.id} value={user.id}>{user.firstName} {user.lastName}</option>)}
+              </select>
+            </label>}
+            <ExpenseTracker userId={parsedUserRole === "admin" ? activeUserId : parsedUserId} readOnly={parsedUserRole === "admin" && activeUserId !== parsedUserId} />
+          </>}
+        </div>
+        <div role="tabpanel" id="pa-panel-account" aria-labelledby="pa-tab-account" hidden={accountTab !== "account"}>
         {profile ? (
           <>
             <section className="pa-hero ad-panel">
@@ -427,6 +453,7 @@ function NewProfilePage() {
 
         <h3 className="pa-section-title">Account History</h3>
         <UserAccounts accountData={accountSections} />
+        </div>
       </div>
 
       {savingsModal && (
