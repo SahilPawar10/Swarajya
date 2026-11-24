@@ -1,4 +1,5 @@
 import React from "react";
+import LoanFundingPreview from "./LoanFundingPreview";
 import { Box, Typography } from "@mui/material";
 
 const money = (value) => new Intl.NumberFormat("en-IN", {
@@ -26,6 +27,7 @@ export default function LoanRepaymentPreview({ preview }) {
             Simple interest = amount × {preview.rate}% × {preview.days} / 30. Total payable is rounded down to whole rupees.
             {preview.emi !== null && " EMI is rounded to the nearest rupee; the final payment may differ to settle the total payable."}
           </Box>
+          <LoanFundingPreview preview={preview} />
         </>
       )}
     </Box>
