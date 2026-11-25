@@ -1,3 +1,4 @@
+import DailyPlanner from "../DailyPlanner/DailyPlanner";
 import ExpenseTracker from "./ExpenseTracker";
 import React, { useEffect, useMemo, useState } from "react";
 import "./newprofile.css";
@@ -321,16 +322,20 @@ function NewProfilePage() {
     <div id="newprofile">
       <div className="profile-container">
         <div className="pa-account-tabs" role="tablist" aria-label="Personal account sections">
-          {[{ id: "account", label: "Account overview" }, { id: "expenses", label: "Expenses" }].map((tab, index) => (
+          {[{ id: "account", label: "Account overview" }, { id: "expenses", label: "Expenses" }, { id: "planner", label: "Daily Planner" }].map((tab, index) => (
             <button key={tab.id} type="button" role="tab" id={`pa-tab-${tab.id}`} aria-controls={`pa-panel-${tab.id}`} aria-selected={accountTab === tab.id} tabIndex={accountTab === tab.id ? 0 : -1} onClick={() => setAccountTab(tab.id)} onKeyDown={(event) => {
               if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
                 event.preventDefault();
-                const next = event.key === "Home" ? "account" : event.key === "End" ? "expenses" : index === 0 ? "expenses" : "account";
+                const tabs = ["account", "expenses", "planner"];
+                const next = event.key === "Home" ? tabs[0] : event.key === "End" ? tabs[2] : tabs[(index + (event.key === "ArrowRight" ? 1 : 2)) % 3];
                 setAccountTab(next);
                 document.getElementById(`pa-tab-${next}`)?.focus();
               }
             }}>{tab.label}</button>
           ))}
+        </div>
+        <div role="tabpanel" id="pa-panel-planner" aria-labelledby="pa-tab-planner" hidden={accountTab !== "planner"}>
+          {accountTab === "planner" && <DailyPlanner />}
         </div>
         <div role="tabpanel" id="pa-panel-expenses" aria-labelledby="pa-tab-expenses" hidden={accountTab !== "expenses"}>
           {accountTab === "expenses" && <>
