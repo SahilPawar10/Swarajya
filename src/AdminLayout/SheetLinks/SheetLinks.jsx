@@ -6,6 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import LayoutAdmin from "../Layout2/LayoutAdmin";
 import { createSheetLink, getSheetLinks, updateSheetLink, deleteSheetLink } from "../../api/apiService";
+import YearBackup from "./YearBackup";
 import "./sheetLinks.css";
 
 const emptyForm = () => ({ name: "", year: String(new Date().getFullYear()), url: "" });
@@ -111,6 +112,7 @@ function SheetLinks() {
         <div><h1>Important Sheets</h1><p>Your important Google Sheets, organized by year.</p></div>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => { setEditing(null); setForm(emptyForm()); setFormError(""); setOpen(true); }}>Add Sheet</Button>
       </header>
+      {isAdmin && <YearBackup />}
       {success && <Alert severity="success" onClose={() => setSuccess("")}>{success}</Alert>}
       <div className="sheet-links-toolbar">
         <TextField select label="Year" value={year} onChange={(event) => { setYear(event.target.value); setPage(1); }} size="small" sx={{ minWidth: 160 }}>

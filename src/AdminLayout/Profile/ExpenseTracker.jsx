@@ -17,6 +17,7 @@ export default function ExpenseTracker({ userId, readOnly = false }) {
   const [error,setError] = useState("");
   const [loading,setLoading] = useState(true);
   const [busy,setBusy] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [incomeOpen, setIncomeOpen] = useState(false);
   const [incomeAmount, setIncomeAmount] = useState("");
   const [editingId, setEditingId] = useState(null);
@@ -94,6 +95,31 @@ export default function ExpenseTracker({ userId, readOnly = false }) {
     }
   }
   const groups = Object.values(doneRows.reduce((acc,e)=>{const id=e.debitType?._id || "unknown"; if(!acc[id]) acc[id]={name:e.debitType?.name || "Unknown",total:0}; acc[id].total+=e.amount; return acc;},{})).sort((a,b)=>b.total-a.total);
+  async function exportExpenses() {
+    if (loading || busy || exporting || !data || !filteredRows.length) return;
+    setExporting(true); setError("");
+    try {
+      const exportRows = filteredRows.map(expense => ({
+        Date: expense.date,
+        "Debit type": expense.debitType?.name || "Unknown",
+        "Amount (INR)": expense.amount,
+        Status: isDone(expense) ? "Done" : "Planned",
+      }));
+      const periodLabel = period === "month" ? month : period === "quarter" ? `${year}-Q${quarter + 1}` : String(year);
+      const XLSX = await import("xlsx");
+      const worksheet = XLSX.utils.json_to_sheet(exportRows);
+      worksheet["!cols"] = [{ wch: 12 }, { wch: 32 }, { wch: 18 }, { wch: 12 }];
+      worksheet["!autofilter"] = { ref: worksheet["!ref"] };
+      exportRows.forEach((_, index) => { worksheet[`C${index + 2}`].z = "#,##0.00"; });
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Expenses");
+      XLSX.writeFile(workbook, `expenses-${periodLabel}-${statusFilter}.xlsx`);
+    } catch {
+      setError("Unable to export expenses. Please try again.");
+    } finally {
+      setExporting(false);
+    }
+  }
   async function save(event) {
     event.preventDefault(); setBusy(true); setError("");
     try {const payload = {...form,amount:Number(form.amount),isPlanned:!!form.isPlanned}; if(editingId) await Axios.patch(`/expenses/${editingId}`,payload); else await Axios.post("/expenses",payload); setEditingId(null); setMonth(form.date.slice(0,7)); setOpen(false); setForm({...form,amount:""}); setRevision(v=>v+1);}
@@ -176,7 +202,7 @@ export default function ExpenseTracker({ userId, readOnly = false }) {
     {!open && <div className="expense-content">
       <div className="expense-history">
         <div className="expense-history-head"><div><h3>Expense history</h3><span>{filteredRows.length} entries · {period === "month" ? month : period === "quarter" ? `Q${quarter+1} ${year}` : year}</span></div>
-          <label className="expense-history-filter"><span className="expense-sr-only">Filter by status</span><select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}><option value="all">All expenses</option><option value="planned">Upcoming fixed expenses</option><option value="done">Done</option></select></label>
+          <div className="expense-history-actions"><button className="expense-secondary" type="button" disabled={loading || busy || exporting || !data || !filteredRows.length} onClick={exportExpenses} title="Export all expenses matching the selected period and status, across all pages">{exporting ? "Exporting..." : "Export Excel"}</button><label className="expense-history-filter"><span className="expense-sr-only">Filter by status</span><select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}><option value="all">All expenses</option><option value="planned">Upcoming fixed expenses</option><option value="done">Done</option></select></label></div>
         </div>
         <div className="expense-table"><table><thead><tr><th>Date</th><th>Debit type</th><th className="expense-amount">Amount</th><th>Status</th>{!readOnly && <th className="expense-actions">Action</th>}</tr></thead><tbody>{visibleRows.map(e=><tr key={e._id} className={!isDone(e) ? "expense-row-upcoming" : undefined}>
           <td>{e.date}</td><td>{e.debitType?.name}</td><td className="expense-amount">{money(e.amount)}</td><td><span className={isDone(e) ? "expense-status-done" : "expense-status-planned"}>{isDone(e) ? "Done" : "Planned"}</span></td>
